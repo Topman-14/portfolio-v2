@@ -1,87 +1,21 @@
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
+import { RateLimiterMemory } from 'rate-limiter-flexible';
+
+const rateLimiters = new Map<string, RateLimiterMemory>();
+
+function getRateLimiter(limit: number, windowMs: number): RateLimiterMemory {
+  const key = `${limit}-${windowMs}`;
+  
+  if (!rateLimiters.has(key)) {
+    rateLimiters.set(key, new RateLimiterMemory({
+      points: limit,
+      duration: Math.floor(windowMs / 1000), // Convert ms to seconds
+      blockDuration: Math.floor(windowMs / 1000),
+    }));
+  }
+  
+  return rateLimiters.get(key)!;
 }
 
-class InMemoryRateLimit {
-  private requests = new Map<string, RateLimitEntry>();
-  private cleanupInterval: NodeJS.Timeout;
-
-  constructor() {
-    this.cleanupInterval = setInterval(() => {
-      this.cleanup();
-    }, 5 * 60 * 1000);
-  }
-
-  private cleanup() {
-    const now = Date.now();
-    for (const [key, entry] of this.requests.entries()) {
-      if (now > entry.resetTime) {
-        this.requests.delete(key);
-      }
-    }
-  }
-
-  async limit(
-    identifier: string,
-    limit: number = 10,
-    windowMs: number = 60 * 1000 // 1 minute default
-  ): Promise<{
-    success: boolean;
-    remaining: number;
-    resetTime: number;
-  }> {
-    const now = Date.now();
-    const resetTime = now + windowMs;
-    
-    const existing = this.requests.get(identifier);
-
-    if (!existing || now > existing.resetTime) {
-      // First request or window has reset
-      this.requests.set(identifier, {
-        count: 1,
-        resetTime,
-      });
-      
-      return {
-        success: true,
-        remaining: limit - 1,
-        resetTime,
-      };
-    }
-
-    if (existing.count >= limit) {
-      // Rate limit exceeded
-      return {
-        success: false,
-        remaining: 0,
-        resetTime: existing.resetTime,
-      };
-    }
-
-    // Increment counter
-    existing.count += 1;
-    this.requests.set(identifier, existing);
-
-    return {
-      success: true,
-      remaining: limit - existing.count,
-      resetTime: existing.resetTime,
-    };
-  }
-
-  destroy() {
-    if (this.cleanupInterval) {
-      clearInterval(this.cleanupInterval);
-    }
-    this.requests.clear();
-  }
-}
-
-// Global instance
-const rateLimiter = new InMemoryRateLimit();
-
-// Rate limiting configurations for different endpoints
 export const rateLimitConfigs = {
   // Auth endpoints - more restrictive
   auth: {
@@ -103,11 +37,31 @@ export const rateLimitConfigs = {
 export async function rateLimit(
   identifier: string,
   config: { limit: number; windowMs: number }
-) {
-  return rateLimiter.limit(identifier, config.limit, config.windowMs);
+): Promise<{
+  success: boolean;
+  remaining: number;
+  resetTime: number;
+}> {
+  const limiter = getRateLimiter(config.limit, config.windowMs);
+  
+  try {
+    const result = await limiter.consume(identifier);
+    
+    return {
+      success: true,
+      remaining: result.remainingPoints || 0,
+      resetTime: Date.now() + (result.msBeforeNext || config.windowMs),
+    };
+  } catch (rejRes) {
+    const rateLimitRejection = rejRes as { msBeforeNext?: number; remainingPoints?: number };
+    return {
+      success: false,
+      remaining: 0,
+      resetTime: Date.now() + (rateLimitRejection.msBeforeNext || config.windowMs),
+    };
+  }
 }
 
-// Helper function to get client IP
 export function getClientIP(request: Request): string {
   const forwarded = request.headers.get('x-forwarded-for');
   const realIP = request.headers.get('x-real-ip');
@@ -120,11 +74,9 @@ export function getClientIP(request: Request): string {
     return realIP;
   }
   
-  // Fallback for development
   return 'localhost';
 }
 
-// Helper function to determine rate limit config based on pathname
 export function getRateLimitConfig(pathname: string) {
   if (pathname.startsWith('/api/auth') || pathname.startsWith('/admin/auth')) {
     return rateLimitConfigs.auth;

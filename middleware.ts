@@ -39,12 +39,12 @@ export async function middleware(request: NextRequest) {
     const session = await auth();
     
     if (!session?.user) {
-      return NextResponse.redirect(new URL('/admin/auth/signin', request.url));
+      return NextResponse.redirect(new URL('/signin', request.url));
     }
 
     const userRole = session.user.role;
     if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
-      return NextResponse.redirect(new URL('/admin/auth/signin', request.url));
+      return NextResponse.redirect(new URL('/signin', request.url));
     }
   }
 
