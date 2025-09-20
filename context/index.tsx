@@ -10,7 +10,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       {children}
-      <Toaster />
+      <Toaster position="top-center" richColors />
     </ThemeProvider>
   )
 }

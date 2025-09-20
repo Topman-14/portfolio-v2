@@ -2,49 +2,50 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { rateLimit, getClientIP, getRateLimitConfig } from "@/lib/rate-limit";
+import { routes } from "./lib/constants";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const clientIP = getClientIP(request);
-  const config = getRateLimitConfig(pathname);
+  // const clientIP = getClientIP(request);
+  // const config = getRateLimitConfig(pathname);
   
-  const rateLimitResult = await rateLimit(clientIP, config);
+  // const rateLimitResult = await rateLimit(clientIP, config);
   
-  if (!rateLimitResult.success) {
-    return new NextResponse(
-      JSON.stringify({
-        error: "Too many requests",
-        message: "Rate limit exceeded. Please try again later.",
-      }),
-      {
-        status: 429,
-        headers: {
-          "Content-Type": "application/json",
-          "X-RateLimit-Limit": config.limit.toString(),
-          "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
-          "X-RateLimit-Reset": new Date(rateLimitResult.resetTime).toISOString(),
-          "Retry-After": Math.round((rateLimitResult.resetTime - Date.now()) / 1000).toString(),
-        },
-      }
-    );
-  }
+  // if (!rateLimitResult.success) {
+  //   return new NextResponse(
+  //     JSON.stringify({
+  //       error: "Too many requests",
+  //       message: "Rate limit exceeded. Please try again later.",
+  //     }),
+  //     {
+  //       status: 429,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "X-RateLimit-Limit": config.limit.toString(),
+  //         "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
+  //         "X-RateLimit-Reset": new Date(rateLimitResult.resetTime).toISOString(),
+  //         "Retry-After": Math.round((rateLimitResult.resetTime - Date.now()) / 1000).toString(),
+  //       },
+  //     }
+  //   );
+  // }
 
   const response = NextResponse.next();
-  response.headers.set("X-RateLimit-Limit", config.limit.toString());
-  response.headers.set("X-RateLimit-Remaining", rateLimitResult.remaining.toString());
-  response.headers.set("X-RateLimit-Reset", new Date(rateLimitResult.resetTime).toISOString());
+  // response.headers.set("X-RateLimit-Limit", config.limit.toString());
+  // response.headers.set("X-RateLimit-Remaining", rateLimitResult.remaining.toString());
+  // response.headers.set("X-RateLimit-Reset", new Date(rateLimitResult.resetTime).toISOString());
 
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/auth')) {
+  if (pathname.startsWith('/admin') && !pathname.startsWith(routes.signIn)) {
     const session = await auth();
     
     if (!session?.user) {
-      return NextResponse.redirect(new URL('/signin', request.url));
+      return NextResponse.redirect(new URL(routes.signIn, request.url));
     }
 
     const userRole = session.user.role;
     if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
-      return NextResponse.redirect(new URL('/signin', request.url));
+      return NextResponse.redirect(new URL(routes.signIn, request.url));
     }
   }
 

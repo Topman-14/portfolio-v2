@@ -1,3 +1,4 @@
+import Navbar from "@/components/admin/navbar";
 import { SessionProvider } from "next-auth/react";
 
 export default function AdminLayout({
@@ -8,6 +9,7 @@ export default function AdminLayout({
   return (
     <SessionProvider>
       <div className="min-h-screen bg-background">
+        <Navbar />
         {children}
       </div>
     </SessionProvider>

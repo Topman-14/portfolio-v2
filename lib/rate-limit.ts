@@ -17,10 +17,9 @@ function getRateLimiter(limit: number, windowMs: number): RateLimiterMemory {
 }
 
 export const rateLimitConfigs = {
-  // Auth endpoints - more restrictive
   auth: {
     limit: 5,
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 60 * 1000, // 1 minute
   },
   // API endpoints - moderate
   api: {
@@ -30,7 +29,7 @@ export const rateLimitConfigs = {
   // General pages - lenient
   general: {
     limit: 200,
-    windowMs: 60 * 1000, // 1 minute
+    windowMs: 60 * 1000,
   },
 };
 

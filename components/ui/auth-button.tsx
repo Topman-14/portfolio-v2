@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { routes } from "@/lib/constants";
 
 export function AuthButton() {
   const { data: session, status } = useSession();
@@ -30,7 +31,7 @@ export function AuthButton() {
   }
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/admin/auth/signin" });
+    await signOut({ callbackUrl: routes.signIn });
   };
 
   const getInitials = (name: string | null | undefined, email: string | null | undefined) => {
