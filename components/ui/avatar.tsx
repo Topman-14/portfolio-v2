@@ -1,14 +1,13 @@
 "use client"
 
-import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
+import { ComponentProps, FC } from "react"
+import { cn, getInitials } from "@/lib/utils"
 
-import { cn } from "@/lib/utils"
-
-function Avatar({
+function AvatarBase({
   className,
   ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Root>) {
+}: ComponentProps<typeof AvatarPrimitive.Root>) {
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
@@ -24,7 +23,7 @@ function Avatar({
 function AvatarImage({
   className,
   ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+}: ComponentProps<typeof AvatarPrimitive.Image>) {
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
@@ -37,7 +36,7 @@ function AvatarImage({
 function AvatarFallback({
   className,
   ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
+}: ComponentProps<typeof AvatarPrimitive.Fallback>) {
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
@@ -50,4 +49,24 @@ function AvatarFallback({
   )
 }
 
-export { Avatar, AvatarImage, AvatarFallback }
+interface AvatarProps {
+  src: string;
+  alt: string;
+}
+
+export const Avatar:FC<AvatarProps> = ({ src, alt }) => {
+
+  return (
+    <AvatarBase>
+    <AvatarImage
+      src={src || ""}
+      alt={alt || "User"}
+    />
+    <AvatarFallback className="text-primary font-medium bg-transparent">
+        {getInitials(alt)}
+    </AvatarFallback>
+  </AvatarBase>
+  )
+}
+
+// good, now i want to implement the create pages of the data items in my setu up, not the shad cns components, 

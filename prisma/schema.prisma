@@ -22,9 +22,11 @@ model User {
   role          UserRole        @default(ADMIN)
   accounts      Account[]
   sessions      Session[]
-  // Optional for WebAuthn support
   Authenticator Authenticator[]
-
+  articles      Article[]
+  experiences   Experience[]
+  works         Work[]
+  categories    Category[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -41,12 +43,9 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
   @@id([provider, providerAccountId])
 }
  
@@ -64,11 +63,9 @@ model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
   @@id([identifier, token])
 }
  
-// Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @unique
   userId               String
@@ -78,8 +75,101 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
   @@id([userId, credentialID])
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Article {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  content     String       
+  excerpt     String?      
+  coverImg    String?      
+  status      ArticleStatus @default(DRAFT)
+  reads       Int           @default(0)
+  readTime    Int          
+  tags        String[]     
+  publishedAt DateTime?
+  
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId  String?
+  category    Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  comments    Comment[]
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("articles")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  text      String
+  email     String?
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model Experience {
+  id              String    @id @default(cuid())
+  jobTitle        String
+  company         String
+  location        String?
+  description     String
+  startDate       DateTime
+  endDate         DateTime?
+  isCurrentRole   Boolean   @default(false)
+  skills          String[]
+  achievements    String[]
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("experiences")
+}
+
+model Work {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  image       String?
+  videoUrl    String?
+  tools       String[]
+  githubLink  String?
+  liveUrl     String?
+  featured    Boolean  @default(false)
+  category    String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("works")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  slug        String    @unique
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  articles    Article[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("categories")
 }
