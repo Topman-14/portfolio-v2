@@ -3,7 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { LogOut, Shield } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/lib/constants";
+import { UserRole } from "@prisma/client";
 
 export function AuthButton() {
   const { data: session, status } = useSession();
@@ -34,21 +35,9 @@ export function AuthButton() {
     await signOut({ callbackUrl: routes.signIn });
   };
 
-  const getInitials = (name: string | null | undefined, email: string | null | undefined) => {
-    if (name) {
-      return name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase();
-    }
-    if (email) {
-      return email[0].toUpperCase();
-    }
-    return "U";
-  };
 
-  const getRoleBadgeColor = (role: string) => {
+
+  const getRoleBadgeColor = (role: UserRole) => {
     switch (role) {
       case "SUPER_ADMIN":
         return "text-red-600 dark:text-red-400";
@@ -63,18 +52,10 @@ export function AuthButton() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="ghost"
-          className="relative h-8 w-8 rounded-full p-0 hover:bg-accent"
+          variant="outline"
+          className="relative rounded-full size-9"
         >
-          <Avatar className="h-8 w-8">
-            <AvatarImage
-              src={session.user.image || ""}
-              alt={session.user.name || session.user.email || "User"}
-            />
-            <AvatarFallback className="bg-primary/10 text-primary font-medium">
-              {getInitials(session.user.name, session.user.email)}
-            </AvatarFallback>
-          </Avatar>
+          <Avatar src={session.user.image || ""} alt={session.user.name || "User"}/>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
