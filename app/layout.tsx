@@ -10,11 +10,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body
         className={`${bricolageGrotesque.className} ${kronaOne.className} ${syne.className} antialiased h-full`}
       >
-        {' '}
         <Providers>{children}</Providers>
       </body>
     </html>
