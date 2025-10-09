@@ -39,7 +39,7 @@ export default async function ExperiencePage() {
         deleteConfig={{
           onDelete: deleteExperience,
           title: "Delete Experience",
-          getContent: (experience) => `Are you sure you want to delete "${experience?.jobTitle} at ${experience?.company}"? This action cannot be undone.`,
+          nameKey: 'jobTitle'
         }}
       />
     </div>

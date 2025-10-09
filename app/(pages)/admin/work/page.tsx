@@ -39,7 +39,7 @@ export default async function WorkPage() {
         deleteConfig={{
           onDelete: deleteWork,
           title: "Delete Work",
-          getContent: (work) => `Are you sure you want to delete "${work?.title}"? This action cannot be undone.`,
+          nameKey: 'title'
         }}
       />
     </div>

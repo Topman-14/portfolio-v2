@@ -7,7 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "createsuperuser": "tsx scripts/create-superuser.ts"
+    "createsuperuser": "tsx scripts/create-superuser.ts",
+    "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
@@ -63,6 +64,7 @@
     "react-hook-form": "^7.62.0",
     "react-hotkeys-hook": "^5.1.0",
     "readline-sync": "^1.4.10",
+    "recharts": "^3.2.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "zod": "^4.1.9"

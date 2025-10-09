@@ -42,7 +42,7 @@ export default async function ArticlesPage() {
         deleteConfig={{
           onDelete: deleteArticle,
           title: "Delete Article",
-          getContent: (article)=>`Are you sure you want to delete "${article?.title}"? This action cannot be undone.`,
+          nameKey: 'title'
         }}
       />
     </div>

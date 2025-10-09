@@ -46,7 +46,7 @@ export default async function CategoriesPage() {
         deleteConfig={{
           onDelete: deleteCategory,
           title: "Delete Category",
-          getContent: (category) => `Are you sure you want to delete "${category?.name}"? This action cannot be undone.`,
+          nameKey: 'name'
         }}
       />
     </div>

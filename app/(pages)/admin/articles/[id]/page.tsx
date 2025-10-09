@@ -1,10 +1,9 @@
 import { notFound } from 'next/navigation';
 import prismadb from '@/lib/prismadb';
-import { GenericForm } from '@/components/generic-form';
-import { Article, ArticleStatus } from '@prisma/client';
+import { FieldConfig, GenericForm } from '@/components/generic-form';
+import { Article, ArticleStatus, Category } from '@prisma/client';
 import { generateSlug, cleanErrorMsg } from '@/lib/utils';
 import { auth } from '@/auth';
-import { articleFields } from '../data';
 
 interface PageProps {
   params: {
@@ -105,3 +104,72 @@ export default async function ArticlePage({ params }: PageProps) {
   );
 }
 
+ const articleFields = (categories: Category[]): FieldConfig[] => [
+  {
+    name: 'coverImg',
+    label: 'Cover Image',
+    type: 'file',
+    accept: 'image/*',
+    maxSize: 5,
+    colSpan: 3,
+  },
+  {
+    name: 'title',
+    label: 'Title',
+    type: 'text',
+    placeholder: 'Enter article title',
+    required: true,
+    colSpan: 1,
+  },
+  {
+    name: 'categoryId',
+    label: 'Category',
+    type: 'async-select',
+    placeholder: 'Select or search category',
+    fetchOptions: categories.map((cat) => ({
+      label: cat.name,
+      value: cat.id,
+    })),
+  },
+  {
+    name: 'tags',
+    label: 'Tags',
+    type: 'text',
+    placeholder: 'javascript, react, nextjs',
+  },
+  {
+    name: 'excerpt',
+    label: 'Excerpt',
+    type: 'textarea',
+    placeholder: 'Brief summary of the article',
+    colSpan: 2,
+  },
+  {
+    name: 'readTime',
+    label: 'Read Time (minutes)',
+    type: 'number',
+    min: 1,
+    max: 120,
+    defaultValue: 5,
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { label: 'Draft', value: ArticleStatus.DRAFT },
+      { label: 'Published', value: ArticleStatus.PUBLISHED },
+      { label: 'Archived', value: ArticleStatus.ARCHIVED },
+    ],
+    defaultValue: ArticleStatus.DRAFT,
+  },
+  {
+    name: 'content',
+    label: 'Content',
+    type: 'rich-text',
+    placeholder: 'Write your article content here...',
+    required: true,
+    colSpan: 3,
+    minHeight: 400,
+  },
+];
