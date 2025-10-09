@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import {
@@ -11,9 +12,12 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table"
-import { useState } from "react"
+import { useState, useMemo } from "react"
+import { useRouter } from "next/navigation"
+import { Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useAlert } from "@/context/alert"
 import {
   Table,
   TableBody,
@@ -23,11 +27,19 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+interface DeleteConfig {
+  onDelete: (id: string) => Promise<void>
+  title: string
+  getContent: (item: any) => string
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   searchKey?: string
   searchPlaceholder?: string
+  rowNavigate?: string
+  deleteConfig?: DeleteConfig
 }
 
 export function DataTable<TData, TValue>({
@@ -35,13 +47,59 @@ export function DataTable<TData, TValue>({
   data,
   searchKey,
   searchPlaceholder = "Search...",
+  rowNavigate,
+  deleteConfig,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter()
+  const { showAlert } = useAlert()
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
+  const handleRowClick = (row: TData & { id: string }) => {
+    if (rowNavigate && (row)?.id) {
+      router.push(`${rowNavigate}/${row?.id}`)
+    }
+  }
+
+  const columnsWithActions = useMemo(() => {
+    if (!deleteConfig) return columns
+
+    const actionsColumn: ColumnDef<TData, TValue> = {
+      id: "actions",
+      cell: ({ row }) => {
+        const item = row.original as TData & { id: string }
+
+        const handleDelete = (e: React.MouseEvent) => {
+          e.stopPropagation()
+          
+          showAlert({
+            title: deleteConfig.title,
+            content: deleteConfig.getContent(item),
+            onConfirm: () => deleteConfig.onDelete((item as any).id),
+          })
+        }
+
+        return (
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+              onClick={handleDelete}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+      },
+    }
+
+    return [...columns, actionsColumn]
+  }, [columns, deleteConfig, showAlert])
+
   const table = useReactTable({
     data,
-    columns,
+    columns: columnsWithActions,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -94,6 +152,8 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={rowNavigate ? "group cursor-pointer hover:bg-muted/50" : "group"}
+                  onClick={() => handleRowClick(row.original as TData & { id: string })}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -104,7 +164,7 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columnsWithActions.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

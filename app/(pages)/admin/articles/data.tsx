@@ -1,19 +1,12 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Edit, Trash } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
-import Link from "next/link"
-import { Article, Category } from "@prisma/client"
+import { Article, ArticleStatus, Category } from "@prisma/client"
+import { FieldConfig } from "@/components/generic-form"
 
 type ArticleWithCategory = Article & {
   category: Category | null
@@ -99,34 +92,75 @@ export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
       )
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const article = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/articles/${article.id}`}>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive">
-              <Trash className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
 ]
+
+
+export const articleFields = (categories: Category[]): FieldConfig[] => [
+  {
+    name: 'coverImg',
+    label: 'Cover Image',
+    type: 'file',
+    accept: 'image/*',
+    maxSize: 5,
+    colSpan: 3,
+  },
+  {
+    name: 'title',
+    label: 'Title',
+    type: 'text',
+    placeholder: 'Enter article title',
+    required: true,
+    colSpan: 1,
+  },
+  {
+    name: 'categoryId',
+    label: 'Category',
+    type: 'async-select',
+    placeholder: 'Select or search category',
+    fetchOptions: categories.map((cat) => ({
+      label: cat.name,
+      value: cat.id,
+    })),
+  },
+  {
+    name: 'tags',
+    label: 'Tags',
+    type: 'text',
+    placeholder: 'javascript, react, nextjs',
+  },
+  {
+    name: 'excerpt',
+    label: 'Excerpt',
+    type: 'textarea',
+    placeholder: 'Brief summary of the article',
+    colSpan: 2,
+  },
+  {
+    name: 'readTime',
+    label: 'Read Time (minutes)',
+    type: 'number',
+    min: 1,
+    max: 120,
+    defaultValue: 5,
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { label: 'Draft', value: ArticleStatus.DRAFT },
+      { label: 'Published', value: ArticleStatus.PUBLISHED },
+      { label: 'Archived', value: ArticleStatus.ARCHIVED },
+    ],
+    defaultValue: ArticleStatus.DRAFT,
+  },
+  {
+    name: 'content',
+    label: 'Content',
+    type: 'rich-text',
+    placeholder: 'Write your article content here...',
+    required: true,
+    colSpan: 3,
+    minHeight: 400,
+  },
+];

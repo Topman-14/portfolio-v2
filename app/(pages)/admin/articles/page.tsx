@@ -1,9 +1,10 @@
-import prismadb from '@/lib/prismadb';
+import prismadb, { checkAuthentication } from '@/lib/prismadb';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { articlesColumns } from './data';
+import { revalidatePath } from 'next/cache';
 
 export default async function ArticlesPage() {
   const articles = await prismadb.article.findMany({
@@ -37,7 +38,31 @@ export default async function ArticlesPage() {
         data={articles}
         searchKey="title"
         searchPlaceholder="Search articles..."
+        rowNavigate="/admin/articles"
+        deleteConfig={{
+          onDelete: deleteArticle,
+          title: "Delete Article",
+          getContent: (article)=>`Are you sure you want to delete "${article?.title}"? This action cannot be undone.`,
+        }}
       />
     </div>
   );
+}
+
+
+async function deleteArticle(id: string) {
+  'use server'
+  
+  try {
+    await checkAuthentication()
+
+    await prismadb.article.delete({
+      where: { id }
+    })
+
+    revalidatePath('/admin/articles')
+  } catch (error) {
+    console.error('Error deleting article:', error)
+    throw new Error('Failed to delete article')
+  }
 }
