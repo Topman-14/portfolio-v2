@@ -3,14 +3,11 @@ import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { articlesColumns } from './data';
+import { workColumns } from './data';
 import { revalidatePath } from 'next/cache';
 
-export default async function ArticlesPage() {
-  const articles = await prismadb.article.findMany({
-    include: {
-      category: true,
-    },
+export default async function WorkPage() {
+  const works = await prismadb.work.findMany({
     orderBy: {
       createdAt: 'desc',
     },
@@ -20,28 +17,28 @@ export default async function ArticlesPage() {
     <div className="container mx-auto py-6 px-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Articles</h1>
+          <h1 className="text-3xl font-bold">Work</h1>
           <p className="text-muted-foreground">
-            Manage your articles and blog posts
+            Manage your portfolio projects and work samples
           </p>
         </div>
         <Button asChild>
-          <Link href="/admin/articles/new">
+          <Link href="/admin/work/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Article
+            New Work
           </Link>
         </Button>
       </div>
 
       <DataTable
-        columns={articlesColumns}
-        data={articles}
+        columns={workColumns}
+        data={works}
         searchKey="title"
-        searchPlaceholder="Search articles..."
-        rowNavigate="/admin/articles"
+        searchPlaceholder="Search work..."
+        rowNavigate="/admin/work"
         deleteConfig={{
-          onDelete: deleteArticle,
-          title: "Delete Article",
+          onDelete: deleteWork,
+          title: "Delete Work",
           nameKey: 'title'
         }}
       />
@@ -49,20 +46,20 @@ export default async function ArticlesPage() {
   );
 }
 
-
-async function deleteArticle(id: string) {
+async function deleteWork(id: string) {
   'use server'
   
   try {
     await checkAuthentication()
 
-    await prismadb.article.delete({
+    await prismadb.work.delete({
       where: { id }
     })
 
-    revalidatePath('/admin/articles')
+    revalidatePath('/admin/work')
   } catch (error) {
-    console.error('Error deleting article:', error)
-    throw new Error('Failed to delete article')
+    console.error('Error deleting work:', error)
+    throw new Error('Failed to delete work')
   }
 }
+

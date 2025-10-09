@@ -1,25 +1,29 @@
-'use client'
+"use client"
+
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
-import { Article, Category } from "@prisma/client"
+import { Category } from "@prisma/client"
+import { FieldConfig } from "@/components/generic-form"
 
-type ArticleWithCategory = Article & {
-  category: Category | null
+type CategoryWithCount = Category & {
+  _count: {
+    articles: number
+  }
 }
 
-export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
+export const categoryColumns: ColumnDef<CategoryWithCount>[] = [
   {
-    accessorKey: "title",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Title
+          Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -27,43 +31,31 @@ export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
     cell: ({ row }) => {
       return (
         <div className="font-medium">
-          {row.getValue("title")}
+          {row.getValue("name")}
         </div>
       )
     },
   },
   {
-    accessorKey: "category",
-    header: "Category",
+    accessorKey: "description",
+    header: "Description",
     cell: ({ row }) => {
-      const category = row.getValue("category") as Category | null
+      const description = row.getValue("description") as string | null
       return (
-        <div>
-          {category ? (
-            <Badge variant="outline">{category.name}</Badge>
-          ) : (
-            <span className="text-muted-foreground">No category</span>
-          )}
+        <div className="max-w-[300px] truncate">
+          {description || <span className="text-muted-foreground">No description</span>}
         </div>
       )
     },
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "_count",
+    header: "Articles",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string
+      const count = row.getValue("_count") as { articles: number }
       return (
-        <Badge 
-          variant={
-            status === "PUBLISHED" 
-              ? "default" 
-              : status === "DRAFT" 
-                ? "secondary" 
-                : "destructive"
-          }
-        >
-          {status}
+        <Badge variant="secondary">
+          {count.articles} {count.articles === 1 ? 'article' : 'articles'}
         </Badge>
       )
     },
@@ -91,4 +83,23 @@ export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
     },
   },
 ]
+
+export const categoryFields: FieldConfig[] = [
+  {
+    name: 'name',
+    label: 'Category Name',
+    type: 'text',
+    placeholder: 'Web Development',
+    required: true,
+    colSpan: 2,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    placeholder: 'Describe what this category covers...',
+    colSpan: 3,
+    minHeight: 100,
+  },
+];
 

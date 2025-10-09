@@ -104,7 +104,7 @@ export default async function ArticlePage({ params }: PageProps) {
   );
 }
 
-export const articleFields = (categories: Category[]): FieldConfig[] => [
+ const articleFields = (categories: Category[]): FieldConfig[] => [
   {
     name: 'coverImg',
     label: 'Cover Image',

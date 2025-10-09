@@ -9,7 +9,8 @@ export const routes = {
     admin: "/admin",
     adminBlog: "/admin/articles",
     adminWork: "/admin/work",
-    adminExperience: "/admin/exp",
+    adminExperience: "/admin/experience",
+    adminCategories: "/admin/categories",
     signIn: "/auth/sign-in",
 }
 
@@ -29,5 +30,9 @@ export const AdminNavRoutes = [
     {
       href: `${routes.adminExperience}`,
       label: 'Experience',
+    },
+    {
+      href: `${routes.adminCategories}`,
+      label: 'Categories',
     },
   ]
