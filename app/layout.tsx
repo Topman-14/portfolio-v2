@@ -12,13 +12,14 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body
-        className={`${bricolageGrotesque.className} ${kronaOne.className} ${syne.className} antialiased h-full`}
+        className={`${bricolageGrotesque.variable} ${kronaOne.variable} ${syne.variable} antialiased h-full`}
       >
         <Providers>{children}</Providers>
       </body>
     </html>
   );
 }
+
 
 export const metadata: Metadata = {
   title: 'Tope Akinkuade | Software Engineer',

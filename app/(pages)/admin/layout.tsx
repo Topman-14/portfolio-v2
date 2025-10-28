@@ -1,6 +1,5 @@
-import Navbar from "@/components/admin/navbar";
-import { SessionProvider } from "next-auth/react";
-import { AlertProvider } from "@/context/alert";
+import Navbar from '@/components/admin/navbar';
+import { SessionProvider } from 'next-auth/react';
 
 export default function AdminLayout({
   children,
@@ -9,12 +8,10 @@ export default function AdminLayout({
 }) {
   return (
     <SessionProvider>
-      <AlertProvider>
-        <div className="min-h-screen bg-background">
-          <Navbar />
-          {children}
-        </div>
-      </AlertProvider>
+      <div className='min-h-screen bg-background'>
+        <Navbar />
+        {children}
+      </div>
     </SessionProvider>
   );
 }
