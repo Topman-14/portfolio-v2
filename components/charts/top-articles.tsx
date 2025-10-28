@@ -1,11 +1,14 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { routes } from '@/lib/constants';
 
 interface Article {
   title: string;
   reads: number;
   status: string;
+  id: string
 }
 
 interface TopArticlesProps {
@@ -16,7 +19,7 @@ export function TopArticles({ articles }: TopArticlesProps) {
   return (
     <div className="space-y-4">
       {articles.map((article) => (
-        <div key={article.title} className="flex items-center justify-between p-3 border rounded-lg">
+        <Link href={`${routes.adminBlog}/${article?.id}`} key={article.title} className="flex items-center justify-between p-3 border rounded-lg">
           <div className="flex-1">
             <h4 className="font-medium text-sm truncate">{article.title}</h4>
             <div className="flex items-center gap-2 mt-1">
@@ -29,7 +32,7 @@ export function TopArticles({ articles }: TopArticlesProps) {
             <div className="text-lg font-bold">{article.reads.toLocaleString()}</div>
             <div className="text-xs text-muted-foreground">reads</div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

@@ -13,6 +13,7 @@ import { TopArticles } from '../../../components/charts/top-articles';
 import { CategoryDistribution } from '../../../components/charts/category-distribution';
 import { RecentActivity } from '../../../components/charts/recent-activity';
 import { MetricCard, ChartCard } from '../../../components/dashboard/metric-card';
+import { routes } from '@/lib/constants';
 
 export default async function AdminDashboard() {
   const [
@@ -44,7 +45,7 @@ export default async function AdminDashboard() {
     prismadb.article.findMany({
       take: 5,
       orderBy: { reads: 'desc' },
-      select: { title: true, reads: true, status: true }
+      select: { title: true, reads: true, status: true, id: true }
     }),
     prismadb.article.findMany({
       where: { publishedAt: { not: null } },
@@ -57,7 +58,7 @@ export default async function AdminDashboard() {
     prismadb.article.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
-      select: { title: true, status: true, createdAt: true }
+      select: { title: true, status: true, createdAt: true, id: true }
     })
   ]);
 
@@ -88,7 +89,8 @@ export default async function AdminDashboard() {
         { label: `${publishedArticles} Published`, variant: 'default' as const },
         { label: `${draftArticles} Draft`, variant: 'secondary' as const },
         { label: `${archivedArticles} Archived`, variant: 'outline' as const }
-      ]
+      ],
+      link: routes.adminBlog
     },
     {
       title: 'Total Reads',
