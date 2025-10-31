@@ -146,3 +146,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+.rolling-text-wrapper .originalText,
+.rolling-text-wrapper .cloneText {
+  display: inline-block;
+  backface-visibility: hidden;
+}
+
+
+.bg1 {
+  background-color: black;
+  background-image: url('/img/svg/bg1.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.bg1-light {
+  background-color: white;
+  background-image: url('/img/svg/bg1.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

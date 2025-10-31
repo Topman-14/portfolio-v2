@@ -21,7 +21,7 @@ const Logo = ({
     <Image
       width={width}
       height={height}
-      className={!link ? cn(className, 'm-2') : undefined}
+      className={!link ? cn(className, 'm-2 flex-shrink-0') : undefined}
       alt=''
       src={`/img/svg/logo-${color}${variant}.svg`}
     />
@@ -29,7 +29,7 @@ const Logo = ({
 
   if (link) {
     return (
-      <Link className={cn(className, 'm-2 block')} href={'/'}>
+      <Link className={cn(className, 'm-2 block flex-shrink-0')} href={'/'}>
         {logo_content}
       </Link>
     );
