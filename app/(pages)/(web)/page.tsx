@@ -1,11 +1,10 @@
-import SplinePlayer from "@/components/custom/spline";
+import { Hero } from '@/components/web/home';
 
 export default function Home() {
   return (
-   <section>
-    <SplinePlayer scene="/3d/hero.splinecode" draggable className="h-screen bg-black" zoom={9} />
-
-    <div className="container mx-auto bg-black h-screen"></div>
-   </section>
+    <main>
+      <Hero />
+      <div className='h-screen' />
+    </main>
   );
 }
