@@ -2,6 +2,8 @@ import { ThemeProvider } from './theme';
 import { Toaster } from '@/components/ui/sonner';
 import NextTopLoader from 'nextjs-toploader';
 import { AlertProvider } from '@/context/alert';
+import PageLoader from '@/components/ui/page-loader';
+
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +13,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
+      <PageLoader />
       <NextTopLoader
         color='#14cc5e'
         initialPosition={0.08}
