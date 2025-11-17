@@ -20,7 +20,7 @@ export const Hero = () => {
 
     document.fonts.ready.then(() => {
       const tl = gsap.timeline({
-        delay: 0.2,
+        delay: 1.5,
         // repeat: -1,
         // repeatDelay: 0.5
       });
@@ -71,9 +71,9 @@ export const Hero = () => {
   });
 
   return (
-    <section className='relative min-h-screen bg1 overflow-hidden'>
-      <div className='relative z-10 flex lg:items-center justify-center min-h-screen px-4 md:px-8 lg:px-16'>
-        <div className='max-w-7xl w-full md:pt-32 pb-40 xl:max-w-6xl'>
+    <section className='relative bg1 overflow-hidden pb-5 md:pb-0'>
+      <div className='relative z-10 flex lg:items-center justify-center min-h-screen px-4 md:px-8 lg:px-16 flex-col md:flex-row'>
+        <div className='lg:max-w-6xl w-full pt-20 md:pt-32 pb-20 md:pb-48 xl:max-w-7xl z-[20]'>
           <p
             ref={introRef}
             className='text-xl md:text-4xl text-white/80 mb-4 font-sans font-semibold'
@@ -83,7 +83,7 @@ export const Hero = () => {
 
           <h1
             ref={bigTextRef}
-            className='text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-display font-bold text-white leading-[1.1] mb-8 text-left max-w-4xl'
+            className='sm:text-6xl text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-display font-bold text-white leading-[1.1] mb-8 text-left max-w-4xl'
           >
             Reformed Perfectionist, <br />
             <span className='text-malachite'>Present Realist.</span>
@@ -91,27 +91,26 @@ export const Hero = () => {
 
           <p
             ref={descriptionRef}
-            className='text-sm md:text-base text-white/80 font-semibold max-w-xl leading-relaxed font-sans'
+            className='text-sm md:text-base text-white font-semibold max-w-xl leading-relaxed font-sans'
           >
             I&apos;m a Product engineer that works across the stack to create
             systems that balance precision and practicality. <br />
-            From architecture to deployment, I build infrastructure nobody
+            From architecture to deployment, <br className='md:hidden' /> I build infrastructure nobody
             notices; until it&apos;s missing.
           </p>
         </div>
-      </div>
-
-      <div className='absolute bottom-32 right-12 size-[600px] z-[15] pointer-events-none'>
-        <SplinePlayer
-          scene='/3d/hero.splinecode'
-          draggable={true}
-          className='w-full h-full'
-          cameraPosition={{ x: 50, y: -90, z: 380 }}
-          cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
-          disableZoom={true}
-          interactive={true}
-          zoom={1.5}
-        />
+        <div className='md:absolute mx-auto xl:bottom-32 bottom-20 right-12 size-[300px] md:max-h-none lg:size-[500px] xl:size-[600px] z-[8] pointer-events-none'>
+          <SplinePlayer
+            scene='/3d/hero.splinecode'
+            draggable={true}
+            className='w-full h-full'
+            cameraPosition={{ x: 50, y: -90, z: 380 }}
+            cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
+            disableZoom={true}
+            interactive={true}
+            zoom={1.5}
+          />
+        </div>
       </div>
     </section>
   );

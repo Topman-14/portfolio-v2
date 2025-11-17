@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Menu } from 'lucide-react';
 import Logo from '../ui/logo';
 import { navItems, socials } from '@/config';
 import NavOverlay from './nav-overlay';
@@ -10,11 +9,11 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import RollingText from '../animations/rolling-text';
 import SocialIcons from '../ui/social-icon';
 import DomAnimate from '../animations/dom-animate';
+import CircleButton from '../ui/circle-button';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -48,8 +47,6 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   className='relative overflow-hidden'
-                  onMouseEnter={() => setHoveredItem(item.href)}
-                  onMouseLeave={() => setHoveredItem(null)}
                 >
                   <RollingText className='text-white '>{item.name}</RollingText>
                 </Link>
@@ -70,13 +67,12 @@ export default function Navbar() {
           </DomAnimate>
 
           <DomAnimate show={!showFullNavbar}>
-            <button
+            <CircleButton
               onClick={() => setIsOpen(true)}
-              className='rounded-full size-12 flex items-center justify-center transition-colors bg-white/10 backdrop-blur-md border border-transparent hover:border-malachite cursor-pointer'
-              aria-label='Open menu'
+              size={48}
             >
-              <Logo color='white' height={20} width={20} />
-            </button>
+              <Logo color='white' height={20} width={20} className='relative z-10' />
+            </CircleButton>
           </DomAnimate>
         </div>
       </nav>
