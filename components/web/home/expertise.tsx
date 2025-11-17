@@ -149,20 +149,20 @@ export const Expertise = () => {
   return (
     <section
       ref={sectionRef}
-      className='relative min-h-screen bg-white py-32 px-4 md:px-8 lg:px-16 bg1-light'
+      className='relative min-h-screen bg-white py-32 px-4 md:px-8 lg:px-16 bg3'
     >
       <div className='max-w-7xl mx-auto'>
         <div className='grid lg:grid-cols-2 gap-12 lg:gap-20'>
           <div className='lg:sticky lg:top-32 lg:self-start space-y-6'>
             <h2
               ref={overviewHeadingRef}
-              className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-coal leading-tight'
+              className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight'
             >
               Expertise
             </h2>
 
             <div ref={overviewTextRef} className='space-y-4'>
-              <p className='text-coal/70 text-base md:text-lg leading-relaxed font-sans'>
+              <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans'>
                 I work across the stack, but my obsession lies in clean
                 interfaces that feel effortless. I take projects from concept to
                 deployment, handling architecture, UX, and long-term
@@ -171,7 +171,7 @@ export const Expertise = () => {
                 it&apos;s solid.
               </p>
 
-              <p className='text-coal/70 text-base md:text-lg leading-relaxed font-sans'>
+              <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans'>
                 I believe engineering isn&apos;t just about code; it&apos;s about
                 control. Control over performance, cost, and experience. Whether
                 I&apos;m integrating AI models, setting up efficient infra, or
@@ -193,10 +193,10 @@ export const Expertise = () => {
             <div className='space-y-10'>
               {specializations.map((spec) => (
                 <div key={spec.title} className='specialization-item space-y-3'>
-                  <h4 className='text-xl md:text-2xl font-display font-bold text-coal'>
+                  <h4 className='text-xl md:text-2xl font-display font-bold text-white'>
                     {spec.title}
                   </h4>
-                  <p className='text-coal/70 text-sm md:text-base leading-relaxed font-sans'>
+                  <p className='text-white/70 text-sm md:text-base leading-relaxed font-sans'>
                     {spec.description}
                   </p>
                   <div className='flex flex-wrap gap-2 pt-2'>

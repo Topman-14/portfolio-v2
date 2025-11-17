@@ -5,16 +5,18 @@ import { useState, useEffect } from 'react';
 import Logo from '../ui/logo';
 import { navItems, socials } from '@/config';
 import NavOverlay from './nav-overlay';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useWindowSize } from '@/hooks/use-window-size';
 import RollingText from '../animations/rolling-text';
 import SocialIcons from '../ui/social-icon';
 import DomAnimate from '../animations/dom-animate';
 import CircleButton from '../ui/circle-button';
+import { Menu } from 'lucide-react';
+import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const isMobile = useIsMobile();
+  const { isMobile } = useWindowSize();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +44,7 @@ export default function Navbar() {
 
           <DomAnimate show={showFullNavbar}>
             <div className='hidden md:flex gap-8 items-center backdrop-blur-lg bg-white/10 rounded-full p-3 px-6 '>
-              {navItems.map((item) => (
+              {navItems.filter((item) => item.name !== 'Home').map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -56,7 +58,7 @@ export default function Navbar() {
           
           <DomAnimate show={showFullNavbar}>
             <div className='hidden md:flex gap-3 items-center'>
-              {socials.map((social) => (
+              {socials.filter((social) => social.name !== 'Email').map((social) => (
                 <SocialIcons
                   key={social.href}
                   link={social.href}
@@ -69,9 +71,10 @@ export default function Navbar() {
           <DomAnimate show={!showFullNavbar}>
             <CircleButton
               onClick={() => setIsOpen(true)}
-              size={48}
+              size={isMobile ? 48 : 62}
             >
-              <Logo color='white' height={20} width={20} className='relative z-10' />
+              {/* <Logo color='white' height={20} width={20} className='relative z-10' /> */}
+              <HiOutlineMenuAlt3 size={isMobile ? 20 : 24} className='relative z-10 text-malachite' />
             </CircleButton>
           </DomAnimate>
         </div>

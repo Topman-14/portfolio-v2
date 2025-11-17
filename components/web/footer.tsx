@@ -132,7 +132,7 @@ export default function Footer() {
         size={48}
         aria-label='Back to top'
       >
-        <ChevronUp style={{ fill: 'transparent' }} />
+        <ChevronUp className='hover:text-malachite transition-colors' style={{ fill: 'transparent' }} />
       </CircleButton>
     </footer>
   );

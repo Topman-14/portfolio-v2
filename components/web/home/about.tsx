@@ -8,12 +8,12 @@ import SplitType from 'split-type';
 import { ArrowRight } from 'lucide-react';
 import { GButton } from '@/components/ui/gbutton';
 import Image from 'next/image';
+import Parallax from '@/components/animations/parallax';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const paragraph1Ref = useRef<HTMLParagraphElement>(null);
@@ -50,35 +50,23 @@ export const About = () => {
 
         for (const p of [p1, p2]) {
           if (p) {
-            const split = new SplitType(p, { types: 'chars' });
+            const split = new SplitType(p, { types: 'words' });
             
-            gsap.set(split.chars, { opacity: 0.3 });
+            gsap.set(split.words, { opacity: 0.3 });
 
-            gsap.to(split.chars, {
+            gsap.to(split.words, {
               opacity: 1,
               stagger: 0.008,
               ease: 'none',
+              delay: 3.5,
               scrollTrigger: {
                 trigger: p,
                 start: 'top 75%',
                 end: 'bottom 50%',
-                scrub: 1,
+                scrub: 0.5,
               },
             });
           }
-        }
-
-        if (imageRef.current && imageContainerRef.current) {
-          gsap.to(imageRef.current, {
-            yPercent: -15,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: imageContainerRef.current,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          });
         }
       });
     },
@@ -88,7 +76,7 @@ export const About = () => {
   return (
     <section
       ref={sectionRef}
-      className='relative lg:h-screen min-h-screen bg-black py-32 px-4 md:px-8 lg:px-16'
+      className='relative lg:h-screen min-h-screen py-32 px-4 md:px-8 lg:px-16 bg1x'
     >
       <div className='max-w-7xl mx-auto h-full'>
         <div className='flex gap-4 h-full'>
@@ -102,7 +90,7 @@ export const About = () => {
 
             <p
               ref={paragraph1Ref}
-              className='text-white/40 text-xl md:text-2xl leading-relaxed font-sans'
+              className='text-white text-xl md:text-2xl leading-relaxed font-sans'
             >
               I&apos;m a software engineer who&apos;s spent the last few years
               building products across logistics, fintech, and business
@@ -115,7 +103,7 @@ export const About = () => {
 
             <p
               ref={paragraph2Ref}
-              className='text-white/40 text-xl md:text-2xl leading-relaxed font-sans'
+              className='text-white text-xl md:text-2xl leading-relaxed font-sans'
             >
               Alongside engineering, I&apos;m big on design thinking, not in the
               corporate sense, but in the way a product feels when it&apos;s
@@ -130,20 +118,49 @@ export const About = () => {
 
           <div
             ref={imageContainerRef}
-            className='relative  max-w-[400px] h-[400px] lg:h-[500px] overflow-hidden rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] mt-auto flex-1'
+            className='relative mt-auto flex-1 grid grid-cols-2 gap-4 max-w-[500px]'
           >
-            <div
-              ref={imageRef}
-              className='absolute inset-0 -top-[10%] -bottom-[10%]'
-            >
-              <Image
-                src='/img/jpg/me.jpg'
-                alt='Tope Akinkuade'
-                fill
-                className='object-cover'
-                priority
-              />
-            </div>
+            {[
+              {
+                src: '/img/jpg/me.jpg',
+                alt: 'Tope Akinkuade',
+                speed: -20,
+                colSpan: 'col-span-2',
+                height: 'h-[280px] lg:h-[320px]',
+                priority: true,
+              },
+              {
+                src: '/img/jpg/me.jpg',
+                alt: 'Tope Akinkuade',
+                speed: -15,
+                colSpan: 'col-span-1',
+                height: 'h-[200px] lg:h-[240px]',
+                priority: false,
+              },
+              {
+                src: '/img/jpg/me.jpg',
+                alt: 'Tope Akinkuade',
+                speed: -25,
+                colSpan: 'col-span-1',
+                height: 'h-[200px] lg:h-[240px]',
+                priority: false,
+              },
+            ].map((image, index) => (
+              <div
+                key={`${image.src}-${image.speed}-${index}`}
+                className={`${image.colSpan} relative ${image.height} overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
+              >
+                <Parallax speed={image.speed} trigger={imageContainerRef}>
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className='object-cover'
+                    priority={image.priority}
+                  />
+                </Parallax>
+              </div>
+            ))}
           </div>
         </div>
       </div>

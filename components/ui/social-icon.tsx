@@ -1,7 +1,7 @@
 'use client';
 
 import { FC } from 'react';
-import { FaXTwitter, FaLinkedinIn, FaGithub } from 'react-icons/fa6';
+import { FaXTwitter, FaLinkedinIn, FaGithub, FaEnvelope } from 'react-icons/fa6';
 import CircleButton from './circle-button';
 
 const icons = [
@@ -16,6 +16,10 @@ const icons = [
   {
     name: 'GitHub',
     icon: FaGithub,
+  },
+  {
+    name: 'Email',
+    icon: FaEnvelope,
   },
 ];
 

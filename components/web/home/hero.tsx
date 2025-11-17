@@ -99,7 +99,7 @@ export const Hero = () => {
             notices; until it&apos;s missing.
           </p>
         </div>
-        <div className='md:absolute mx-auto xl:bottom-32 bottom-20 right-12 size-[300px] md:max-h-none lg:size-[500px] xl:size-[600px] z-[8] pointer-events-none'>
+        <div className='md:absolute mx-auto xl:bottom-32 bottom-20 right-12 size-[300px] md:max-h-none lg:size-[500px] xl:size-[600px] z-[20] pointer-events-none'>
           <SplinePlayer
             scene='/3d/hero.splinecode'
             draggable={true}
@@ -108,7 +108,6 @@ export const Hero = () => {
             cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
             disableZoom={true}
             interactive={true}
-            zoom={1.5}
           />
         </div>
       </div>
