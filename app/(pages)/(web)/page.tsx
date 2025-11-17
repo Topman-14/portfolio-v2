@@ -1,10 +1,23 @@
-import { Hero } from '@/components/web/home';
+import { Hero, About, Projects, Expertise } from '@/components/web/home';
+import prismadb from '@/lib/prismadb';
 
-export default function Home() {
+export default async function Home() {
+  const works = await prismadb.work.findMany({
+    where: {
+      featured: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 10,
+  });
+
   return (
     <main>
       <Hero />
-      <div className='h-screen' />
+      <About />
+      <Expertise />
+      <Projects works={works} />
     </main>
   );
 }

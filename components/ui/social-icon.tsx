@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import { FC } from 'react';
-import { FaXTwitter, FaLinkedinIn, FaGithub } from "react-icons/fa6";
+'use client';
 
+import { FC } from 'react';
+import { FaXTwitter, FaLinkedinIn, FaGithub } from 'react-icons/fa6';
+import CircleButton from './circle-button';
 
 const icons = [
   {
@@ -28,21 +28,12 @@ interface SocialIconsProps {
 const SocialIcons: FC<SocialIconsProps> = ({ name, className, link }) => {
   const Icon = icons.find((icon) => icon.name === name)?.icon;
 
-  //todo: come back to this animation later
   if (!Icon) return null;
-  return (
-    <Link
-    href={link}
-    target="_blank"
-    className={cn(
-        'border border-white/10 text-white bg-white/10 rounded-full size-[35px] flex items-center justify-center transition-colors ease-in-out ',
-        '[&>svg]:fill-current [&>svg]:transition-[fill] [&>svg]:duration-300  hover:border-malachite',
-        className
-      )}
-  >
-    <Icon size={14} />
-  </Link>
   
+  return (
+    <CircleButton href={link} className={className}>
+      <Icon size={14} className='relative z-10' />
+    </CircleButton>
   );
 };
 
