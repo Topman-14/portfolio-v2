@@ -46,6 +46,9 @@ export default async function WorkPage({ params }: PageProps) {
       const processedData = {
         ...data,
         tools: data.tools?.split(',').map((tool: string) => tool.trim()).filter(Boolean) || [],
+        videoUrl: data.videoUrl || null,
+        liveUrl: data.liveUrl || null,
+        githubLink: data.githubLink || null,
       };
 
       if (!isNew) {

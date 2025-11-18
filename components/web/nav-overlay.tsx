@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MAIN_EMAIL, navItems, REPO_URL, socials } from '@/config';
+import { MAIN_EMAIL, navItems, REPO_URL, socials } from '@/lib/constants';
 import Link from 'next/link';
-import { ArrowUpRight, Check, Copy, SquareArrowOutUpRight, Star, X } from 'lucide-react';
+import { Check, Copy, SquareArrowOutUpRight, Star, X } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import RollingText from '../animations/rolling-text';
@@ -130,7 +130,6 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
                     key={social.href}
                     href={social.href}
                     target='_blank'
-                    rel='noopener noreferrer'
                     className='group flex items-center gap-3 text-white hover:text-malachite transition-colors'
                   >
                     <GoDash className='text-white/40 group-hover:text-malachite transition-colors w-6' />

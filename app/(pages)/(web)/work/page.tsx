@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import prismadb from '@/lib/prismadb';
 import { BASE_URL } from '@/lib/constants';
-import { WorksGrid } from '@/components/web/work/works-grid';
 import { WorksHero } from '@/components/web/work/works-hero';
+import { WorksBentoGrid } from '@/components/web/work/works-bento-grid';
+import { AllWorksSection } from '@/components/web/work/all-works-section';
+import { ExperienceSection } from '@/components/web/work/experience-section';
 
 export const metadata: Metadata = {
   title: 'Work | Tope Akinkuade',
@@ -43,20 +44,21 @@ export const metadata: Metadata = {
 };
 
 export default async function WorkPage() {
-  const works = await prismadb.work.findMany({
+  const featuredWorks = await prismadb.work.findMany({
+    where: {
+      featured: true,
+    },
     orderBy: {
       createdAt: 'desc',
     },
   });
 
-  if (!works) {
-    notFound();
-  }
-
   return (
     <main>
       <WorksHero />
-      <WorksGrid works={works} />
+      <WorksBentoGrid works={featuredWorks} />
+      <AllWorksSection />
+      <ExperienceSection />
     </main>
   );
 }

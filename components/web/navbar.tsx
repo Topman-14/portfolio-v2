@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Logo from '../ui/logo';
-import { navItems, socials } from '@/config';
+import { navItems, socials } from '@/lib/constants';
 import NavOverlay from './nav-overlay';
 import { useWindowSize } from '@/hooks/use-window-size';
 import RollingText from '../animations/rolling-text';

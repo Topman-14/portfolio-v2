@@ -5,8 +5,8 @@ import { useEffect, useCallback, useState } from "react"
 import type { Editor } from "@tiptap/react"
 
 // --- Hooks ---
-import { useIsMobile } from "@/hooks/use-mobile"
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
+import { useWindowSize } from "@/hooks/use-window-size"
 
 // --- Icons ---
 import { CornerDownLeftIcon } from "@/components/tiptap/tiptap-icons/corner-down-left-icon"
@@ -111,7 +111,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
   openLink,
   isActive,
 }) => {
-  const isMobile = useIsMobile()
+  const { isMobile } = useWindowSize()
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {

@@ -153,7 +153,7 @@ export const Expertise = () => {
     >
       <div className='max-w-7xl mx-auto'>
         <div className='grid lg:grid-cols-2 gap-12 lg:gap-20'>
-          <div className='lg:sticky lg:top-32 lg:self-start space-y-6'>
+          <div className='lg:sticky lg:top-[300px] lg:self-start space-y-6'>
             <h2
               ref={overviewHeadingRef}
               className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight'
@@ -190,7 +190,7 @@ export const Expertise = () => {
               Specializations
             </h3>
 
-            <div className='space-y-10'>
+            <div className='flex flex-col gap-10 lg:gap-16'>
               {specializations.map((spec) => (
                 <div key={spec.title} className='specialization-item space-y-3'>
                   <h4 className='text-xl md:text-2xl font-display font-bold text-white'>

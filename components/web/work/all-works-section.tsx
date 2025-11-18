@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink, Github } from 'lucide-react';
+import { GButton } from '@/components/ui/gbutton';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,13 +24,32 @@ type Work = {
   category?: string | null;
 };
 
-export const WorksGrid = ({ works }: { works: Work[] }) => {
+export const AllWorksSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const [works, setWorks] = useState<Work[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+
+  const fetchAllWorks = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/works');
+      if (response.ok) {
+        const data = await response.json();
+        setWorks(data);
+        setShowAll(true);
+      }
+    } catch (error) {
+      console.error('Error fetching works:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useGSAP(
     () => {
-      if (!sectionRef.current) return;
+      if (!sectionRef.current || !showAll) return;
 
       document.fonts.ready.then(() => {
         const heading = headingRef.current;
@@ -52,24 +72,44 @@ export const WorksGrid = ({ works }: { works: Work[] }) => {
             }
           );
         }
+
+        const cards = sectionRef.current?.querySelectorAll('.work-card');
+        if (cards) {
+          gsap.fromTo(
+            cards,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              stagger: 0.08,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 70%',
+              },
+            }
+          );
+        }
       });
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [showAll, works] }
   );
 
-  if (works.length === 0) {
+  if (!showAll) {
     return (
-      <section ref={sectionRef} className='relative bg3 min-h-screen py-32 px-4 md:px-8 lg:px-16'>
+      <section ref={sectionRef} className='relative bg3 py-32 px-4 md:px-8 lg:px-16'>
         <div className='max-w-7xl mx-auto text-center'>
-          <h2 className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-6'>
-            No projects yet
-          </h2>
-          <p className='text-white/70 text-lg font-sans'>
-            Check back soon for exciting projects!
-          </p>
+          <GButton onClick={fetchAllWorks} disabled={loading} variant='green'>
+            {loading ? 'Loading...' : 'See More Projects'}
+          </GButton>
         </div>
       </section>
     );
+  }
+
+  if (works.length === 0) {
+    return null;
   }
 
   return (
@@ -77,7 +117,7 @@ export const WorksGrid = ({ works }: { works: Work[] }) => {
       <div className='max-w-7xl mx-auto'>
         <h2
           ref={headingRef}
-          className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-16'
+          className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-16 text-center'
         >
           All Projects
         </h2>
@@ -96,7 +136,7 @@ const WorkCard = ({ work }: { work: Work }) => {
   return (
     <Link
       href={`/work/${work.id}`}
-      className='group relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 hover:border-malachite/50 transition-all duration-300 h-[400px] flex flex-col'
+      className='work-card group relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 hover:border-malachite/50 transition-all duration-300 h-[400px] flex flex-col'
     >
       <div className='relative h-[240px] overflow-hidden'>
         {work.image ? (

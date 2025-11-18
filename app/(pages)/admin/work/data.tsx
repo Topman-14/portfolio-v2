@@ -38,7 +38,7 @@ export const workColumns: ColumnDef<Work>[] = [
       return (
         <div>
           {category ? (
-            <Badge variant="outline">{category}</Badge>
+            <Badge>{category}</Badge>
           ) : (
             <span className="text-muted-foreground">No category</span>
           )}
@@ -52,8 +52,8 @@ export const workColumns: ColumnDef<Work>[] = [
     cell: ({ row }) => {
       const featured = row.getValue("featured") as boolean
       return (
-        <Badge variant={featured ? "default" : "secondary"}>
-          {featured ? "Featured" : "Regular"}
+        <Badge variant={featured ? "malachite" : "amber"}>
+          {featured ? "True" : "False"}
         </Badge>
       )
     },
@@ -66,12 +66,12 @@ export const workColumns: ColumnDef<Work>[] = [
       return (
         <div className="flex gap-1 flex-wrap">
           {tools.slice(0, 3).map((tool) => (
-            <Badge key={tool} variant="outline" className="text-xs">
+            <Badge key={tool} className="text-xs">
               {tool}
             </Badge>
           ))}
           {tools.length > 3 && (
-            <Badge variant="outline" className="text-xs">
+            <Badge className="text-xs">
               +{tools.length - 3}
             </Badge>
           )}
@@ -160,6 +160,7 @@ export const workFields: FieldConfig[] = [
     type: 'url',
     placeholder: 'https://youtube.com/watch?v=...',
     colSpan: 1,
+    required: false,
   },
   {
     name: 'description',

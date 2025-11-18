@@ -1,35 +1,12 @@
-'use client';
-
 import Link from 'next/link';
-import { useState } from 'react';
-import { ChevronUp, Send } from 'lucide-react';
+import { Star } from 'lucide-react';
 import RollingText from '../animations/rolling-text';
 import SocialIcons from '../ui/social-icon';
-import { navItems, socials } from '@/config';
-import CircleButton from '../ui/circle-button';
-import { useScrollPosition } from '@/hooks/use-scroll-position';
-import { cn } from '@/lib/utils';
-import GInput from '../ui/ginput';
-import { GButton } from '../ui/gbutton';
+import { navItems, REPO_URL, socials } from '@/lib/constants';
+import NewsletterForm from '@/components/web/footer/newsletter-form';
+import ScrollToTopButton from '@/components/web/footer/scroll-to-top-button';
 
 export default function Footer() {
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { isScrollingUp, isAtBottom } = useScrollPosition();
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setEmail('');
-    setIsSubmitting(false);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const showScrollButton = isScrollingUp || isAtBottom;
 
   return (
     <footer className='relative bg-coal border-t border-white/10'>
@@ -55,7 +32,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className='lg:col-span-3 space-y-4'>
+          <div className='lg:col-span-2 space-y-4'>
             <h4 className='text-lg font-display font-bold text-white mb-4'>
               Quick Links
             </h4>
@@ -66,7 +43,7 @@ export default function Footer() {
                   href={item.href}
                   className='relative overflow-hidden w-fit'
                 >
-                  <RollingText className='text-white/70 hover:text-white transition-colors'>
+                  <RollingText className='text-white/70 hover:text-white text-sm transition-colors'>
                     {item.name}
                   </RollingText>
                 </Link>
@@ -74,66 +51,38 @@ export default function Footer() {
             </nav>
           </div>
 
-          <div className='lg:col-span-4 space-y-4'>
+          <div className='lg:col-span-5 space-y-4'>
             <h4 className='text-lg font-display font-bold text-white mb-4'>
               Stay Updated
             </h4>
             <p className='text-white/70 text-sm font-sans'>
               Get notified about new articles, projects, and updates.
             </p>
-            <form onSubmit={handleNewsletterSubmit} className='space-y-3'>
-              <GInput
-                type='email'
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                placeholder='Enter your email'
-                required
-              />
-              <GButton
-                type='submit'
-                variant='green'
-                disabled={isSubmitting}
-                className='w-full'
-              >
-                {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-                <Send className='w-4 h-4' />
-              </GButton>
-            </form>
+            <NewsletterForm />
           </div>
         </div>
 
         <div className='mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4'>
           <p className='text-white/50 text-sm font-sans'>
-            © {new Date().getFullYear()} Tope Akinkuade. All rights reserved.
+            By Tope Akinkuade | {new Date().getFullYear()}
           </p>
           <div className='flex gap-6 text-sm font-sans'>
             <Link
-              href='/privacy'
-              className='text-white/50 hover:text-white transition-colors'
+              href={REPO_URL}
+              target='_blank'
+              className='group flex items-center gap-2 text-white/50 hover:text-malachite transition-colors text-sm md:text-base font-sans'
             >
-              Privacy
-            </Link>
-            <Link
-              href='/terms'
-              className='text-white/50 hover:text-white transition-colors'
-            >
-              Terms
+              <Star
+                size={16}
+                className='group-hover:fill-malachite transition-colors'
+              />
+              <span>Star this repo on GitHub!</span>
             </Link>
           </div>
         </div>
       </div>
 
-      <CircleButton
-        onClick={scrollToTop}
-        className={cn(
-          'fixed bottom-8 right-8 z-50 transition-opacity duration-300',
-          showScrollButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        )}
-        size={48}
-        aria-label='Back to top'
-      >
-        <ChevronUp className='hover:text-malachite transition-colors' style={{ fill: 'transparent' }} />
-      </CircleButton>
+      <ScrollToTopButton />
     </footer>
   );
 }

@@ -29,9 +29,9 @@ export const About = () => {
         const p2 = paragraph2Ref.current;
 
         if (heading) {
-          const headingSplit = new SplitType(heading, { types: 'words' });
+          const headingSplit = new SplitType(heading, { types: 'chars' });
           gsap.fromTo(
-            headingSplit.words,
+            headingSplit.chars,
             { opacity: 0, y: 30 },
             {
               opacity: 1,
@@ -61,8 +61,8 @@ export const About = () => {
               delay: 3.5,
               scrollTrigger: {
                 trigger: p,
-                start: 'top 75%',
-                end: 'bottom 50%',
+                start: 'top 60%',
+                end: 'bottom 20%',
                 scrub: 0.5,
               },
             });
@@ -78,8 +78,7 @@ export const About = () => {
       ref={sectionRef}
       className='relative lg:h-screen min-h-screen py-32 px-4 md:px-8 lg:px-16 bg1x'
     >
-      <div className='max-w-7xl mx-auto h-full'>
-        <div className='flex gap-4 h-full'>
+      <div className='max-w-7xl mx-auto h-full flex gap-4 md:gap-6 lg:gap-10 flex-col lg:flex-row'>
           <div className='mb-auto space-y-8 flex-1'>
             <h2
               ref={headingRef}
@@ -90,9 +89,9 @@ export const About = () => {
 
             <p
               ref={paragraph1Ref}
-              className='text-white text-xl md:text-2xl leading-relaxed font-sans'
+              className='text-white text-xl leading-relaxed font-sans'
             >
-              I&apos;m a software engineer who&apos;s spent the last few years
+              I&apos;m a software engineer based in Lagos, who&apos;s spent the last few years
               building products across logistics, fintech, and business
               infrastructure. I&apos;ve worked with teams of all sizes to create
               tools that power real operations from supply chain platforms used
@@ -103,12 +102,13 @@ export const About = () => {
 
             <p
               ref={paragraph2Ref}
-              className='text-white text-xl md:text-2xl leading-relaxed font-sans'
+              className='text-white text-xl leading-relaxed font-sans'
             >
               Alongside engineering, I&apos;m big on design thinking, not in the
               corporate sense, but in the way a product feels when it&apos;s
               used. My work sits at the intersection of function and pragmatism.
             </p>
+            {/* todo: fix this text */}
 
             <GButton href='/about' className='mt-8 group'>
               <span>Read Full Story</span>
@@ -118,7 +118,7 @@ export const About = () => {
 
           <div
             ref={imageContainerRef}
-            className='relative mt-auto flex-1 grid grid-cols-2 gap-4 max-w-[500px]'
+            className='relative mt-auto flex-1 grid grid-cols-3 gap-4 lg:max-w-[500px]'
           >
             {[
               {
@@ -126,7 +126,15 @@ export const About = () => {
                 alt: 'Tope Akinkuade',
                 speed: -20,
                 colSpan: 'col-span-2',
-                height: 'h-[280px] lg:h-[320px]',
+                height: 'h-[200px] lg:h-[200px]',
+                priority: true,
+              },
+              {
+                src: '/img/jpg/me.jpg',
+                alt: 'Tope Akinkuade',
+                speed: -20,
+                colSpan: 'col-span-1',
+                height: 'h-[200px] lg:h-[200px]',
                 priority: true,
               },
               {
@@ -134,15 +142,15 @@ export const About = () => {
                 alt: 'Tope Akinkuade',
                 speed: -15,
                 colSpan: 'col-span-1',
-                height: 'h-[200px] lg:h-[240px]',
+                height: 'h-[200px] lg:h-[200px]',
                 priority: false,
               },
               {
                 src: '/img/jpg/me.jpg',
                 alt: 'Tope Akinkuade',
                 speed: -25,
-                colSpan: 'col-span-1',
-                height: 'h-[200px] lg:h-[240px]',
+                colSpan: 'col-span-2',
+                height: 'h-[200px] lg:h-[200px]',
                 priority: false,
               },
             ].map((image, index) => (
@@ -163,7 +171,6 @@ export const About = () => {
             ))}
           </div>
         </div>
-      </div>
     </section>
   );
 };
