@@ -26,6 +26,9 @@ export interface WindowSizeState {
    * This is useful for scaling elements based on the current zoom level.
    */
   scale: number
+  isMobile: boolean
+  isTablet: boolean
+  isDesktop: boolean
 }
 
 /**
@@ -45,6 +48,9 @@ export function useWindowSize(): WindowSizeState {
     offsetTop: 0,
     offsetLeft: 0,
     scale: 0,
+    isMobile: false,
+    isTablet: false,
+    isDesktop: false,
   })
 
   const handleViewportChange = useThrottledCallback(() => {
@@ -61,18 +67,25 @@ export function useWindowSize(): WindowSizeState {
       scale = 0,
     } = vp
 
+    const isMobile = width < 768
+    const isTablet = width >= 768 && width < 1024
+    const isDesktop = width >= 1024
+
     setWindowSize((prevState) => {
       if (
         width === prevState.width &&
         height === prevState.height &&
         offsetTop === prevState.offsetTop &&
         offsetLeft === prevState.offsetLeft &&
-        scale === prevState.scale
+        scale === prevState.scale &&
+        isMobile === prevState.isMobile &&
+        isTablet === prevState.isTablet &&
+        isDesktop === prevState.isDesktop
       ) {
         return prevState
       }
 
-      return { width, height, offsetTop, offsetLeft, scale }
+      return { width, height, offsetTop, offsetLeft, scale, isMobile, isTablet, isDesktop }
     })
   }, 200)
 

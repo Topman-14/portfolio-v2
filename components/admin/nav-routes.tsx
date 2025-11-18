@@ -30,7 +30,7 @@ export default function NavRoutes({
               Menu
             </SheetTitle>
           </SheetHeader>
-          <div className='flex flex-col gap-5 text-right mt-8'>
+          <div className='flex flex-col gap-5 text-right mt-8 px-4'>
               {AdminNavRoutes.map((route) => (
                 <Fragment key={route.href}>
                     <Link 

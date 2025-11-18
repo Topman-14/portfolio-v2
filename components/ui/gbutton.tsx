@@ -89,7 +89,7 @@ export const GButton = ({
   );
 
   const baseClasses =
-    'relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full backdrop-blur-md font-sans font-medium transition-all duration-300 overflow-hidden';
+    'relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full backdrop-blur-md font-sans font-medium transition-all duration-300 overflow-hidden cursor-pointer';
   
   const variantClasses = {
     primary: 'bg-white/10 text-white',

@@ -1,20 +1,34 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Logo from '../ui/logo';
-import { navItems, socials } from '@/config';
+import { MAIN_EMAIL, navItems, REPO_URL, socials } from '@/lib/constants';
 import Link from 'next/link';
-import { X } from 'lucide-react';
+import { Check, Copy, SquareArrowOutUpRight, Star, X } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import RollingText from '../animations/rolling-text';
+import SocialIcons from '../ui/social-icon';
+import { GoDash } from 'react-icons/go';
+import { usePathname } from 'next/navigation';
+
 interface NavOverlayProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
+  const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(isOpen);
+  const [mailCopied, setMailCopied] = useState(false);
+
+  useEffect(() => {
+    if (mailCopied) {
+      setTimeout(() => {
+        setMailCopied(false);
+      }, 2000);
+    }
+  }, [mailCopied]);
 
   useEffect(() => {
     if (isOpen) setVisible(true);
@@ -48,49 +62,108 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
       ref={overlayRef}
       className='fixed inset-0 z-[9999] bg-[#00000061] flex items-center justify-center backdrop-blur-lg'
     >
-      <div className='relative z-10 w-full max-w-6xl px-6'>
-        <div className='flex justify-end mb-12'>
-          <button
-            onClick={onClose}
-            className='p-2 hover:bg-gray-100 rounded-full transition-colors'
-            aria-label='Close menu'
-          >
-            <X size={32} />
-          </button>
-        </div>
+      <div className='relative z-10 w-full h-full px-6 md:px-12 flex flex-col items-center justify-center'>
+        <button
+          onClick={onClose}
+          className='p-2 bg-[#00000017] hover:bg-[#00000030] rounded-full transition-colors absolute top-6 right-6 cursor-pointer'
+          aria-label='Close menu'
+        >
+          <X size={32} className='text-malachite' />
+        </button>
 
-        <nav className='flex flex-col gap-8'>
-          <div className='mb-8'>
-            <Logo link color='black' />
+        <nav className='flex md:flex-row flex-col gap-12 lg:gap-16 mt-16 md:mt-24 md:justify-between w-full max-w-7xl'>
+          <div className='flex flex-col gap-4 md:gap-6 lg:gap-10'>
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className='text-5xl md:text-6xl lg:text-8xl  font-semibold hover:text-malachite/70 transition-colors w-fit flex items-center gap-2 font-display group'
+                >
+                  <GoDash
+                    className={`${
+                      isActive ? 'text-malachite' : 'text-white/60 group-hover:text-white'
+                    } mb-2 w-[50px] transition-colors`}
+                  />
+                  <RollingText className='text-white'>{item.name}</RollingText>
+                </Link>
+              );
+            })}
           </div>
 
-          <div className='flex flex-col gap-4'>
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className='text-4xl md:text-5xl font-semibold hover:text-gray-500 transition-colors'
-              >
-                {item.name}
-              </Link>
-            ))}
+          <div className='hidden md:flex gap-8 flex-col'>
+            <div className='flex flex-col gap-2'>
+              <span className='text-white/50 text-xs font-sans uppercase tracking-wider'>
+                Email
+              </span>
+              <div className='flex gap-3 items-center text-white text-lg font-sans'>
+                <span className='text-white/90'>{MAIN_EMAIL}</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(MAIN_EMAIL);
+                    setMailCopied(true);
+                  }}
+                  className='hover:text-malachite transition-colors p-1.5 hover:bg-white/5 rounded cursor-pointer'
+                  aria-label='Copy email'
+                >
+                  {mailCopied ? <Check size={18} /> : <Copy size={18} />}
+                </button>
+                <Link
+                  href={`mailto:${MAIN_EMAIL}`}
+                  className='hover:text-malachite transition-colors p-1.5 hover:bg-white/5 rounded'
+                  aria-label='Send email'
+                >
+                  <SquareArrowOutUpRight size={16} />
+                </Link>
+              </div>
+            </div>
+            
+            <div className='space-y-4'>
+              <h2 className='text-white/50 text-xs font-sans uppercase tracking-wider'>
+                Follow Mee
+              </h2>
+              <div className='flex flex-col gap-6'>
+                {socials.filter((social) => social.name !== 'Email').map((social) => (
+                  <Link
+                    key={social.href}
+                    href={social.href}
+                    target='_blank'
+                    className='group flex items-center gap-3 text-white hover:text-malachite transition-colors'
+                  >
+                    <GoDash className='text-white/40 group-hover:text-malachite transition-colors w-6' />
+                    <RollingText className='text-lg lg:text-xl font-sans'>
+                      {social.name}
+                    </RollingText>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className='flex gap-6 mt-8'>
+          <div className='flex md:hidden gap-3 mt-8 items-center justify-center'>
             {socials.map((social) => (
-              <Link
+              <SocialIcons
                 key={social.href}
-                href={social.href}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-lg hover:text-gray-500 transition-colors'
-              >
-                {social.name}
-              </Link>
+                link={social.href}
+                name={social.name}
+              />
             ))}
           </div>
         </nav>
+
+        <div className='flex flex-col md:items-end items-center gap-2 md:ml-auto md:mr-5 md:-mt-10 mt-8'>
+          <Link
+            href={REPO_URL}
+            target='_blank'
+            className='group flex items-center gap-2 text-white hover:text-malachite transition-colors text-sm md:text-base font-sans'
+          >
+            <Star size={16} className='group-hover:fill-malachite transition-colors' />
+            <span>Star this repo on GitHub!</span>
+          </Link>
+        </div>
+
       </div>
     </div>
   );

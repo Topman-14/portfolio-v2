@@ -33,6 +33,7 @@ export function generateSchema(fields: FieldConfig[]): z.ZodObject<Record<string
 
   fields.forEach((field) => {
     let fieldSchema: z.ZodTypeAny;
+    let isOptional = false;
 
     switch (field.type) {
       case "text":
@@ -46,7 +47,13 @@ export function generateSchema(fields: FieldConfig[]): z.ZodObject<Record<string
           fieldSchema = (fieldSchema as z.ZodString).email("Invalid email address");
         }
         if (field.type === "url") {
-          fieldSchema = (fieldSchema as z.ZodString).url("Invalid URL");
+          const urlSchema = (fieldSchema as z.ZodString).url("Invalid URL");
+          if (!field.required) {
+            fieldSchema = z.union([urlSchema, z.literal(""), z.null()]).optional();
+            isOptional = true;
+          } else {
+            fieldSchema = urlSchema;
+          }
         }
         break;
       case "number":
@@ -78,7 +85,7 @@ export function generateSchema(fields: FieldConfig[]): z.ZodObject<Record<string
         fieldSchema = z.string();
     }
 
-    if (!field.required) {
+    if (!field.required && !isOptional) {
       fieldSchema = fieldSchema.optional();
     }
 

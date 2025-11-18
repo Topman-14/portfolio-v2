@@ -14,7 +14,9 @@ export default function RootLayout({
       <body
         className={`${bricolageGrotesque.variable} ${kronaOne.variable} ${syne.variable} antialiased h-full`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
@@ -77,4 +79,19 @@ export const metadata: Metadata = {
     },
   },
   category: 'Portfolio',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/img/png/icon.png',
+    apple: '/img/png/icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Tope Portfolio',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'msapplication-TileColor': '#14cc5e',
+    'theme-color': '#14cc5e',
+  },
 };
