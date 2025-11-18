@@ -1,109 +1,55 @@
 'use client';
 
-import { useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import Lenis from 'lenis';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface UseSmoothScrollOptions {
-  friction?: number;
-  minVelocity?: number;
-  multiplier?: number;
+  lerp?: number;
+  smoothWheel?: boolean;
+  syncTouch?: boolean;
+  duration?: number;
+  touchInertiaExponent?: number;
   enabled?: boolean;
 }
 
 export function useSmoothScroll(options: UseSmoothScrollOptions = {}) {
   const {
-    friction = 0.92,
-    minVelocity = 0.5,
-    multiplier = 0.3,
+    lerp = 0.04,
+    smoothWheel = true,
+    syncTouch = false,
+    duration,
+    touchInertiaExponent = 50,
     enabled = true,
   } = options;
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!enabled) return;
 
-    let velocity = 0;
-    let rafId: number | null = null;
-    let frameCount = 0;
-    let wheelEventCount = 0;
-    const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+    const lenis = new Lenis({
+      lerp,
+      smoothWheel,
+      syncTouch,
+      touchInertiaExponent,
+      ...(duration && { duration }),
+    });
 
-    console.log('[useSmoothScroll] Initializing smooth scroll');
+    lenis.on('scroll', ScrollTrigger.update);
 
-    document.documentElement.style.scrollBehavior = 'auto';
-    document.body.style.scrollBehavior = 'auto';
-
-    const animate = () => {
-      frameCount++;
-      const currentScroll = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-
-      if (Math.abs(velocity) > minVelocity) {
-        const newScroll = Math.max(0, Math.min(currentScroll + velocity, maxScroll));
-
-        if (frameCount % 60 === 0) {
-          console.log('[useSmoothScroll] Animating:', {
-            frame: frameCount,
-            velocity: velocity.toFixed(2),
-            currentScroll: currentScroll.toFixed(2),
-            newScroll: newScroll.toFixed(2),
-            rafId,
-            maxScroll,
-          });
-        }
-
-        window.scrollTo({
-          top: newScroll,
-          behavior: 'auto',
-        });
-        
-        velocity *= friction;
-        rafId = requestAnimationFrame(animate);
-      } else {
-        if (velocity !== 0) {
-          console.log('[useSmoothScroll] Animation stopped:', {
-            finalVelocity: velocity.toFixed(2),
-            frames: frameCount,
-            currentScroll: window.scrollY.toFixed(2),
-          });
-        }
-        velocity = 0;
-        rafId = null;
-        frameCount = 0;
-      }
+    const raf = (time: number) => {
+      lenis.raf(time * 1000);
     };
 
-    const handleWheel = (e: WheelEvent) => {
-      wheelEventCount++;
-      const beforeVelocity = velocity;
-      const beforeRafId = rafId;
-
-      e.preventDefault();
-      velocity += e.deltaY * multiplier;
-      velocity = Math.max(-50, Math.min(50, velocity));
-
-      console.log('[useSmoothScroll] Wheel event:', {
-        event: wheelEventCount,
-        deltaY: e.deltaY,
-        beforeVelocity: beforeVelocity.toFixed(2),
-        afterVelocity: velocity.toFixed(2),
-        beforeRafId,
-        rafIdAfter: rafId,
-      });
-
-      rafId ??= requestAnimationFrame(animate);
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    console.log('[useSmoothScroll] Wheel listener added');
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      console.log('[useSmoothScroll] Cleaning up:', { rafId, finalVelocity: velocity });
-      window.removeEventListener('wheel', handleWheel);
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
-      document.documentElement.style.scrollBehavior = originalScrollBehavior || '';
-      document.body.style.scrollBehavior = '';
+      gsap.ticker.remove(raf);
+      lenis.destroy();
     };
-  }, [enabled, friction, minVelocity, multiplier]);
+  }, { dependencies: [enabled, lerp, smoothWheel, syncTouch, duration, touchInertiaExponent] });
 }
 
