@@ -100,8 +100,6 @@ npx prisma generate
 # Run database migrations
 npx prisma migrate dev
 
-# (Optional) Open Prisma Studio to view your database
-npx prisma studio
 ```
 
 ### 5. Create Admin User
@@ -242,10 +240,10 @@ Upcoming features and improvements planned for the project:
 - [ ] **Spotify Current Track**: Integrate Spotify API to display currently playing track
 
 ### UI/UX Improvements
-- [ ] **Update Hero Text**: Refine and improve the hero section text for better clarity and impact 😅
+- [ ] **Update Hero Text**: It sounds weird in my head now 🥲
 
 ### Attribution & Credits
-- [ ] **3D Assets Attribution**: Add proper attribution and credits for 3D assets used in the project
+- [ ] **3D Assets Attribution**: Add proper attribution and credits for 3D assets used
 
 ## 🤝 Contributing
 
