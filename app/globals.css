@@ -336,15 +336,11 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: initial;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: smooth;
-  }
-  
-  * {
-    scroll-behavior: inherit;
+    scroll-behavior: auto;
   }
 }

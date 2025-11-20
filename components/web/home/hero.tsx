@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import SplinePlayer from '@/components/custom/spline';
 import SplitType from 'split-type';
+import { getFontsReady } from '@/lib/fonts-ready';
 
 export const Hero = () => {
   const introRef = useRef<HTMLParagraphElement>(null);
@@ -18,20 +19,20 @@ export const Hero = () => {
 
     if (!intro || !bigText || !description) return;
 
-    document.fonts.ready.then(() => {
-      const tl = gsap.timeline({
+    const splits: SplitType[] = [];
+    let timeline: gsap.core.Timeline | null = null;
+
+    getFontsReady().then(() => {
+      timeline = gsap.timeline({
         delay: 1.5,
-        // repeat: -1,
-        // repeatDelay: 0.5
       });
 
       const introSplit = new SplitType(intro, { types: 'lines' });
-
       const bigTextSplit = new SplitType(bigText, { types: 'words,chars' });
-
       const descriptionSplit = new SplitType(description, { types: 'words' });
+      splits.push(introSplit, bigTextSplit, descriptionSplit);
 
-      tl.fromTo(
+      timeline.fromTo(
         bigTextSplit.chars,
         { opacity: 0, yPercent: 50 },
         {
@@ -68,6 +69,11 @@ export const Hero = () => {
           }
         );
     });
+
+    return () => {
+      if (timeline) timeline.kill();
+      splits.forEach(split => split.revert());
+    };
   });
 
   return (

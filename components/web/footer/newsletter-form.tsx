@@ -5,10 +5,31 @@ import { Send } from 'lucide-react';
 import GInput from '@/components/ui/ginput';
 import { GButton } from '@/components/ui/gbutton';
 import { toast } from 'sonner';
+import { useMutate } from '@/hooks/use-mutate';
+
+type NewsletterResponse = {
+  message: string;
+};
+
+
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { mutate: subscribe, isPending: isSubmitting } = useMutate<
+    NewsletterResponse
+  >('/newsletter', {
+    onSuccess: (data) => {
+      const message = data?.message || 'You are subscribed!';
+      toast.success(message);
+      setEmail('');
+    },
+    onError: (error) => {
+      toast.error(
+        error?.message || 'Unable to subscribe right now. Please try again later.'
+      );
+    },
+  });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -18,34 +39,7 @@ export default function NewsletterForm() {
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, source: 'footer' }),
-      });
-
-      const data = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        const message =
-          data?.message || 'Something went wrong. Please try again.';
-        toast.error(message);
-        return;
-      }
-
-      const message = data?.message || 'You are subscribed!';
-      toast.success(message);
-      setEmail('');
-    } catch (error) {
-      toast.error((error as Error)?.message || 'Unable to subscribe right now. Please try again later.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    subscribe({ email, source: 'footer' });
   };
 
   return (

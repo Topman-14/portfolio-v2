@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import prismadb from '@/lib/prismadb';
 import { BASE_URL } from '@/lib/constants';
 import { WorksHero } from '@/components/web/work/works-hero';
-import { WorksBentoGrid } from '@/components/web/work/works-bento-grid';
-import { AllWorksSection } from '@/components/web/work/all-works-section';
+import { WorksBentoGrid } from '@/components/web/work/featured-works';
 import { ExperienceSection } from '@/components/web/work/experience-section';
 
 export const metadata: Metadata = {
@@ -57,7 +56,6 @@ export default async function WorkPage() {
     <main>
       <WorksHero />
       <WorksBentoGrid works={featuredWorks} />
-      <AllWorksSection />
       <ExperienceSection />
     </main>
   );

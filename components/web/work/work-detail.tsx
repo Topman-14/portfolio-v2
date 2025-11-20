@@ -1,8 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 import SplitType from 'split-type';
 import Image from 'next/image';
@@ -11,8 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { GButton } from '@/components/ui/gbutton';
 import { ArrowLeft, ExternalLink, Github } from 'lucide-react';
 import SplinePlayer from '@/components/custom/spline';
-
-gsap.registerPlugin(ScrollTrigger);
+import { getFontsReady } from '@/lib/fonts-ready';
 
 type Work = {
   id: string;
@@ -37,13 +35,17 @@ export const WorkDetail = ({ work }: { work: Work }) => {
     () => {
       if (!sectionRef.current) return;
 
-      document.fonts.ready.then(() => {
+      const splits: SplitType[] = [];
+      const scrollTriggers: ScrollTrigger[] = [];
+
+      getFontsReady().then(() => {
         const heading = headingRef.current;
         const description = descriptionRef.current;
 
         if (heading) {
           const split = new SplitType(heading, { types: 'words' });
-          gsap.fromTo(
+          splits.push(split);
+          const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
             {
@@ -57,12 +59,14 @@ export const WorkDetail = ({ work }: { work: Work }) => {
                 start: 'top 80%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (st) scrollTriggers.push(st);
         }
 
         if (description) {
           const split = new SplitType(description, { types: 'words' });
-          gsap.fromTo(
+          splits.push(split);
+          const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 20 },
             {
@@ -76,9 +80,15 @@ export const WorkDetail = ({ work }: { work: Work }) => {
                 start: 'top 85%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (st) scrollTriggers.push(st);
         }
       });
+
+      return () => {
+        scrollTriggers.forEach(st => st?.kill());
+        splits.forEach(split => split.revert());
+      };
     },
     { scope: sectionRef }
   );

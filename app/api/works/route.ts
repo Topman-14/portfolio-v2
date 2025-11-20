@@ -7,7 +7,12 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured');
     const limit = searchParams.get('limit');
 
-    const where = featured === 'true' ? { featured: true } : {};
+    const where =
+      featured === 'true'
+        ? { featured: true }
+        : featured === 'false'
+          ? { featured: false }
+          : {};
     const take = limit ? parseInt(limit) : undefined;
 
     const works = await prismadb.work.findMany({

@@ -1,11 +1,8 @@
 'use client';
 
 import { useRef, ReactNode, useEffect, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface ParallaxProps {
   children: ReactNode;

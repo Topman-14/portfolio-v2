@@ -1,8 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 import SplitType from 'split-type';
 import Image from 'next/image';
@@ -11,8 +10,7 @@ import { GButton } from '@/components/ui/gbutton';
 import { ArrowRight } from 'lucide-react';
 import SplinePlayer from '@/components/custom/spline';
 import Parallax from '@/components/animations/parallax';
-
-gsap.registerPlugin(ScrollTrigger);
+import { getFontsReady } from '@/lib/fonts-ready';
 
 const skills = [
   'React',
@@ -56,13 +54,17 @@ export const AboutContent = () => {
     () => {
       if (!sectionRef.current) return;
 
-      document.fonts.ready.then(() => {
+      const splits: SplitType[] = [];
+      const scrollTriggers: ScrollTrigger[] = [];
+
+      getFontsReady().then(() => {
         const heading = headingRef.current;
         const intro = introRef.current;
 
         if (heading) {
           const split = new SplitType(heading, { types: 'words' });
-          gsap.fromTo(
+          splits.push(split);
+          const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
             {
@@ -76,12 +78,14 @@ export const AboutContent = () => {
                 start: 'top 85%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (st) scrollTriggers.push(st);
         }
 
         if (intro) {
           const split = new SplitType(intro, { types: 'words' });
-          gsap.fromTo(
+          splits.push(split);
+          const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 20 },
             {
@@ -95,9 +99,15 @@ export const AboutContent = () => {
                 start: 'top 85%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (st) scrollTriggers.push(st);
         }
       });
+
+      return () => {
+        scrollTriggers.forEach(st => st?.kill());
+        splits.forEach(split => split.revert());
+      };
     },
     { scope: sectionRef }
   );

@@ -1,16 +1,14 @@
 'use client';
 
 import { useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 import SplitType from 'split-type';
 import { ArrowRight } from 'lucide-react';
 import { GButton } from '@/components/ui/gbutton';
 import Image from 'next/image';
 import Parallax from '@/components/animations/parallax';
-
-gsap.registerPlugin(ScrollTrigger);
+import { getFontsReady } from '@/lib/fonts-ready';
 
 export const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -23,14 +21,18 @@ export const About = () => {
     () => {
       if (!sectionRef.current) return;
 
-      document.fonts.ready.then(() => {
+      const splits: SplitType[] = [];
+      const scrollTriggers: ScrollTrigger[] = [];
+
+      getFontsReady().then(() => {
         const heading = headingRef.current;
         const p1 = paragraph1Ref.current;
         const p2 = paragraph2Ref.current;
 
         if (heading) {
           const headingSplit = new SplitType(heading, { types: 'chars' });
-          gsap.fromTo(
+          splits.push(headingSplit);
+          const headingST = gsap.fromTo(
             headingSplit.chars,
             { opacity: 0, y: 30 },
             {
@@ -45,16 +47,18 @@ export const About = () => {
                 end: 'top 50%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (headingST) scrollTriggers.push(headingST);
         }
 
         for (const p of [p1, p2]) {
           if (p) {
             const split = new SplitType(p, { types: 'words' });
+            splits.push(split);
             
             gsap.set(split.words, { opacity: 0.3 });
 
-            gsap.to(split.words, {
+            const pST = gsap.to(split.words, {
               opacity: 1,
               stagger: 0.008,
               ease: 'none',
@@ -65,10 +69,16 @@ export const About = () => {
                 end: 'bottom 20%',
                 scrub: 0.5,
               },
-            });
+            }).scrollTrigger;
+            if (pST) scrollTriggers.push(pST);
           }
         }
       });
+
+      return () => {
+        scrollTriggers.forEach(st => st?.kill());
+        splits.forEach(split => split.revert());
+      };
     },
     { scope: sectionRef }
   );

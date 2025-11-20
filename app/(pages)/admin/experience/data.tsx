@@ -59,7 +59,7 @@ export const experienceColumns: ColumnDef<Experience>[] = [
     cell: ({ row }) => {
       const isCurrent = row.getValue("isCurrentRole") as boolean
       return (
-        <Badge variant={isCurrent ? "default" : "secondary"}>
+        <Badge variant={isCurrent ? "malachite" : "amber"}>
           {isCurrent ? "Current" : "Past"}
         </Badge>
       )

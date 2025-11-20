@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react';
 // import SplitText from 'gsap-trial/SplitText';
 import SplitType from 'split-type';
 import { cn } from '@/lib/utils';
+import { getFontsReady } from '@/lib/fonts-ready';
 
 interface RollingTextProps {
   children: string;
@@ -26,7 +27,7 @@ export default function RollingText({ children, className }: RollingTextProps) {
       const el = containerRef.current;
       if (!el) return;
 
-      document.fonts.ready.then(() => {
+      getFontsReady().then(() => {
         const original = el.querySelector(
           '.rolling-text-original'
         ) as HTMLElement;
