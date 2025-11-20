@@ -1,13 +1,11 @@
 'use client';
 
 import { useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 import SplitType from 'split-type';
 import { Badge } from '@/components/ui/badge';
-
-gsap.registerPlugin(ScrollTrigger);
+import { getFontsReady } from '@/lib/fonts-ready';
 
 const specializations = [
   {
@@ -57,14 +55,18 @@ export const Expertise = () => {
     () => {
       if (!sectionRef.current) return;
 
-      document.fonts.ready.then(() => {
+      const splits: SplitType[] = [];
+      const scrollTriggers: ScrollTrigger[] = [];
+
+      getFontsReady().then(() => {
         const overviewHeading = overviewHeadingRef.current;
         const overviewText = overviewTextRef.current;
         const specializationsHeading = specializationsHeadingRef.current;
 
         if (overviewHeading) {
           const split = new SplitType(overviewHeading, { types: 'words' });
-          gsap.fromTo(
+          splits.push(split);
+          const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
             {
@@ -78,14 +80,16 @@ export const Expertise = () => {
                 start: 'top 80%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (st) scrollTriggers.push(st);
         }
 
         if (overviewText) {
           const paragraphs = overviewText.querySelectorAll('p');
           for (const p of paragraphs) {
             const split = new SplitType(p, { types: 'lines' });
-            gsap.fromTo(
+            splits.push(split);
+            const st = gsap.fromTo(
               split.lines,
               { opacity: 0, y: 20 },
               {
@@ -99,13 +103,15 @@ export const Expertise = () => {
                   start: 'top 85%',
                 },
               }
-            );
+            ).scrollTrigger;
+            if (st) scrollTriggers.push(st);
           }
         }
 
         if (specializationsHeading) {
           const split = new SplitType(specializationsHeading, { types: 'words' });
-          gsap.fromTo(
+          splits.push(split);
+          const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
             {
@@ -119,13 +125,14 @@ export const Expertise = () => {
                 start: 'top 80%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (st) scrollTriggers.push(st);
         }
 
         if (sectionRef.current) {
           const specs = sectionRef.current.querySelectorAll('.specialization-item');
           for (const spec of specs) {
-            gsap.fromTo(
+            const st = gsap.fromTo(
               spec,
               { opacity: 0, y: 30 },
               {
@@ -138,10 +145,16 @@ export const Expertise = () => {
                   start: 'top 85%',
                 },
               }
-            );
+            ).scrollTrigger;
+            if (st) scrollTriggers.push(st);
           }
         }
       });
+
+      return () => {
+        scrollTriggers.forEach(st => st?.kill());
+        splits.forEach(split => split.revert());
+      };
     },
     { scope: sectionRef }
   );

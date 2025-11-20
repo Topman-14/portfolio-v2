@@ -54,7 +54,7 @@ export const categoryColumns: ColumnDef<CategoryWithCount>[] = [
     cell: ({ row }) => {
       const count = row.getValue("_count") as { articles: number }
       return (
-        <Badge variant="secondary">
+        <Badge variant="white">
           {count.articles} {count.articles === 1 ? 'article' : 'articles'}
         </Badge>
       )

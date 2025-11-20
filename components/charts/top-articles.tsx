@@ -23,7 +23,7 @@ export function TopArticles({ articles }: TopArticlesProps) {
           <div className="flex-1">
             <h4 className="font-medium text-sm truncate">{article.title}</h4>
             <div className="flex items-center gap-2 mt-1">
-              <Badge variant={article.status === 'PUBLISHED' ? 'default' : 'secondary'}>
+              <Badge  variant={article.status === 'PUBLISHED' ? 'malachite' : 'amber'}>
                 {article.status}
               </Badge>
             </div>

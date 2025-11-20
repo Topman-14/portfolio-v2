@@ -11,7 +11,6 @@ const GRID_ROWS = 10;
 export default function PageLoader() {
   const loaderRef = useRef<HTMLDivElement>(null);
   const { pending } = useLinkStatus();
-  console.log(pending);
   const [initialLoad, setInitialLoad] = useState(true);
 
   const fadeOut = () => {

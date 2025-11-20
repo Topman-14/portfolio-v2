@@ -1,42 +1,62 @@
 'use client';
 
-import { useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useMemo, useRef } from 'react';
+import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 import SplitType from 'split-type';
-import { MarqueeRow } from '@/components/animations/marquee-row';
-import Marquee from "react-fast-marquee";
+import Marquee from 'react-fast-marquee';
 
 import { Work } from '@prisma/client';
-import { ProjectCard } from '../work/project-card';
-
-gsap.registerPlugin(ScrollTrigger);
+import { ProjectCard } from './project-card';
+import { getFontsReady } from '@/lib/fonts-ready';
 
 export const Projects = ({ works }: { works: Work[] }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subheadingRef = useRef<HTMLParagraphElement>(null);
 
-  const row1Works = works.slice(0, Math.ceil(works.length / 3));
-  const row2Works = works.slice(Math.ceil(works.length / 3), Math.ceil((works.length * 2) / 3));
-  const row3Works = works.slice(Math.ceil((works.length * 2) / 3));
+  // const row1Works = works.slice(0, Math.ceil(works.length / 3));
+  // const row2Works = works.slice(
+  //   Math.ceil(works.length / 3),
+  //   Math.ceil((works.length * 2) / 3)
+  // );
+  // const row3Works = works.slice(Math.ceil((works.length * 2) / 3));
 
-  const triplicatedRow1 = [...row1Works, ...row2Works, ...row1Works];
-  const triplicatedRow2 = [...row3Works, ...row2Works, ...row2Works];
-  const triplicatedRow3 = [...row3Works, ...row3Works, ...row1Works];
+  // const triplicatedRow1 = [...row1Works, ...row2Works, ...row1Works];
+  // const triplicatedRow2 = [...row3Works, ...row2Works, ...row2Works];
+  // const triplicatedRow3 = [...row3Works, ...row3Works, ...row1Works];
+
+  // const movingGrid = [
+  //   { dir: 'left', speed: 30, data: triplicatedRow1 },
+  //   { dir: 'right', speed: 25, data: triplicatedRow2 },
+  //   { dir: 'left', speed: 40, data: triplicatedRow3 },
+  // ];
+
+  const movingGrid = useMemo(() => {
+    const cut = Math.ceil(works.length / 3);
+    const [a, b, c] = [works.slice(0, cut), works.slice(cut, cut * 2), works.slice(cut * 2)];
+    return [
+      { dir: 'left',  speed: 30, data: [...a, ...b, ...a] },
+      { dir: 'right', speed: 25, data: [...c, ...b, ...b] },
+      { dir: 'left',  speed: 40, data: [...c, ...c, ...a] },
+    ];
+  }, [works]);
 
   useGSAP(
     () => {
       if (!sectionRef.current) return;
 
-      document.fonts.ready.then(() => {
+      const splits: SplitType[] = [];
+      const scrollTriggers: ScrollTrigger[] = [];
+
+      getFontsReady().then(() => {
         const heading = headingRef.current;
         const subheading = subheadingRef.current;
 
         if (heading) {
           const split = new SplitType(heading, { types: 'chars' });
-          gsap.fromTo(
+          splits.push(split);
+          const st = gsap.fromTo(
             split.chars,
             { opacity: 0, y: 30 },
             {
@@ -50,12 +70,14 @@ export const Projects = ({ works }: { works: Work[] }) => {
                 start: 'top 80%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (st) scrollTriggers.push(st);
         }
 
         if (subheading) {
           const split = new SplitType(subheading, { types: 'words' });
-          gsap.fromTo(
+          splits.push(split);
+          const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 20 },
             {
@@ -69,9 +91,15 @@ export const Projects = ({ works }: { works: Work[] }) => {
                 start: 'top 85%',
               },
             }
-          );
+          ).scrollTrigger;
+          if (st) scrollTriggers.push(st);
         }
       });
+
+      return () => {
+        scrollTriggers.forEach((st) => st?.kill());
+        splits.forEach((split) => split.revert());
+      };
     },
     { scope: sectionRef }
   );
@@ -103,27 +131,20 @@ export const Projects = ({ works }: { works: Work[] }) => {
       </div>
 
       <div className='space-y-6'>
-        {/* <MarqueeRow works={triplicatedRow1} direction='left' speed={40} />
-        <MarqueeRow works={triplicatedRow2} direction='right' speed={35} />
-        <MarqueeRow works={triplicatedRow3} direction='left' speed={30} /> */}
-
-        <Marquee pauseOnHover direction='left' speed={30} autoFill  >
-          {triplicatedRow1.map((work, i) => (
-            <ProjectCard key={work.id} work={work} isMarquee index={i}  />
-          ))}
-        </Marquee>
-        <Marquee pauseOnHover direction='right' speed={25} autoFill>
-          {triplicatedRow2.map((work, i) => (
-            <ProjectCard key={work.id} work={work} isMarquee index={i}  />
-          ))}
-        </Marquee>
-        <Marquee pauseOnHover direction='left' speed={40} autoFill>
-          {triplicatedRow3.map((work, i) => (
-            <ProjectCard key={work.id} work={work} isMarquee index={i}  />
-          ))}
-        </Marquee>
+        {movingGrid.map(({ dir, speed, data }, idx) => (
+          <Marquee
+            key={idx}
+            pauseOnHover
+            direction={dir as 'left' | 'right'}
+            speed={speed}
+            autoFill
+          >
+            {data.map((work, i) => (
+              <ProjectCard key={work.id} work={work} isMarquee index={i} />
+            ))}
+          </Marquee>
+        ))}
       </div>
     </section>
   );
 };
-

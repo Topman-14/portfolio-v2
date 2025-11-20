@@ -40,7 +40,7 @@ export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
       return (
         <div>
           {category ? (
-            <Badge variant="outline">{category.name}</Badge>
+            <Badge variant="white">{category.name}</Badge>
           ) : (
             <span className="text-muted-foreground">No category</span>
           )}
@@ -59,8 +59,8 @@ export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
             status === "PUBLISHED" 
               ? "default" 
               : status === "DRAFT" 
-                ? "secondary" 
-                : "destructive"
+                ? "amber" 
+                : "bittersweet"
           }
         >
           {status}

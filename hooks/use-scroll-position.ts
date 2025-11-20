@@ -21,35 +21,44 @@ export function useScrollPosition(): UseScrollPositionReturn {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    let rafId: number | null = null;
+    let ticking = false;
+
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      
-      setScrollY(currentScrollY);
-      setIsAtTop(currentScrollY <= 10);
-      setIsAtBottom(currentScrollY >= maxScroll - 10);
-      
-      const scrollingUp = currentScrollY < lastScrollY.current;
-      const scrollingDown = currentScrollY > lastScrollY.current;
-      
-      if (scrollingUp) {
-        setIsScrollingUp(true);
-        setIsScrollingDown(false);
-      } else if (scrollingDown) {
-        setIsScrollingDown(true);
-        setIsScrollingUp(false);
+      if (!ticking) {
+        rafId = requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          
+          setScrollY(currentScrollY);
+          setIsAtTop(currentScrollY <= 10);
+          setIsAtBottom(currentScrollY >= maxScroll - 10);
+          
+          const scrollingUp = currentScrollY < lastScrollY.current;
+          const scrollingDown = currentScrollY > lastScrollY.current;
+          
+          if (scrollingUp) {
+            setIsScrollingUp(true);
+            setIsScrollingDown(false);
+          } else if (scrollingDown) {
+            setIsScrollingDown(true);
+            setIsScrollingUp(false);
+          }
+          
+          if (scrollTimeoutRef.current) {
+            clearTimeout(scrollTimeoutRef.current);
+          }
+          
+          scrollTimeoutRef.current = setTimeout(() => {
+            setIsScrollingUp(false);
+            setIsScrollingDown(false);
+          }, 2000);
+          
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
       }
-      
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrollingUp(false);
-        setIsScrollingDown(false);
-      }, 2000);
-      
-      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -57,6 +66,9 @@ export function useScrollPosition(): UseScrollPositionReturn {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }

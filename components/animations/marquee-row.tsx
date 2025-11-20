@@ -3,7 +3,7 @@ import { Work } from "@prisma/client";
 import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ProjectCard } from "@/components/web/work/project-card";
+import { ProjectCard } from "@/components/web/home/project-card";
 
 export const MarqueeRow = ({
     works,
@@ -118,7 +118,7 @@ export const MarqueeRow = ({
           style={{ willChange: 'transform' }}
         >
           {works.map((work, index) => (
-            <ProjectCard key={`${work.id}-${index}`} work={work} index={index} isPaused={isPaused} />
+            <ProjectCard key={`${work.id}-${index}`} work={work} index={index} />
           ))}
         </div>
       </div>
