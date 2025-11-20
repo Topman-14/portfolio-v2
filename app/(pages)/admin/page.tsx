@@ -86,9 +86,9 @@ export default async function AdminDashboard() {
       value: totalArticles,
       icon: FileText,
       badges: [
-        { label: `${publishedArticles} Published`, variant: 'default' as const },
-        { label: `${draftArticles} Draft`, variant: 'secondary' as const },
-        { label: `${archivedArticles} Archived`, variant: 'outline' as const }
+        { label: `${publishedArticles} Published`, variant: 'malachite' as const },
+        { label: `${draftArticles} Draft`, variant: 'amber' as const },
+        { label: `${archivedArticles} Archived`, variant: 'bittersweet' as const }
       ],
       link: routes.adminBlog
     },

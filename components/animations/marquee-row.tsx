@@ -118,7 +118,7 @@ export const MarqueeRow = ({
           style={{ willChange: 'transform' }}
         >
           {works.map((work, index) => (
-            <ProjectCard key={`${work.id}-${index}`} work={work} index={index} isPaused={isPaused} />
+            <ProjectCard key={`${work.id}-${index}`} work={work} index={index} />
           ))}
         </div>
       </div>

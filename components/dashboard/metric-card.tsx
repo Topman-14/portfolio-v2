@@ -11,7 +11,7 @@ interface MetricCardProps {
   link?: string;
   badges?: Array<{
     label: string;
-    variant: 'default' | 'secondary' | 'outline';
+    variant: 'default' | 'malachite' | 'amber' | 'bittersweet' | 'white';
   }>;
 }
 

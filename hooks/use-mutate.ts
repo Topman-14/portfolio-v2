@@ -3,7 +3,6 @@
 import {
   useMutation as useReactMutation,
   UseMutationOptions as ReactUseMutationOptions,
-  useQueryClient,
 } from '@tanstack/react-query';
 import { apiClient } from '../lib/api-client';
 
@@ -21,11 +20,8 @@ export function useMutate<
   endpoint: string,
   options: UseMutateOptions<TData, TVariables, TError> = {}
 ) {
-  const queryClient = useQueryClient();
   const {
-    invalidateQueries = [],
     method = 'POST',
-    onSuccess,
     ...restOptions
   } = options;
 
@@ -41,12 +37,6 @@ export function useMutate<
         method,
         body: variables as never,
       });
-    },
-    onSuccess: (data, variables, context) => {
-      for (const queryKey of invalidateQueries) {
-        queryClient.invalidateQueries({ queryKey: [queryKey] });
-      }
-      onSuccess?.(data, variables, context as never);
     },
     ...restOptions,
   });
