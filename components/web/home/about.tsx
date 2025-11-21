@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 import SplitType from 'split-type';
@@ -17,6 +17,41 @@ export const About = () => {
   const paragraph1Ref = useRef<HTMLParagraphElement>(null);
   const paragraph2Ref = useRef<HTMLParagraphElement>(null);
 
+  const imageData = useMemo(() => [
+    {
+      src: '/img/jpg/me.jpg',
+      alt: 'Tope Akinkuade',
+      speed: -20,
+      colSpan: 'col-span-2',
+      height: 'h-[200px] lg:h-[200px]',
+      priority: true,
+    },
+    {
+      src: '/img/jpg/me.jpg',
+      alt: 'Tope Akinkuade',
+      speed: -20,
+      colSpan: 'col-span-1',
+      height: 'h-[200px] lg:h-[200px]',
+      priority: true,
+    },
+    {
+      src: '/img/jpg/me.jpg',
+      alt: 'Tope Akinkuade',
+      speed: -15,
+      colSpan: 'col-span-1',
+      height: 'h-[200px] lg:h-[200px]',
+      priority: false,
+    },
+    {
+      src: '/img/jpg/me.jpg',
+      alt: 'Tope Akinkuade',
+      speed: -25,
+      colSpan: 'col-span-2',
+      height: 'h-[200px] lg:h-[200px]',
+      priority: false,
+    },
+  ], []);
+
   useGSAP(
     () => {
       if (!sectionRef.current) return;
@@ -32,6 +67,7 @@ export const About = () => {
         if (heading) {
           const headingSplit = new SplitType(heading, { types: 'chars' });
           splits.push(headingSplit);
+          gsap.set(headingSplit.chars, { willChange: 'opacity, transform' });
           const headingST = gsap.fromTo(
             headingSplit.chars,
             { opacity: 0, y: 30 },
@@ -41,6 +77,7 @@ export const About = () => {
               duration: 0.8,
               stagger: 0.03,
               ease: 'expo.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: heading,
                 start: 'top 85%',
@@ -56,13 +93,14 @@ export const About = () => {
             const split = new SplitType(p, { types: 'words' });
             splits.push(split);
             
-            gsap.set(split.words, { opacity: 0.3 });
+            gsap.set(split.words, { opacity: 0.3, willChange: 'opacity' });
 
             const pST = gsap.to(split.words, {
               opacity: 1,
               stagger: 0.008,
               ease: 'none',
               delay: 3.5,
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: p,
                 start: 'top 60%',
@@ -76,8 +114,12 @@ export const About = () => {
       });
 
       return () => {
-        scrollTriggers.forEach(st => st?.kill());
-        splits.forEach(split => split.revert());
+        for (const st of scrollTriggers) {
+          st?.kill();
+        }
+        for (const split of splits) {
+          split.revert();
+        }
       };
     },
     { scope: sectionRef }
@@ -130,40 +172,7 @@ export const About = () => {
             ref={imageContainerRef}
             className='relative mt-auto flex-1 grid grid-cols-3 gap-4 lg:max-w-[500px]'
           >
-            {[
-              {
-                src: '/img/jpg/me.jpg',
-                alt: 'Tope Akinkuade',
-                speed: -20,
-                colSpan: 'col-span-2',
-                height: 'h-[200px] lg:h-[200px]',
-                priority: true,
-              },
-              {
-                src: '/img/jpg/me.jpg',
-                alt: 'Tope Akinkuade',
-                speed: -20,
-                colSpan: 'col-span-1',
-                height: 'h-[200px] lg:h-[200px]',
-                priority: true,
-              },
-              {
-                src: '/img/jpg/me.jpg',
-                alt: 'Tope Akinkuade',
-                speed: -15,
-                colSpan: 'col-span-1',
-                height: 'h-[200px] lg:h-[200px]',
-                priority: false,
-              },
-              {
-                src: '/img/jpg/me.jpg',
-                alt: 'Tope Akinkuade',
-                speed: -25,
-                colSpan: 'col-span-2',
-                height: 'h-[200px] lg:h-[200px]',
-                priority: false,
-              },
-            ].map((image, index) => (
+            {imageData.map((image, index) => (
               <div
                 key={`${image.src}-${image.speed}-${index}`}
                 className={`${image.colSpan} relative ${image.height} overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}

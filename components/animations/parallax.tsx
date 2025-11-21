@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, ReactNode, useEffect, useState } from 'react';
+import { useRef, ReactNode, useEffect, useState, useMemo } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 
@@ -29,9 +29,6 @@ export default function Parallax({
     const updateHeight = () => {
       const containerHeight = container.clientHeight;
       const speedAbs = Math.abs(speed);
-      // Calculate extra height needed: if speed is -20%, element moves up 20% of its height
-      // We need element height = containerHeight / (1 - speedAbs/100)
-      // Extra height = elementHeight - containerHeight
       const elementHeight = containerHeight / (1 - speedAbs / 100);
       const extra = elementHeight - containerHeight;
       setExtraHeight(Math.max(0, extra));
@@ -46,6 +43,16 @@ export default function Parallax({
     };
   }, [speed]);
 
+  const scrollTriggerConfig = useMemo(() => ({
+    trigger: null,
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: true,
+    fastScrollEnd: true,
+    preventOverlaps: true,
+    invalidateOnRefresh: false,
+  }), []);
+
   useGSAP(() => {
     if (!elementRef.current) return;
 
@@ -53,21 +60,24 @@ export default function Parallax({
 
     if (!triggerElement) return;
 
-    const scrollTrigger = gsap.to(elementRef.current, {
+    gsap.set(elementRef.current, { willChange: 'transform', force3D: true });
+
+    const animation = gsap.to(elementRef.current, {
       yPercent: speed,
       ease: 'none',
+      force3D: true,
       scrollTrigger: {
+        ...scrollTriggerConfig,
         trigger: triggerElement,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1,
       },
     });
 
     return () => {
-      scrollTrigger.kill();
+      gsap.set(elementRef.current, { clearProps: 'willChange' });
+      animation.scrollTrigger?.kill();
+      animation.kill();
     };
-  }, { scope: (trigger?.current as HTMLElement) || undefined });
+  }, { scope: (trigger?.current as HTMLElement) || undefined, dependencies: [speed, scrollTriggerConfig] });
 
   return (
     <div
@@ -77,6 +87,7 @@ export default function Parallax({
         height: extraHeight > 0 ? `calc(100% + ${extraHeight}px)` : '100%',
         marginTop: extraHeight > 0 ? `-${extraHeight / 2}px` : 0,
         marginBottom: extraHeight > 0 ? `-${extraHeight / 2}px` : 0,
+        transform: 'translateZ(0)',
       }}
     >
       {children}

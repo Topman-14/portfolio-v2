@@ -20,26 +20,32 @@ export const ProjectCard = ({
     const cardRef = useRef<HTMLAnchorElement>(null);
     const imageRef = useRef<HTMLDivElement>(null);
   
-    useGSAP(
-      () => {
-        if (!imageRef.current || !cardRef.current) return;
-  
-        const tl = gsap.timeline({ paused: true });
-  
-        tl.to(imageRef.current, {
-          scale: 1.1,
-          duration: 0.6,
-          ease: 'power2.out',
-        });
-  
-        if (isHovered ) {
-          tl.play();
-        } else {
-          tl.reverse();
-        }
-      },
-      { dependencies: [isHovered, ], scope: cardRef }
-    );
+  useGSAP(
+    () => {
+      if (!imageRef.current || !cardRef.current) return;
+
+      gsap.set(imageRef.current, { 
+        willChange: isHovered ? 'transform' : 'auto',
+        force3D: true,
+      });
+
+      const tl = gsap.timeline({ paused: true });
+
+      tl.to(imageRef.current, {
+        scale: 1.1,
+        duration: 0.4,
+        ease: 'power2.out',
+        force3D: true,
+      });
+
+      if (isHovered) {
+        tl.play();
+      } else {
+        tl.reverse();
+      }
+    },
+    { dependencies: [isHovered], scope: cardRef }
+  );
   
     const getCardWidth = (index: number) => {
       const widths = ['w-[350px]', 'w-[450px]', 'w-[400px]', 'w-[380px]', 'w-[420px]'];

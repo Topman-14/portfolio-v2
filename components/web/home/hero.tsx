@@ -32,6 +32,10 @@ export const Hero = () => {
       const descriptionSplit = new SplitType(description, { types: 'words' });
       splits.push(introSplit, bigTextSplit, descriptionSplit);
 
+      gsap.set([bigTextSplit.chars, introSplit.lines, descriptionSplit.words], {
+        willChange: 'opacity, transform',
+      });
+
       timeline.fromTo(
         bigTextSplit.chars,
         { opacity: 0, yPercent: 50 },
@@ -66,6 +70,7 @@ export const Hero = () => {
             duration: 0.3,
             stagger: 0.02,
             ease: 'expo.out',
+            clearProps: 'willChange',
           }
         );
     });

@@ -39,6 +39,7 @@ export const ExperienceSection = () => {
         if (heading) {
           const split = new SplitType(heading, { types: 'words' });
           splits.push(split);
+          gsap.set(split.words, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
@@ -48,6 +49,7 @@ export const ExperienceSection = () => {
               duration: 0.8,
               stagger: 0.03,
               ease: 'expo.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: heading,
                 start: 'top 80%',
@@ -59,6 +61,7 @@ export const ExperienceSection = () => {
 
         const items = sectionRef.current?.querySelectorAll('.experience-item');
         if (items) {
+          gsap.set(items, { willChange: 'opacity, transform' });
           for (const item of items) {
             const st = gsap.fromTo(
               item,
@@ -68,6 +71,7 @@ export const ExperienceSection = () => {
                 y: 0,
                 duration: 0.8,
                 ease: 'power3.out',
+                clearProps: 'willChange',
                 scrollTrigger: {
                   trigger: item,
                   start: 'top 85%',

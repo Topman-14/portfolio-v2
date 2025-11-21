@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { ScrollTrigger } from '@/lib/gsap-config';
+import { useEffect, useRef, useCallback } from 'react';
+import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import Lenis from 'lenis';
 
 const premiumEasing = (t: number): number => {
-  return 1 - Math.pow(1 - t, 3);
+  return Math.min(1, 1.001 - Math.pow(2, -10 * t));
 };
 
 interface UseSmoothScrollOptions {
@@ -21,25 +21,30 @@ interface UseSmoothScrollOptions {
 
 export function useSmoothScroll(options: UseSmoothScrollOptions = {}) {
   const {
-    lerp = 0.04,
+    lerp = 0.1,
     smoothWheel = true,
     syncTouch = false,
-    duration = 1.8,
-    touchInertiaExponent = 100,
+    duration = 1.2,
+    touchInertiaExponent = 50,
     enabled = true,
-    wheelMultiplier = 0.8,
+    wheelMultiplier = 1,
     easing = premiumEasing,
   } = options;
 
   const lenisRef = useRef<Lenis | null>(null);
-  const rafIdRef = useRef<number | null>(null);
+  const rafCallbackRef = useRef<((time: number) => void) | null>(null);
+
+  const handleRaf = useCallback((time: number) => {
+    if (lenisRef.current) {
+      lenisRef.current.raf(time * 1000);
+    }
+  }, []);
 
   useEffect(() => {
     if (!enabled || typeof window === 'undefined') {
       if (lenisRef.current) {
-        if (rafIdRef.current !== null) {
-          cancelAnimationFrame(rafIdRef.current);
-          rafIdRef.current = null;
+        if (rafCallbackRef.current) {
+          gsap.ticker.remove(rafCallbackRef.current);
         }
         lenisRef.current.destroy();
         lenisRef.current = null;
@@ -55,41 +60,27 @@ export function useSmoothScroll(options: UseSmoothScrollOptions = {}) {
       touchInertiaExponent,
       wheelMultiplier,
       easing,
+      prevent: (node) => node.classList.contains('no-smooth-scroll'),
     });
 
     lenisRef.current = lenis;
+    rafCallbackRef.current = handleRaf;
 
-    let rafPending = false;
-    const updateScrollTrigger = () => {
-      if (!rafPending) {
-        rafPending = true;
-        requestAnimationFrame(() => {
-          ScrollTrigger.update();
-          rafPending = false;
-        });
-      }
-    };
-    lenis.on('scroll', updateScrollTrigger);
+    lenis.on('scroll', ScrollTrigger.update);
 
-    let isRunning = true;
-    const raf = (time: number) => {
-      if (!isRunning) return;
-      lenis.raf(time);
-      rafIdRef.current = requestAnimationFrame(raf);
-    };
-
-    rafIdRef.current = requestAnimationFrame(raf);
+    gsap.ticker.add(handleRaf);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      isRunning = false;
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current);
-        rafIdRef.current = null;
+      if (rafCallbackRef.current) {
+        gsap.ticker.remove(rafCallbackRef.current);
       }
+      lenis.off('scroll', ScrollTrigger.update);
       lenis.destroy();
       lenisRef.current = null;
+      rafCallbackRef.current = null;
     };
-  }, [enabled, lerp, smoothWheel, syncTouch, duration, touchInertiaExponent, wheelMultiplier, easing]);
+  }, [enabled, lerp, smoothWheel, syncTouch, duration, touchInertiaExponent, wheelMultiplier, easing, handleRaf]);
 
   return lenisRef.current;
 }

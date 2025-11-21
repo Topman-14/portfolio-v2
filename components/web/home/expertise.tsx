@@ -51,6 +51,7 @@ export const Expertise = () => {
   const overviewTextRef = useRef<HTMLDivElement>(null);
   const specializationsHeadingRef = useRef<HTMLHeadingElement>(null);
 
+
   useGSAP(
     () => {
       if (!sectionRef.current) return;
@@ -66,6 +67,7 @@ export const Expertise = () => {
         if (overviewHeading) {
           const split = new SplitType(overviewHeading, { types: 'words' });
           splits.push(split);
+          gsap.set(split.words, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
@@ -75,6 +77,7 @@ export const Expertise = () => {
               duration: 0.8,
               stagger: 0.03,
               ease: 'expo.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: overviewHeading,
                 start: 'top 80%',
@@ -89,6 +92,7 @@ export const Expertise = () => {
           for (const p of paragraphs) {
             const split = new SplitType(p, { types: 'lines' });
             splits.push(split);
+            gsap.set(split.lines, { willChange: 'opacity, transform' });
             const st = gsap.fromTo(
               split.lines,
               { opacity: 0, y: 20 },
@@ -98,6 +102,7 @@ export const Expertise = () => {
                 duration: 0.6,
                 stagger: 0.04,
                 ease: 'power2.out',
+                clearProps: 'willChange',
                 scrollTrigger: {
                   trigger: p,
                   start: 'top 85%',
@@ -111,6 +116,7 @@ export const Expertise = () => {
         if (specializationsHeading) {
           const split = new SplitType(specializationsHeading, { types: 'words' });
           splits.push(split);
+          gsap.set(split.words, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
@@ -120,6 +126,7 @@ export const Expertise = () => {
               duration: 0.8,
               stagger: 0.03,
               ease: 'expo.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: specializationsHeading,
                 start: 'top 80%',
@@ -134,15 +141,17 @@ export const Expertise = () => {
           for (const spec of specs) {
             const st = gsap.fromTo(
               spec,
-              { opacity: 0, y: 30 },
+              { opacity: 0, y: 30, willChange: 'opacity, transform' },
               {
                 opacity: 1,
                 y: 0,
                 duration: 0.6,
                 ease: 'power2.out',
+                clearProps: 'willChange',
                 scrollTrigger: {
                   trigger: spec,
                   start: 'top 85%',
+                  toggleActions: 'play none none none',
                 },
               }
             ).scrollTrigger;
