@@ -8,6 +8,21 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
+// SSG for works, no time based revalidation, i dont think i have that many visitors yet
+//export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const works = await prismadb.work.findMany({
+    select: {
+      id: true,
+    },
+  });
+
+  return works.map((work) => ({
+    id: work.id,
+  }));
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const work = await prismadb.work.findUnique({

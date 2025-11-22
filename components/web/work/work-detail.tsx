@@ -45,6 +45,7 @@ export const WorkDetail = ({ work }: { work: Work }) => {
         if (heading) {
           const split = new SplitType(heading, { types: 'words' });
           splits.push(split);
+          gsap.set(split.words, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
@@ -54,6 +55,7 @@ export const WorkDetail = ({ work }: { work: Work }) => {
               duration: 0.8,
               stagger: 0.03,
               ease: 'expo.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: heading,
                 start: 'top 80%',
@@ -66,6 +68,7 @@ export const WorkDetail = ({ work }: { work: Work }) => {
         if (description) {
           const split = new SplitType(description, { types: 'words' });
           splits.push(split);
+          gsap.set(split.words, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 20 },
@@ -75,6 +78,7 @@ export const WorkDetail = ({ work }: { work: Work }) => {
               duration: 0.6,
               stagger: 0.01,
               ease: 'power2.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: description,
                 start: 'top 85%',

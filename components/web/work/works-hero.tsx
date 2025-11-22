@@ -64,8 +64,8 @@ export const WorksHero = () => {
   return (
     <section className='relative bg3 min-h-screen flex items-center justify-center overflow-hidden'>
       <div ref={containerRef} className='relative z-10 max-w-7xl mx-auto px-4'>
-        <div className='flex flex-col items-center justify-center text-center'>
-          <div className='w-full max-w-[800px] max-h-[800px] md:h-[500px] lg:h-[700px] -mb-6'>
+        <div className='flex flex-col-reverse md:flex-col items-center justify-center text-center'>
+          <div className='w-full max-w-[800px] max-h-[800px] md:h-[500px] lg:h-[700px] -mb-6 h-[500px]'>
             <SplinePlayer
               scene='/3d/sparkles.splinecode'
               draggable={true}

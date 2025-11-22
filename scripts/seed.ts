@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole, ArticleStatus } from '@prisma/client';
+import { PrismaClient, UserRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -16,94 +16,116 @@ const categories = [
   { name: 'CSS', description: 'CSS styling and design techniques' }
 ];
 
-const articleTitles = [
-  'Getting Started with React Hooks',
-  'Building Scalable Next.js Applications',
-  'TypeScript Best Practices for Large Projects',
-  'Database Optimization Techniques',
-  'Modern CSS Grid Layouts',
-  'Understanding JavaScript Closures',
-  'Docker for Frontend Developers',
-  'Creating Accessible Web Components',
-  'State Management in React Applications',
-  'API Design Best Practices',
-  'Testing React Components with Jest',
-  'Performance Optimization in Next.js',
-  'Advanced TypeScript Patterns',
-  'PostgreSQL vs MongoDB: A Comparison',
-  'CSS-in-JS vs Traditional CSS',
-  'JavaScript ES6+ Features You Should Know',
-  'CI/CD Pipeline Setup with GitHub Actions',
-  'Design Systems: Building Consistent UIs',
-  'React Server Components Deep Dive',
-  'GraphQL vs REST API',
-  'Web Security Best Practices',
-  'Responsive Design Principles',
-  'Node.js Performance Tips',
-  'CSS Animations and Transitions',
-  'JavaScript Memory Management',
-  'Microservices Architecture Patterns',
-  'Progressive Web Apps Guide',
-  'React Native vs Flutter',
-  'Database Migration Strategies',
-  'Frontend Build Tools Comparison'
+
+const experiences = [
+  {
+    jobTitle: "Fullstack Engineer | Contract",
+    company: "Binta Financial",
+    location: "Remote",
+    description: "At Binta Financial, I took on a variety of responsibilities that spanned fullstack development and system architecture. I launched the company's website in just three weeks, including a full-featured blog, webinar hub, and careers section. I worked extensively with TypeScript, Node.js, React, and Strapi to design a custom CMS and admin panel that allowed non-technical teams to manage content independently. Additionally, I engineered a Retrieval-Augmented Generation (RAG) application using LangChain and PGVector with NestJS, implementing real-time token streaming via Socket.IO and backend rate limiting to handle high volumes of queries. I also designed and deployed a unified cross-domain authentication system supporting both client and server-to-server flows across web products and React Native mobile apps, while establishing centralized testing, monitoring, and automated CI/CD pipelines for onboarding new developers.",
+    startDate: "2024-12-01T00:00:00.000Z",
+    endDate: null,
+    isCurrentRole: true,
+    skills: ["TypeScript","Node.js","React","Strapi","LangChain","PGVector","NestJS","Socket.IO","CI/CD"],
+    achievements: ["Launched full-featured company website in 3 weeks","Built RAG application with real-time streaming","Implemented cross-domain auth system"]
+  },
+  {
+    jobTitle: "Frontend Engineer | Contract",
+    company: "Compass AI",
+    location: "Remote",
+    description: "I developed the ReactJS client for an AI-powered LMS built on Django. My work involved creating real-time audio streaming interfaces and custom UI components like dynamic module calendars and course views from scratch. I collaborated closely with backend developers to ensure seamless integration with AI-powered learning features.",
+    startDate: "2024-08-01T00:00:00.000Z",
+    endDate: "2024-12-31T00:00:00.000Z",
+    isCurrentRole: false,
+    skills: ["React","JavaScript","TypeScript","Django integration","WebRTC"],
+    achievements: ["Built complex, dynamic UI components for AI LMS","Implemented real-time audio streaming for course content"]
+  },
+  {
+    jobTitle: "Fullstack Engineer | Contract",
+    company: "Husridge Limited",
+    location: "Remote",
+    description: "I bolstered the engineering team to build a well-received MVP featuring a Node.js-based application layer with multiple microservices, a React client, and a document-object store. My work included integrating seamlessly with third-party services like Dojah. I contributed to building scalable features while ensuring high-quality code and maintainable architecture.",
+    startDate: "2025-03-01T00:00:00.000Z",
+    endDate: "2025-07-31T00:00:00.000Z",
+    isCurrentRole: false,
+    skills: ["Node.js","React","Microservices","Integration","Document-store"],
+    achievements: ["Contributed to MVP launch","Integrated third-party services successfully"]
+  },
+  {
+    jobTitle: "Frontend Engineer | Part-time",
+    company: "Lengoal",
+    location: "Remote",
+    description: "I played a pivotal role in crafting an e-learning platform using Next.js, delivering an intuitive, engaging experience for modern learners with WebRTC technology. I collaborated with backend teams and designers to revamp the codebase, introducing mobile-first interfaces while maintaining high-quality and maintainable code.",
+    startDate: "2024-06-01T00:00:00.000Z",
+    endDate: "2025-07-31T00:00:00.000Z",
+    isCurrentRole: false,
+    skills: ["Next.js","React","WebRTC","Frontend development","UI/UX"],
+    achievements: ["Revamped codebase for mobile-first interfaces","Enhanced learner experience with WebRTC integration"]
+  },
+  {
+    jobTitle: "Frontend Engineer",
+    company: "Kobo360 Logistics",
+    location: "Lagos, Nigeria",
+    description: "I contributed to a ReactJS fleet management SaaS intended to expand the company's truck logistics offerings. I was heavily involved in building a price estimation module for the Angular-based CRM software, which increased customer retention and reduced sales overhead by 48 hours. My work focused on scalable frontend architecture and improving usability for internal users.",
+    startDate: "2024-02-01T00:00:00.000Z",
+    endDate: "2024-08-31T00:00:00.000Z",
+    isCurrentRole: false,
+    skills: ["React","Angular","Frontend development","Fleet management SaaS"],
+    achievements: ["Developed price estimation module","Improved user workflow and retention"]
+  }
 ];
 
-const companies = [
-  'Google', 'Microsoft', 'Apple', 'Amazon', 'Meta', 'Netflix', 'Spotify', 'Uber', 'Airbnb', 'Twitter',
-  'LinkedIn', 'GitHub', 'Stripe', 'Shopify', 'Slack', 'Discord', 'Zoom', 'Tesla', 'SpaceX', 'OpenAI'
-];
-
-const jobTitles = [
-  'Senior Software Engineer', 'Frontend Developer', 'Backend Developer', 'Full Stack Developer',
-  'DevOps Engineer', 'UI/UX Designer', 'Product Manager', 'Technical Lead', 'Software Architect',
-  'Mobile Developer', 'Data Engineer', 'Cloud Engineer', 'Security Engineer', 'QA Engineer'
-];
-
-const workTitles = [
-  'E-commerce Platform', 'Social Media Dashboard', 'Task Management App', 'Real-time Chat Application',
-  'Weather App', 'Recipe Finder', 'Expense Tracker', 'Blog Platform', 'Portfolio Website',
-  'Learning Management System', 'Fitness Tracker', 'Music Streaming App', 'Travel Planner',
-  'Online Marketplace', 'Project Management Tool', 'Video Conferencing App', 'Food Delivery App',
-  'Banking Application', 'Healthcare Portal', 'Gaming Platform'
-];
-
-const tools = [
-  'React', 'Next.js', 'TypeScript', 'Node.js', 'Express', 'MongoDB', 'PostgreSQL', 'Redis',
-  'Docker', 'AWS', 'Vercel', 'Tailwind CSS', 'Material-UI', 'GraphQL', 'Apollo',
-  'Jest', 'Cypress', 'Git', 'GitHub', 'Figma', 'Sketch', 'Adobe XD'
-];
-
-const skills = [
-  'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Angular', 'Node.js', 'Python', 'Java',
-  'Go', 'Rust', 'SQL', 'MongoDB', 'Redis', 'Docker', 'Kubernetes', 'AWS', 'Azure',
-  'Git', 'CI/CD', 'Agile', 'Scrum', 'Leadership', 'Problem Solving', 'Communication'
-];
-
-const achievements = [
-  'Led team of 5 developers to deliver project 2 weeks ahead of schedule',
-  'Improved application performance by 40% through code optimization',
-  'Implemented CI/CD pipeline reducing deployment time by 60%',
-  'Designed and developed microservices architecture serving 1M+ users',
-  'Reduced bug reports by 50% through comprehensive testing strategy',
-  'Mentored 3 junior developers who were promoted within 6 months',
-  'Successfully migrated legacy system to modern tech stack',
-  'Implemented security measures preventing 99.9% of potential vulnerabilities',
-  'Optimized database queries resulting in 70% faster response times',
-  'Built scalable system handling 10x traffic increase during peak times'
-];
-
-const comments = [
-  'Great article! Very helpful for beginners.',
-  'Thanks for sharing this detailed guide.',
-  'I learned something new today. Keep it up!',
-  'This solved my problem perfectly.',
-  'Excellent explanation with clear examples.',
-  'Bookmarked for future reference.',
-  'Very informative content.',
-  'Thanks for the practical tips.',
-  'This is exactly what I was looking for.',
-  'Amazing work! Looking forward to more articles.'
+const works = [
+  {
+    title: "BintaFinancial.com — Company Site & CMS",
+    description: "I still remember the first week on BintaFinancial.com, everything was new, and it felt like stepping onto a live battlefield of data and users. My goal was to create a site that allowed marketing, growth, and product teams to publish content without constant engineering support. I mapped out the CMS structure, designed semantic SEO-friendly pages, and implemented incremental static regeneration so blog and webinar content could update seamlessly. Working with Strapi as a headless CMS, I had to create a robust schema for articles, webinars, ebooks, and careers that could evolve over time. I also built a cross-domain authentication system, handling both client and server-to-server flows, and introduced token streaming endpoints to preview large content efficiently. Watching the site go live and seeing teams publish autonomously made every late night worth it. Each challenge, from content migration scripts to live rate-limiting for our RAG-based internal search, taught me a lot about scaling real-world web platforms.",
+    videoUrl: null,
+    tools: ["TypeScript","Next.js","React","Strapi","Node.js","Tailwind","Postgres","Prisma","Socket.IO","LangChain","PGVector"],
+    githubLink: null,
+    liveUrl: "https://bintafinancial.com",
+    featured: true,
+    category: "Company Sites"
+  },
+  {
+    title: "Topmart — Full Stack Ecommerce (storefront + admin)",
+    description: "Working on Topmart, I had to balance the speed and responsiveness of the storefront with the full functionality of the admin dashboard. I designed an intuitive store interface where users could browse, filter, and purchase products seamlessly while the admin panel enabled sellers to manage inventory, handle orders, and configure Paystack payments. Using Next.js and TypeScript, I optimized server-side rendering and caching to ensure SEO and performance were top-notch. The admin panel used ShadCN UI for consistent design and responsive layouts. Handling asynchronous payment flows, ensuring idempotency, and reconciling order and payment state was tricky but satisfying. Each deployment refined usability, and watching real users complete orders without friction was extremely rewarding. The codebases, both client and admin, reflect careful attention to modularity, maintainability, and UX design.",
+    videoUrl: null,
+    tools: ["TypeScript","Next.js","React","ShadCN UI","Paystack","MongoDB Atlas","Vercel","Tailwind"],
+    githubLink: "https://github.com/Topman-14/topmart-client",
+    liveUrl: null,
+    featured: true,
+    category: "Ecommerce"
+  },
+  {
+    title: "MedSync — AI Powered Electronic Health Records",
+    description: "MedSync was perhaps the most meaningful project I have contributed to. Clinics were struggling with fragmented patient data and inefficient workflows. I focused on building modules for centralized electronic health records with AI-powered summarization and fast retrieval. Using PGVector and LangChain, I enabled smart search for clinicians while keeping privacy and encryption at the forefront. I documented workflows extensively in Notion, iterated on prototypes, and optimized the system for speed and usability. Integrating existing clinic systems and handling sensitive medical data pushed me to implement careful audit trails and secure transformation pipelines. It was incredibly rewarding to see the system streamline patient lookup and billing processes. Each refinement, every user feedback session, reinforced the importance of building technology that tangibly improves healthcare delivery.",
+    videoUrl: null,
+    tools: ["TypeScript","Node.js","Postgres","PGVector","LangChain","Docker","OpenAI APIs"],
+    githubLink: null,
+    liveUrl: null,
+    featured: true,
+    category: "HealthTech"
+  },
+  {
+    title: "Hireflow — AI Powered Applicant Tracking System",
+    description: "Hireflow was a research-driven project where I contributed to building the frontend of an AI-powered ATS. The system allowed recruiters to see candidate pipelines, parse resumes, and evaluate scoring models in real-time. Using React and TypeScript, I designed dashboards, candidate workflows, and interactive elements that made the process intuitive. While my colleague focused on AI and candidate scoring models, I ensured that the UI could handle dynamic updates, complex candidate flows, and visualization of AI recommendations without confusion. Ensuring explainability and avoiding bias in the interface were ongoing challenges. Watching recruiters interact with the system during pilot tests highlighted the value of combining research-driven AI with practical, user-friendly design.",
+    videoUrl: null,
+    tools: ["React","TypeScript","Django","Postgres","Celery","Redis"],
+    githubLink: null,
+    liveUrl: null,
+    featured: false,
+    category: "HR Tech"
+  },
+  {
+    title: "Binta Financial — Fullstack Engineer Contract Experience",
+    description: "At Binta Financial, I built the company's public website and admin panel, integrating Strapi CMS for content management. I also engineered a RAG-based internal search system using LangChain and PGVector, along with real-time streaming for tokenized outputs. I set up cross-domain authentication, ensuring smooth client and server-to-server flows, and implemented centralized CI/CD pipelines for onboarding new developers. Each feature deployment reinforced my understanding of scaling complex systems and balancing developer velocity with product stability.",
+    videoUrl: null,
+    tools: ["Next.js","TypeScript","Strapi","LangChain","PGVector","Socket.IO","Prisma"],
+    githubLink: null,
+    liveUrl: null,
+    featured: true,
+    category: "Experience"
+  }
 ];
 
 function generateSlug(title: string): string {
@@ -115,18 +137,6 @@ function generateSlug(title: string): string {
     .trim();
 }
 
-function getRandomElement<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-function getRandomElements<T>(array: T[], count: number): T[] {
-  const shuffled = [...array].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-}
-
-function getRandomDate(start: Date, end: Date): Date {
-  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-}
 
 async function seed() {
   console.log('🌱 Starting database seeding...');
@@ -135,14 +145,13 @@ async function seed() {
     const hashedPassword = await bcrypt.hash('password123', 10);
 
     const user = await prisma.user.upsert({
-      where: { email: 'admin@example.com' },
+      where: { email: 'topeakinkuade78@gmail.com' },
       update: {},
       create: {
-        email: 'admin@example.com',
-        name: 'Admin User',
+        email: 'topeakinkuade78@gmail.com',
+        name: 'Tops',
         password: hashedPassword,
         role: UserRole.SUPER_ADMIN,
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
       }
     });
 
@@ -165,96 +174,52 @@ async function seed() {
 
     console.log('✅ Categories created:', createdCategories.length);
 
-    for (let i = 0; i < 30; i++) {
-      const title = articleTitles[i];
-      const status = getRandomElement([ArticleStatus.PUBLISHED, ArticleStatus.DRAFT, ArticleStatus.ARCHIVED]);
-      const publishedAt = status === ArticleStatus.PUBLISHED ? getRandomDate(new Date(2023, 0, 1), new Date()) : null;
-      
-      await prisma.article.create({
-        data: {
-          title,
-          slug: generateSlug(title),
-          content: `<h1>${title}</h1><p>This is a comprehensive article about ${title.toLowerCase()}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><h2>Key Points</h2><ul><li>Important concept 1</li><li>Important concept 2</li><li>Important concept 3</li></ul><p>In conclusion, ${title.toLowerCase()} is an essential topic for modern developers. Understanding these concepts will help you build better applications.</p>`,
-          excerpt: `Learn about ${title.toLowerCase()} with this comprehensive guide covering best practices and real-world examples.`,
-          coverImg: `https://images.unsplash.com/photo-${1500000000000 + i}?w=800&h=400&fit=crop`,
-          status,
-          reads: Math.floor(Math.random() * 1000) + 10,
-          readTime: Math.floor(Math.random() * 15) + 3,
-          tags: getRandomElements(['javascript', 'react', 'nextjs', 'typescript', 'webdev', 'tutorial', 'guide'], 3),
-          publishedAt,
-          userId: user.id,
-          categoryId: getRandomElement(createdCategories).id
-        }
-      });
-    }
-
-    console.log('✅ Articles created: 30');
-
-    const articles = await prisma.article.findMany();
-    for (let i = 0; i < 50; i++) {
-      const article = getRandomElement(articles);
-      await prisma.comment.create({
-        data: {
-          text: getRandomElement(comments),
-          email: `user${i}@example.com`,
-          articleId: article.id
-        }
-      });
-    }
-
-    console.log('✅ Comments created: 50');
-
-    for (let i = 0; i < 15; i++) {
-      const startDate = getRandomDate(new Date(2020, 0, 1), new Date(2023, 0, 1));
-      const endDate = Math.random() > 0.3 ? getRandomDate(startDate, new Date()) : null;
-      
+    for (const experience of experiences) {
       await prisma.experience.create({
         data: {
-          jobTitle: getRandomElement(jobTitles),
-          company: getRandomElement(companies),
-          location: getRandomElement(['San Francisco, CA', 'New York, NY', 'Seattle, WA', 'Austin, TX', 'Remote']),
-          description: `Worked as a ${getRandomElement(jobTitles).toLowerCase()} at ${getRandomElement(companies)}, focusing on ${getRandomElement(['frontend development', 'backend systems', 'mobile apps', 'cloud infrastructure', 'data analysis'])}. Led multiple projects and collaborated with cross-functional teams to deliver high-quality solutions.`,
-          startDate,
-          endDate,
-          isCurrentRole: !endDate,
-          skills: getRandomElements(skills, Math.floor(Math.random() * 8) + 5),
-          achievements: getRandomElements(achievements, Math.floor(Math.random() * 3) + 1),
+          jobTitle: experience.jobTitle,
+          company: experience.company,
+          location: experience.location,
+          description: experience.description,
+          startDate: new Date(experience.startDate),
+          endDate: experience.endDate ? new Date(experience.endDate) : null,
+          isCurrentRole: experience.isCurrentRole,
+          skills: experience.skills,
+          achievements: experience.achievements,
           userId: user.id
         }
       });
     }
 
-    console.log('✅ Experiences created: 15');
+    console.log('✅ Experiences created:', experiences.length);
 
-    for (let i = 0; i < 20; i++) {
+    for (const work of works) {
       await prisma.work.create({
         data: {
-          title: getRandomElement(workTitles),
-          description: `A comprehensive ${getRandomElement(workTitles).toLowerCase()} built with modern technologies. Features include ${getRandomElement(['user authentication', 'real-time updates', 'responsive design', 'data visualization', 'API integration'])} and more.`,
-          image: `https://images.unsplash.com/photo-${1600000000000 + i}?w=600&h=400&fit=crop`,
-          videoUrl: Math.random() > 0.7 ? `https://example.com/demo${i}.mp4` : null,
-          tools: getRandomElements(tools, Math.floor(Math.random() * 6) + 3),
-          githubLink: `https://github.com/user/project${i}`,
-          liveUrl: `https://project${i}.vercel.app`,
-          featured: Math.random() > 0.6,
-          category: getRandomElement(['Web App', 'Mobile App', 'Desktop App', 'API', 'Library']),
+          title: work.title,
+          description: work.description,
+          image: '',
+          videoUrl: work.videoUrl,
+          tools: work.tools,
+          githubLink: work.githubLink,
+          liveUrl: work.liveUrl,
+          featured: work.featured,
+          category: work.category,
           userId: user.id
         }
       });
     }
 
-    console.log('✅ Works created: 20');
+    console.log('✅ Works created:', works.length);
 
-    console.log('🎉 Database seeding completed successfully!');
+    console.log('🎉 Database seeding completed successfully!'); 
     console.log('\n📊 Summary:');
     console.log('- Users: 1');
-    console.log('- Categories: 10');
-    console.log('- Articles: 30');
-    console.log('- Comments: 50');
-    console.log('- Experiences: 15');
-    console.log('- Works: 20');
+    console.log('- Categories:', createdCategories.length);
+    console.log('- Experiences:', experiences.length);
+    console.log('- Works:', works.length);
     console.log('\n🔑 Admin credentials:');
-    console.log('- Email: admin@example.com');
+    console.log('- Email: topeakinkuade78@gmail.com');
     console.log('- Password: password123');
 
   } catch (error) {

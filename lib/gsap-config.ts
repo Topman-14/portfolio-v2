@@ -7,15 +7,19 @@ if (typeof window !== 'undefined') {
   ScrollTrigger.config({
     autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load',
     ignoreMobileResize: true,
+    limitCallbacks: true,
+    syncInterval: 150,
   });
 
   gsap.config({
     nullTargetWarn: false,
+    force3D: true,
   });
 
   gsap.defaults({
     force3D: true,
     transformOrigin: 'center center',
+    overwrite: 'auto',
   });
 }
 

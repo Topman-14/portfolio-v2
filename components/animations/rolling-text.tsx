@@ -38,6 +38,10 @@ export default function RollingText({ children, className }: RollingTextProps) {
         const split1 = new SplitType(original, { types: 'chars' });
         const split2 = new SplitType(clone, { types: 'chars' });
 
+        gsap.set([split1.chars, split2.chars], { 
+          willChange: 'transform',
+          force3D: true,
+        });
         gsap.set(split2.chars, { yPercent: 120 });
 
         const tl = gsap.timeline({ paused: true });
@@ -67,6 +71,7 @@ export default function RollingText({ children, className }: RollingTextProps) {
         return () => {
           el.removeEventListener('mouseenter', enterHandler);
           el.removeEventListener('mouseleave', leaveHandler);
+          gsap.set([split1.chars, split2.chars], { clearProps: 'willChange' });
           tl.kill();
           split1.revert();
           split2.revert();

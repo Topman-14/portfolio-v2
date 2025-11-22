@@ -343,4 +343,38 @@ html {
   html {
     scroll-behavior: auto;
   }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+* {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-gsap] {
+  will-change: transform;
+  transform: translateZ(0);
+  contain: layout;
+}
+
+.parallax-element {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.animated-section {
+  contain: layout style paint;
+  content-visibility: auto;
+}
+
+img, video {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }

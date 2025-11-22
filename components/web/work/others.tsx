@@ -37,6 +37,7 @@ const OtherWorksSection = () => {
         if (heading) {
           const split = new SplitType(heading, { types: 'words' });
           splits.push(split);
+          gsap.set(split.words, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
@@ -46,6 +47,7 @@ const OtherWorksSection = () => {
               duration: 0.8,
               stagger: 0.03,
               ease: 'expo.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: heading,
                 start: 'top 80%',
@@ -57,6 +59,7 @@ const OtherWorksSection = () => {
 
         const cards = sectionRef.current?.querySelectorAll('.work-card');
         if (cards) {
+          gsap.set(cards, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             cards,
             { opacity: 0, y: 50 },
@@ -66,6 +69,7 @@ const OtherWorksSection = () => {
               duration: 0.6,
               stagger: 0.08,
               ease: 'power3.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: sectionRef.current,
                 start: 'top 70%',

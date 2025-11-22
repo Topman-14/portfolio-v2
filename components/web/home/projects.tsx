@@ -15,30 +15,14 @@ export const Projects = ({ works }: { works: Work[] }) => {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subheadingRef = useRef<HTMLParagraphElement>(null);
 
-  // const row1Works = works.slice(0, Math.ceil(works.length / 3));
-  // const row2Works = works.slice(
-  //   Math.ceil(works.length / 3),
-  //   Math.ceil((works.length * 2) / 3)
-  // );
-  // const row3Works = works.slice(Math.ceil((works.length * 2) / 3));
-
-  // const triplicatedRow1 = [...row1Works, ...row2Works, ...row1Works];
-  // const triplicatedRow2 = [...row3Works, ...row2Works, ...row2Works];
-  // const triplicatedRow3 = [...row3Works, ...row3Works, ...row1Works];
-
-  // const movingGrid = [
-  //   { dir: 'left', speed: 30, data: triplicatedRow1 },
-  //   { dir: 'right', speed: 25, data: triplicatedRow2 },
-  //   { dir: 'left', speed: 40, data: triplicatedRow3 },
-  // ];
-
   const movingGrid = useMemo(() => {
+    if (works.length === 0) return [];
     const cut = Math.ceil(works.length / 3);
     const [a, b, c] = [works.slice(0, cut), works.slice(cut, cut * 2), works.slice(cut * 2)];
     return [
-      { dir: 'left',  speed: 30, data: [...a, ...b, ...a] },
-      { dir: 'right', speed: 25, data: [...c, ...b, ...b] },
-      { dir: 'left',  speed: 40, data: [...c, ...c, ...a] },
+      { dir: 'left' as const, speed: 30, data: [...a, ...b, ...a] },
+      { dir: 'right' as const, speed: 25, data: [...c, ...b, ...b] },
+      { dir: 'left' as const, speed: 40, data: [...c, ...c, ...a] },
     ];
   }, [works]);
 
@@ -56,6 +40,7 @@ export const Projects = ({ works }: { works: Work[] }) => {
         if (heading) {
           const split = new SplitType(heading, { types: 'chars' });
           splits.push(split);
+          gsap.set(split.chars, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.chars,
             { opacity: 0, y: 30 },
@@ -65,6 +50,7 @@ export const Projects = ({ works }: { works: Work[] }) => {
               duration: 0.8,
               stagger: 0.03,
               ease: 'expo.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: heading,
                 start: 'top 80%',
@@ -77,6 +63,7 @@ export const Projects = ({ works }: { works: Work[] }) => {
         if (subheading) {
           const split = new SplitType(subheading, { types: 'words' });
           splits.push(split);
+          gsap.set(split.words, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 20 },
@@ -86,6 +73,7 @@ export const Projects = ({ works }: { works: Work[] }) => {
               duration: 0.6,
               stagger: 0.04,
               ease: 'power2.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: subheading,
                 start: 'top 85%',
@@ -140,7 +128,7 @@ export const Projects = ({ works }: { works: Work[] }) => {
             autoFill
           >
             {data.map((work, i) => (
-              <ProjectCard key={work.id} work={work} isMarquee index={i} />
+              <ProjectCard key={`${work.id}-${i}`} work={work} isMarquee index={i} />
             ))}
           </Marquee>
         ))}

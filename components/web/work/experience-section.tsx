@@ -39,6 +39,7 @@ export const ExperienceSection = () => {
         if (heading) {
           const split = new SplitType(heading, { types: 'words' });
           splits.push(split);
+          gsap.set(split.words, { willChange: 'opacity, transform' });
           const st = gsap.fromTo(
             split.words,
             { opacity: 0, y: 30 },
@@ -48,6 +49,7 @@ export const ExperienceSection = () => {
               duration: 0.8,
               stagger: 0.03,
               ease: 'expo.out',
+              clearProps: 'willChange',
               scrollTrigger: {
                 trigger: heading,
                 start: 'top 80%',
@@ -59,6 +61,7 @@ export const ExperienceSection = () => {
 
         const items = sectionRef.current?.querySelectorAll('.experience-item');
         if (items) {
+          gsap.set(items, { willChange: 'opacity, transform' });
           for (const item of items) {
             const st = gsap.fromTo(
               item,
@@ -68,6 +71,7 @@ export const ExperienceSection = () => {
                 y: 0,
                 duration: 0.8,
                 ease: 'power3.out',
+                clearProps: 'willChange',
                 scrollTrigger: {
                   trigger: item,
                   start: 'top 85%',
@@ -130,8 +134,8 @@ export const ExperienceSection = () => {
                 key={exp.id}
                 className='experience-item relative pl-8 md:pl-12 border-l-2 border-white/20'
               >
-                <div className='absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-malachite border-4 border-coal z-10' />
-                <div className='absolute -left-[20px] md:-left-[24px] top-0 flex items-center justify-center w-8 md:w-12'>
+                {/* <div className='absolute -left-[20px] top-0 w-4 h-4 rounded-full bg-malachite border-4 border-coal z-10' /> */}
+                <div className='absolute -left-[9px] md:-left-[24px] top-0 flex items-center justify-center w-8 md:w-12'>
                   <span className='text-amber text-lg md:text-xl font-display font-bold'>
                     {getYear(exp.startDate)}
                   </span>

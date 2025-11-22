@@ -52,11 +52,23 @@ async function deleteWork(id: string) {
   try {
     await checkAuthentication()
 
+    const work = await prismadb.work.findUnique({
+      where: { id },
+      select: { featured: true }
+    })
+
     await prismadb.work.delete({
       where: { id }
     })
 
     revalidatePath('/admin/work')
+    revalidatePath('/work')
+    revalidatePath(`/work/${id}`)
+    
+    // Only revalidate home page if deleted work was featured
+    if (work?.featured) {
+      revalidatePath('/')
+    }
   } catch (error) {
     console.error('Error deleting work:', error)
     throw new Error('Failed to delete work')

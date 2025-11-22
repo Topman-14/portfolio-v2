@@ -5,6 +5,7 @@ import { Work } from '@prisma/client';
 import { cleanErrorMsg } from '@/lib/utils';
 import { auth } from '@/auth';
 import { workFields } from '../data';
+import { revalidatePath } from 'next/cache';
 
 interface PageProps {
   params: {
@@ -51,18 +52,32 @@ export default async function WorkPage({ params }: PageProps) {
         githubLink: data.githubLink || null,
       };
 
+      let workId = id;
+      const wasFeatured = !isNew ? work?.featured : false;
+      const isNowFeatured = processedData.featured;
+      const featuredStatusChanged = wasFeatured !== isNowFeatured;
+      
       if (!isNew) {
         await prismadb.work.update({
           where: { id },
           data: processedData,
         });
       } else {
-        await prismadb.work.create({
+        const newWork = await prismadb.work.create({
           data: {
             ...processedData,
             userId: session.user.id,
           },
         });
+        workId = newWork.id;
+      }
+
+      revalidatePath('/work');
+      revalidatePath(`/work/${workId}`);
+      
+      // Only revalidate home page if featured status changed or new work is featured
+      if (featuredStatusChanged || isNowFeatured) {
+        revalidatePath('/');
       }
     } catch (error) {
       const message = error instanceof Error ? cleanErrorMsg(error) : 'An unexpected error occurred';
