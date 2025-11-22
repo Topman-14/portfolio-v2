@@ -84,7 +84,7 @@ export const Hero = () => {
   return (
     <section className='relative bg1 overflow-hidden pb-5 md:pb-0'>
       <div className='relative z-10 flex lg:items-center justify-center min-h-screen px-4 md:px-8 lg:px-16 flex-col md:flex-row'>
-        <div className='lg:max-w-6xl w-full pt-20 md:pt-32 pb-20 md:pb-48 xl:max-w-7xl z-[20]'>
+        <div className='lg:max-w-6xl w-full sm:pt-20 md:pt-32 sm:pb-20 md:pb-48 xl:max-w-7xl z-[20] py-10'>
           <p
             ref={introRef}
             className='text-xl md:text-4xl text-white/80 mb-4 font-sans font-semibold'
@@ -96,16 +96,18 @@ export const Hero = () => {
             ref={bigTextRef}
             className='sm:text-6xl text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-display font-bold text-white leading-[1.1] mb-8 text-left max-w-4xl'
           >
-            Reformed Perfectionist, <br />
-            <span className='text-malachite'>Present Realist.</span>
+            Bug Slasher, <br />
+            <span className='text-malachite'>Deadline Bender.</span>
           </h1>
 
           <p
             ref={descriptionRef}
-            className='text-sm md:text-base text-white font-semibold max-w-xl leading-relaxed font-sans'
+            className='text-white font-semibold max-w-xl font-sans'
           >
             I&apos;m a Product engineer that works across the stack to create
-            systems that balance precision and practicality. <br />
+            systems that balance precision and practicality. 
+            <br />
+            <br />
             From architecture to deployment, <br className='md:hidden' /> I build infrastructure nobody
             notices; until it&apos;s missing.
           </p>

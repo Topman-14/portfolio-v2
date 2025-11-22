@@ -128,7 +128,7 @@ export const Projects = ({ works }: { works: Work[] }) => {
             autoFill
           >
             {data.map((work, i) => (
-              <ProjectCard key={work.id} work={work} isMarquee index={i} />
+              <ProjectCard key={`${work.id}-${i}`} work={work} isMarquee index={i} />
             ))}
           </Marquee>
         ))}

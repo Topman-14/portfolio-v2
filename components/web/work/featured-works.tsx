@@ -120,14 +120,14 @@ export const WorksBentoGrid = ({ works }: { works: Work[] }) => {
           ref={headingRef}
           className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-16'
         >
-          Featured Projects
+          Featured
         </h2>
 
         <div
           ref={gridRef}
-          className='grid gap-4 grid-flow-dense'
+          className='grid gap-4 grid-cols-1 md:grid-flow-dense'
           style={{
-            gridTemplateColumns: 'repeat(12, 1fr)',
+            gridTemplateColumns: viewPort.isMobile ? '1fr' : 'repeat(12, 1fr)',
             gridAutoRows: gridAutoRows,
           }}
         >
@@ -139,6 +139,7 @@ export const WorksBentoGrid = ({ works }: { works: Work[] }) => {
                 work={work}
                 colSpan={size.colSpan}
                 rowSpan={size.rowSpan}
+                isMobile={viewPort.isMobile}
               />
             );
           })}

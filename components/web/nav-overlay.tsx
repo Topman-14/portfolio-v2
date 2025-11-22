@@ -19,6 +19,9 @@ interface NavOverlayProps {
 export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
   const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const navItemsRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(isOpen);
   const [mailCopied, setMailCopied] = useState(false);
 
@@ -35,15 +38,60 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
   }, [isOpen]);
 
   useGSAP(() => {
-    if (!overlayRef.current) return;
+    if (!overlayRef.current || !contentRef.current) return;
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      gsap.fromTo(
+      
+      const tl = gsap.timeline();
+      
+      tl.fromTo(
         overlayRef.current,
         { opacity: 0 },
-        { opacity: 1, duration: 0.4, ease: 'power2.out' }
+        { opacity: 1, duration: 0.3, ease: 'power2.out' }
+      ).fromTo(
+        contentRef.current,
+        { scale: 0.95, opacity: 0, y: 20 },
+        { 
+          scale: 1, 
+          opacity: 1, 
+          y: 0,
+          duration: 0.5, 
+          ease: 'power3.out' 
+        },
+        '-=0.2'
       );
+
+      if (navItemsRef.current) {
+        const navLinks = navItemsRef.current.querySelectorAll('a');
+        tl.fromTo(
+          navLinks,
+          { opacity: 0, y: 30 },
+          { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power3.out'
+          },
+          '-=0.3'
+        );
+      }
+
+      if (sidebarRef.current) {
+        tl.fromTo(
+          sidebarRef.current.children,
+          { opacity: 0, x: 20 },
+          { 
+            opacity: 1, 
+            x: 0, 
+            duration: 0.5,
+            stagger: 0.1,
+            ease: 'power2.out'
+          },
+          '-=0.4'
+        );
+      }
     } else {
       document.body.style.overflow = '';
       gsap.to(overlayRef.current, {
@@ -62,7 +110,7 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
       ref={overlayRef}
       className='fixed inset-0 z-[9999] bg-[#00000061] flex items-center justify-center backdrop-blur-lg'
     >
-      <div className='relative z-10 w-full h-full px-6 md:px-12 flex flex-col items-center justify-center'>
+      <div ref={contentRef} className='relative z-10 w-full h-full px-6 md:px-12 flex flex-col items-center justify-center'>
         <button
           onClick={onClose}
           className='p-2 bg-[#00000017] hover:bg-[#00000030] rounded-full transition-colors absolute top-6 right-6 cursor-pointer'
@@ -72,7 +120,7 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
         </button>
 
         <nav className='flex md:flex-row flex-col gap-12 lg:gap-16 mt-16 md:mt-24 md:justify-between w-full max-w-7xl'>
-          <div className='flex flex-col gap-4 md:gap-6 lg:gap-10'>
+          <div ref={navItemsRef} className='flex flex-col gap-4 md:gap-6 lg:gap-10'>
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -93,7 +141,7 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
             })}
           </div>
 
-          <div className='hidden md:flex gap-8 flex-col'>
+          <div ref={sidebarRef} className='hidden md:flex gap-8 flex-col'>
             <div className='flex flex-col gap-2'>
               <span className='text-white/50 text-xs font-sans uppercase tracking-wider'>
                 Email

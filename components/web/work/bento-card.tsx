@@ -3,23 +3,31 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Work } from '@prisma/client';
 
+interface BentoCardProps {
+  work: Work;
+  colSpan: number;
+  rowSpan: number;
+  isMobile?: boolean;
+}
+
 const BentoCard = ({
     work,
     colSpan,
     rowSpan,
-  }: {
-    work: Work;
-    colSpan: number;
-    rowSpan: number;
-  }) => {
+    isMobile = false,
+  }: BentoCardProps) => {
     return (
       <Link
         href={`/work/${work.id}`}
         className='group relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 hover:border-malachite/50 transition-all duration-300 flex flex-col h-full min-h-[200px] md:min-h-[250px] lg:min-h-[280px] xl:min-h-[300px] hover:scale-[1.02]'
-        style={{
-          gridColumn: `span ${colSpan}`,
-          gridRow: `span ${rowSpan}`,
-        }}
+        style={
+          isMobile
+            ? { gridColumn: 'span 1', gridRow: 'span 1' }
+            : {
+                gridColumn: `span ${colSpan}`,
+                gridRow: `span ${rowSpan}`,
+              }
+        }
       >
         <div className='relative h-full flex flex-col overflow-hidden'>
           {work.image && (
