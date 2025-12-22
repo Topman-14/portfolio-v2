@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import prismadb from '@/lib/prismadb';
 import { BASE_URL } from '@/lib/constants';
-import { WorkDetail } from '@/components/web/work/work-detail';
+import { WorkDetail } from '@/app/(pages)/(web)/work/components/work-detail';
 
 type PageProps = {
   params: Promise<{ id: string }>;

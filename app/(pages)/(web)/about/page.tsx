@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { BASE_URL } from '@/lib/constants';
-import { AboutContent } from '@/components/web/about/about-content';
+import { AboutContent } from '@/app/(pages)/(web)/components/about-content';
 
 export const metadata: Metadata = {
   title: 'About | Tope Akinkuade',

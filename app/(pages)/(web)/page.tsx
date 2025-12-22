@@ -1,4 +1,4 @@
-import { Hero, About, Projects, Expertise } from '@/components/web/home';
+import { Hero, About, Projects, Expertise } from '@/app/(pages)/(web)/components';
 import prismadb from '@/lib/prismadb';
 
 export default async function Home() {

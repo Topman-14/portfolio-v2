@@ -12,6 +12,8 @@ export const routes = {
   adminExperience: "/admin/experience",
   adminCategories: "/admin/categories",
   signIn: "/auth/sign-in",
+  forgotPassword: "/auth/forgot-password",
+  resetPassword: "/auth/reset-password",
 }
 
 export const AdminNavRoutes = [

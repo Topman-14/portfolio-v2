@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import prismadb from '@/lib/prismadb';
 import { BASE_URL } from '@/lib/constants';
-import { WorksHero } from '@/components/web/work/works-hero';
-import { WorksBentoGrid } from '@/components/web/work/featured-works';
-import { ExperienceSection } from '@/components/web/work/experience-section';
+import { WorksHero } from '@/app/(pages)/(web)/work/components/works-hero';
+import { WorksBentoGrid } from '@/app/(pages)/(web)/work/components/featured-works';
+import { ExperienceSection } from '@/app/(pages)/(web)/work/components/experience-section';
 
 export const metadata: Metadata = {
   title: 'Work | Tope Akinkuade',

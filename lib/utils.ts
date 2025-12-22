@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { z } from "zod";
-import { FieldConfig } from "@/components/generic-form/data";
+import { FieldConfig } from "@/components/ui/generic-form/data";
 import { UploadedFile } from "@/components/ui/file-upload";
 
 export function cn(...inputs: ClassValue[]) {

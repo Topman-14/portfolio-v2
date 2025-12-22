@@ -19,6 +19,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import Link from "next/link";
+import { routes } from "@/lib/constants";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -158,6 +160,15 @@ export default function SignIn() {
             </Button>
           </form>
         </Form>
+
+        <div className="text-center">
+          <Link
+            href={routes.forgotPassword}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Forgot your password?
+          </Link>
+        </div>
       </div>
     </div>
   );

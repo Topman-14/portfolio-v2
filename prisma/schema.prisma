@@ -1,5 +1,6 @@
 datasource db {
   provider = "postgresql"
+  //ts-ignore
   url      = env("DATABASE_URL")
 }
  
@@ -27,6 +28,7 @@ model User {
   experiences   Experience[]
   works         Work[]
   categories    Category[]
+  passwordResetTokens PasswordResetToken[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -182,4 +184,15 @@ model NewsletterSubscription {
   updatedAt DateTime @updatedAt
 
   @@map("newsletter_subscriptions")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@map("password_reset_tokens")
 }

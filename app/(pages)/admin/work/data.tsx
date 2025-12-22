@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { Work } from "@prisma/client"
-import { FieldConfig } from "@/components/generic-form"
+import { FieldConfig } from "@/components/ui/generic-form"
 
 export const workColumns: ColumnDef<Work>[] = [
   {
