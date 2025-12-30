@@ -6,7 +6,7 @@ import { useHotkeys } from "react-hotkeys-hook"
 
 // --- Hooks ---
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
-import { useWindowSize } from "@/hooks/use-window-size"
+import { useViewport } from "@/hooks/use-viewport"
 
 // --- Lib ---
 import { isMarkInSchema, isNodeTypeSelected } from "@/lib/tiptap-utils"
@@ -159,7 +159,7 @@ export function useColorHighlight(config: UseColorHighlightConfig) {
   } = config
 
   const { editor } = useTiptapEditor(providedEditor)
-  const { isMobile } = useWindowSize()
+  const { isMobile } = useViewport()
   const [isVisible, setIsVisible] = React.useState<boolean>(true)
   const canColorHighlightState = canColorHighlight(editor)
   const isActive = isColorHighlightActive(editor, highlightColor)

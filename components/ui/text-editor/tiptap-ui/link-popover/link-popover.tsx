@@ -6,7 +6,7 @@ import type { Editor } from "@tiptap/react"
 
 // --- Hooks ---
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
-import { useWindowSize } from "@/hooks/use-window-size"
+import { useViewport } from "@/hooks/use-viewport"
 
 // --- Icons ---
 import { CornerDownLeftIcon } from "@/components/ui/text-editor/tiptap-icons/corner-down-left-icon"
@@ -111,7 +111,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
   openLink,
   isActive,
 }) => {
-  const { isMobile } = useWindowSize()
+  const { isMobile } = useViewport()
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {

@@ -152,10 +152,9 @@ export const AboutContent = () => {
             </div>
 
             <div
-              ref={imageContainerRef}
               className='relative h-[400px] lg:h-[500px] rounded-3xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
             >
-              <Parallax speed={-20} trigger={imageContainerRef}>
+              <Parallax speed={-20} >
                 <Image
                   src='/img/jpg/me.jpg'
                   alt='Tope Akinkuade'

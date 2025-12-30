@@ -99,7 +99,7 @@ export const Projects = ({ works }: { works: Work[] }) => {
   return (
     <section
       ref={sectionRef}
-      className='relative min-h-screen bg3 py-32 overflow-hidden'
+      className='relative min-h-screen py-32 overflow-hidden'
     >
       <div className='max-w-7xl mx-auto mb-12 px-4 md:px-8 lg:px-16'>
         <h2
@@ -119,19 +119,7 @@ export const Projects = ({ works }: { works: Work[] }) => {
       </div>
 
       <div className='space-y-6'>
-        {movingGrid.map(({ dir, speed, data }, idx) => (
-          <Marquee
-            key={idx}
-            pauseOnHover
-            direction={dir as 'left' | 'right'}
-            speed={speed}
-            autoFill
-          >
-            {data.map((work, i) => (
-              <ProjectCard key={`${work.id}-${i}`} work={work} isMarquee index={i} />
-            ))}
-          </Marquee>
-        ))}
+      
       </div>
     </section>
   );

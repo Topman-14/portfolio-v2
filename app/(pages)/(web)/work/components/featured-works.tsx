@@ -8,7 +8,7 @@ import { getFontsReady } from '@/lib/fonts-ready';
 import { Work } from '@prisma/client';
 import BentoCard from './bento-card';
 import OtherWorksSection from './others';
-import { useWindowSize } from '@/hooks/use-window-size';
+import { useViewport } from '@/hooks/use-viewport';
 
 const layouts = [
   { colSpan: 4, rowSpan: 4 },
@@ -30,7 +30,7 @@ export const WorksBentoGrid = ({ works }: { works: Work[] }) => {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const [gridAutoRows, setGridAutoRows] = useState('minmax(200px, 1fr)');
-  const viewPort = useWindowSize();
+  const viewPort = useViewport();
 
   useEffect(() => {
     const updateRows = () => {

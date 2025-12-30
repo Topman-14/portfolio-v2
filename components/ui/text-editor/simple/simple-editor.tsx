@@ -60,7 +60,7 @@ import { HighlighterIcon } from "@/components/ui/text-editor/tiptap-icons/highli
 import { LinkIcon } from "@/components/ui/text-editor/tiptap-icons/link-icon"
 
 // --- Hooks ---
-import { useWindowSize } from "@/hooks/use-window-size"
+import { useViewport } from "@/hooks/use-viewport"
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility"
 
 // --- Components ---
@@ -193,7 +193,7 @@ export function SimpleEditor({
   placeholder = "Start typing...", 
   disabled = false 
 }: SimpleEditorProps) {
-  const { height, isMobile } = useWindowSize()
+  const { height, isMobile } = useViewport()
   const [mobileView, setMobileView] = useState<
     "main" | "highlighter" | "link"
   >("main")

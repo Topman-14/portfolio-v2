@@ -47,10 +47,6 @@ const specializations = [
 
 export const Expertise = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const overviewHeadingRef = useRef<HTMLHeadingElement>(null);
-  const overviewTextRef = useRef<HTMLDivElement>(null);
-  const specializationsHeadingRef = useRef<HTMLHeadingElement>(null);
-
 
   useGSAP(
     () => {
@@ -59,82 +55,7 @@ export const Expertise = () => {
       const splits: SplitType[] = [];
       const scrollTriggers: ScrollTrigger[] = [];
 
-      getFontsReady().then(() => {
-        const overviewHeading = overviewHeadingRef.current;
-        const overviewText = overviewTextRef.current;
-        const specializationsHeading = specializationsHeadingRef.current;
-
-        if (overviewHeading) {
-          const split = new SplitType(overviewHeading, { types: 'words' });
-          splits.push(split);
-          gsap.set(split.words, { willChange: 'opacity, transform' });
-          const st = gsap.fromTo(
-            split.words,
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              stagger: 0.03,
-              ease: 'expo.out',
-              clearProps: 'willChange',
-              scrollTrigger: {
-                trigger: overviewHeading,
-                start: 'top 80%',
-              },
-            }
-          ).scrollTrigger;
-          if (st) scrollTriggers.push(st);
-        }
-
-        if (overviewText) {
-          const paragraphs = overviewText.querySelectorAll('p');
-          for (const p of paragraphs) {
-            const split = new SplitType(p, { types: 'lines' });
-            splits.push(split);
-            gsap.set(split.lines, { willChange: 'opacity, transform' });
-            const st = gsap.fromTo(
-              split.lines,
-              { opacity: 0, y: 20 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.6,
-                stagger: 0.04,
-                ease: 'power2.out',
-                clearProps: 'willChange',
-                scrollTrigger: {
-                  trigger: p,
-                  start: 'top 85%',
-                },
-              }
-            ).scrollTrigger;
-            if (st) scrollTriggers.push(st);
-          }
-        }
-
-        if (specializationsHeading) {
-          const split = new SplitType(specializationsHeading, { types: 'words' });
-          splits.push(split);
-          gsap.set(split.words, { willChange: 'opacity, transform' });
-          const st = gsap.fromTo(
-            split.words,
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              stagger: 0.03,
-              ease: 'expo.out',
-              clearProps: 'willChange',
-              scrollTrigger: {
-                trigger: specializationsHeading,
-                start: 'top 80%',
-              },
-            }
-          ).scrollTrigger;
-          if (st) scrollTriggers.push(st);
-        }
+      getFontsReady().then(() => { 
 
         if (sectionRef.current) {
           const specs = sectionRef.current.querySelectorAll('.specialization-item');
@@ -171,19 +92,18 @@ export const Expertise = () => {
   return (
     <section
       ref={sectionRef}
-      className='relative min-h-screen bg-white py-32 px-4 md:px-8 lg:px-16 bg3'
+      className='relative min-h-screen py-32 px-4 md:px-8 lg:px-16'
     >
       <div className='max-w-7xl mx-auto'>
         <div className='grid lg:grid-cols-2 gap-12 lg:gap-20'>
           <div className='lg:sticky lg:top-[300px] lg:self-start space-y-6'>
             <h2
-              ref={overviewHeadingRef}
-              className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight'
+              className='h2'
             >
               Expertise
             </h2>
 
-            <div ref={overviewTextRef} className='space-y-4'>
+            <div className='space-y-4'>
               <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans'>
                 I work across the stack, but my obsession lies in clean
                 interfaces that feel effortless. I take projects from concept to
@@ -206,7 +126,6 @@ export const Expertise = () => {
 
           <div className='space-y-8'>
             <h3
-              ref={specializationsHeadingRef}
               className='text-2xl md:text-3xl font-display font-bold text-malachite mb-8'
             >
               Specializations

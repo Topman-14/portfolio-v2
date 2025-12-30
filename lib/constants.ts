@@ -1,4 +1,4 @@
-export const BASE_URL = "https://tops.dev";
+export const BASE_URL = "https://findtope.dev";
 
 export const routes = {
   root: "/",
@@ -41,9 +41,9 @@ export const AdminNavRoutes = [
 
 export const navItems = [
   { name: "Home", href: "/" },
-  // { name: "About", href: "/about" },
+  { name: "About", href: "/about" },
   { name: "Work", href: "/work" },
-  // { name: "Blog", href: "/blog" },
+  { name: "Blog", href: "/blog" },
   // { name: "Contact", href: "/contact" },
 ];
 

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Logo from '../../../../components/ui/logo';
 import { navItems, socials } from '@/lib/constants';
 import NavOverlay from './nav-overlay';
-import { useWindowSize } from '@/hooks/use-window-size';
+import { useViewport } from '@/hooks/use-viewport';
 import RollingText from '../../../../components/animations/rolling-text';
 import SocialIcons from '../../../../components/ui/social-icon';
 import DomAnimate from '../../../../components/animations/dom-animate';
@@ -16,7 +16,7 @@ import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { isMobile } = useWindowSize();
+  const { isMobile } = useViewport();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,7 +48,7 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className='relative overflow-hidden'
+                  className='relative overflow-hidden leading-[normal]'
                 >
                   <RollingText className='text-white '>{item.name}</RollingText>
                 </Link>

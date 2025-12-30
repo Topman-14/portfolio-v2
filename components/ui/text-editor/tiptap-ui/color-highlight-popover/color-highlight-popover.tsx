@@ -5,7 +5,7 @@ import { type Editor } from "@tiptap/react"
 
 // --- Hooks ---
 import { useMenuNavigation } from "@/hooks/use-menu-navigation"
-import { useWindowSize } from "@/hooks/use-window-size"
+import { useViewport } from "@/hooks/use-viewport"
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
 
 // --- Icons ---
@@ -96,7 +96,7 @@ export function ColorHighlightPopoverContent({
   ]),
 }: ColorHighlightPopoverContentProps) {
   const { handleRemoveHighlight } = useColorHighlight({ editor })
-  const { isMobile } = useWindowSize()
+  const { isMobile } = useViewport()
   const containerRef = React.useRef<HTMLDivElement>(null)
 
   const menuItems = React.useMemo(

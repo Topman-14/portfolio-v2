@@ -6,7 +6,7 @@ import { type Editor } from "@tiptap/react"
 
 // --- Hooks ---
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
-import { useWindowSize } from "@/hooks/use-window-size"
+import { useViewport } from "@/hooks/use-viewport"
 
 // --- Lib ---
 import {
@@ -143,7 +143,7 @@ export function useImageUpload(config?: UseImageUploadConfig) {
   } = config || {}
 
   const { editor } = useTiptapEditor(providedEditor)
-  const { isMobile } = useWindowSize()
+  const { isMobile } = useViewport()
   const [isVisible, setIsVisible] = React.useState<boolean>(true)
   const canInsert = canInsertImage(editor)
   const isActive = isImageActive(editor)
