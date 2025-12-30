@@ -173,6 +173,15 @@
   position: relative;
 }
 
+.bg2 {
+  background-color: black;
+  background-image: url('/img/svg/bg3.svg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
 
 html {
   scroll-behavior: initial;
