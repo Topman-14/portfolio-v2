@@ -19,7 +19,7 @@ import {
   type ReferenceType,
   FloatingDelayGroup,
 } from "@floating-ui/react"
-import "@/components/tiptap/tiptap-ui-primitive/tooltip/tooltip.scss"
+import "@/components/ui/text-editor/tiptap-ui-primitive/tooltip/tooltip.scss"
 
 interface TooltipProviderProps {
   children: React.ReactNode

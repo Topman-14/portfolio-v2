@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Separator } from "@/components/ui/text-editor/tiptap-ui-primitive/separator"
-import "@/components/tiptap/tiptap-ui-primitive/toolbar/toolbar.scss"
+import "@/components/ui/text-editor/tiptap-ui-primitive/toolbar/toolbar.scss"
 import { cn } from "@/lib/tiptap-utils"
 import { useMenuNavigation } from "@/hooks/use-menu-navigation"
 import { useComposedRef } from "@/hooks/use-composed-ref"

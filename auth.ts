@@ -6,6 +6,7 @@ import { UserRole } from "@prisma/client"
 import { prisma } from "@/prisma"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // @ts-expect-error - Type mismatch between @auth/prisma-adapter and next-auth v5 beta's @auth/core versions
   adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({

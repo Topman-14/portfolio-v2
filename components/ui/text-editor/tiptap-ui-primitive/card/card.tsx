@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/tiptap-utils"
-import "@/components/tiptap/tiptap-ui-primitive/card/card.scss"
+import "@/components/ui/text-editor/tiptap-ui-primitive/card/card.scss"
 
 const Card = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
   ({ className, ...props }, ref) => {

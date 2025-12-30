@@ -84,7 +84,7 @@ export default function ResetPassword() {
         toast.success("Password has been reset successfully!");
         router.push(routes.signIn);
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);

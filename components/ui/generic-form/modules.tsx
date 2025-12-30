@@ -27,7 +27,7 @@ import { FieldConfig, SelectOption, FieldComponentProps } from './data';
 import { useDebounce } from '@/hooks/use-debounce';
 
 import { useState, useEffect } from 'react';
-import { SimpleEditor } from '../text-editor/simple/simple-editor';
+import { SimpleEditor } from '../text-editor';
 
 export function AsyncSelectField({ field, form }: FieldComponentProps) {
   const [open, setOpen] = useState(false);
