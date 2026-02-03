@@ -71,6 +71,73 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
 
+## Docker Development Setup
+
+This project includes Docker Compose configuration for easy development setup.
+
+### Prerequisites
+
+- Docker and Docker Compose installed on your system
+
+### Quick Start with Docker
+
+1. Create a `.env` file in the root directory (or copy from `.env.example` if available):
+```bash
+AUTH_SECRET=your-auth-secret-here
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloudinary-name
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your-upload-preset
+GMAIL_USER=your-email@gmail.com
+GMAIL_APP_PASSWORD=your-app-password
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+2. Start the services:
+```bash
+docker-compose up -d
+```
+
+3. Run database migrations:
+```bash
+docker-compose exec app npx prisma migrate dev
+docker-compose exec app npx prisma generate
+```
+
+4. Create a super admin user:
+```bash
+docker-compose exec app npm run createsuperuser
+```
+
+5. (Optional) Seed the database:
+```bash
+docker-compose exec app npm run seed
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000).
+
+### Docker Commands
+
+- `docker-compose up` - Start services in foreground
+- `docker-compose up -d` - Start services in background
+- `docker-compose down` - Stop and remove containers
+- `docker-compose down -v` - Stop and remove containers with volumes (⚠️ deletes database data)
+- `docker-compose logs -f app` - View application logs
+- `docker-compose logs -f db` - View database logs
+- `docker-compose exec app <command>` - Run commands in the app container
+
+### Database Access
+
+The PostgreSQL database is accessible at:
+- **Host**: `localhost`
+- **Port**: `5432`
+- **Database**: `portfolio_dev`
+- **Username**: `portfolio`
+- **Password**: `portfolio_dev_password`
+
+You can connect using any PostgreSQL client with the connection string:
+```
+postgresql://portfolio:portfolio_dev_password@localhost:5432/portfolio_dev
+```
+
 ## Scripts
 
 - `npm run dev` - Start development server with Turbopack
