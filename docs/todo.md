@@ -8,6 +8,8 @@
 * [ ] fix about text fade time
 * [ ] add product section
 * [ ] add spotify section
-* [ ] increase hero text widthe based on vp
+* [ ] increase hero text width based on vp
 * [ ] add cursor bgblur circle
 * [ ] add back hero animation
+* [ ] add spotify now playing
+* [ ] add OG images for SEO
