@@ -9,7 +9,7 @@ import ScrollToTopButton from '@/app/(pages)/(web)/components/scroll-to-top-butt
 export default function Footer() {
 
   return (
-    <footer className='relative bg-coal border-t border-white/10'>
+    <footer className='relative bg-coal border-t border-white/10 z-4'>
       <div className='max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-16 md:py-20'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16'>
           <div className='lg:col-span-5 space-y-6'>

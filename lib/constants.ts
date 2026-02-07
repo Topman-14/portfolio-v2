@@ -27,7 +27,7 @@ export const AdminNavRoutes = [
   },
   {
     href: `${routes.adminWork}`,
-    label: 'Work',
+    label: 'Projects',
   },
   {
     href: `${routes.adminExperience}`,

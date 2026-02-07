@@ -1,0 +1,26 @@
+# Project Rules
+
+## Code Changes
+- Only make code changes when explicitly asked to do so
+- Never add extra fixes, improvements, or features that were not requested
+- Do not refactor or modify code beyond what is specifically requested
+- Make code changes with the least amount of code changes possible - aim for the most minimal updates
+- Touch only what's necessary for the requested change
+
+## Questions vs. Changes
+- When asked questions, provide answers and information only - do not modify code
+- Questions may be asked to understand something better or to explore available options
+- Only make code updates when there is a clear, explicit request to do so
+- When tasks are ambiguous or there are many tasks, ask questions for clarity instead of assuming
+- NEVER make code changes when user asks questions starting with "how", "is it possible", "can I", "what if", "should I", "would it be better"
+- ONLY make code changes when user explicitly uses action verbs like "update", "change", "modify", "create", "add", "remove", "fix", "implement"
+
+## Debugging
+- When debugging, focus on the root cause first
+- Provide a concise fix based on the logs and information provided
+- Do not add unrelated fixes or improvements during debugging
+
+## General Guidelines
+- Preserve existing behavior unless explicitly asked to change it
+- Do not refactor unrelated code
+- Avoid over-engineering or premature generalization

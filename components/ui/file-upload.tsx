@@ -1,8 +1,8 @@
 "use client";
 
-import { cn, extractFileName, extractPublicId, isImage, uploadToCloudinary } from "@/lib/utils";
+import { cn, extractFileName, extractPublicId, isImage, uploadToS3 } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Upload, X, File, Loader2 } from "lucide-react";
+import { Upload, X, File, Loader2, RefreshCw, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useState, useEffect, useRef } from "react";
 
@@ -63,7 +63,7 @@ export function FileUpload({
     setIsUploading(true);
 
     try {
-      const uploadPromises = fileArray.map(uploadToCloudinary);
+      const uploadPromises = fileArray.map(uploadToS3);
       const newFiles = await Promise.all(uploadPromises);
 
       if (multiple) {
@@ -75,7 +75,7 @@ export function FileUpload({
         onChange(newFiles[0].url);
       }
 
-      toast.success(`${newFiles.length} file(s) uploaded successfully`);
+      toast.success(`${newFiles.length} file${newFiles.length === 1 ? '' : 's'} uploaded!`);
     } catch (error) {
       console.error("Upload error:", error);
       toast.error("Upload failed. Please try again.");
@@ -121,8 +121,10 @@ export function FileUpload({
     }
   };
 
+  const hasFiles = uploadedFiles.length > 0;
+
   const handleClick = () => {
-    if (!disabled) {
+    if (!disabled && !hasFiles) {
       fileInputRef.current?.click();
     }
   };
@@ -131,11 +133,11 @@ export function FileUpload({
     <div className={cn("space-y-4", className)}>
       <div
         className={cn(
-          "relative border-2 border-dashed rounded-lg p-6 transition-all duration-200 cursor-pointer",
-          "hover:border-primary/50 hover:bg-accent/50",
+          "relative border-2 border-dashed rounded-lg p-6 transition-all duration-200",
+          !hasFiles && "cursor-pointer hover:border-primary/50 hover:bg-accent/50",
           isDragOver && "border-primary bg-accent/50 scale-[1.02]",
           disabled && "cursor-not-allowed opacity-50",
-          uploadedFiles.length === 0 && "min-h-[200px] flex items-center justify-center"
+          !hasFiles && "min-h-[200px] flex items-center justify-center"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -152,7 +154,33 @@ export function FileUpload({
           disabled={disabled}
         />
 
-        {uploadedFiles.length === 0 ? (
+        {hasFiles && !disabled && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="absolute top-2 right-2 z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              fileInputRef.current?.click();
+            }}
+            disabled={isUploading}
+          >
+            {multiple ? (
+              <>
+                <Plus className="mr-1 h-3 w-3" />
+                Add another
+              </>
+            ) : (
+              <>
+                <RefreshCw className="mr-1 h-3 w-3" />
+                Change
+              </>
+            )}
+          </Button>
+        )}
+
+        {!hasFiles ? (
           <div className="text-center">
             <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <div className="space-y-2">
@@ -176,11 +204,6 @@ export function FileUpload({
                 disabled={disabled}
               />
             ))}
-            {multiple && uploadedFiles.length < maxFiles && (
-              <div className="aspect-square border-2 border-dashed border-muted-foreground/25 rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-accent/50 transition-colors">
-                <Upload className="h-8 w-8 text-muted-foreground" />
-              </div>
-            )}
           </div>
         )}
 
@@ -191,18 +214,6 @@ export function FileUpload({
         )}
       </div>
 
-      {uploadedFiles.length > 0 && multiple && uploadedFiles.length < maxFiles && (
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handleClick}
-          disabled={disabled || isUploading}
-          className="w-full"
-        >
-          <Upload className="mr-2 h-4 w-4" />
-          Add More Files
-        </Button>
-      )}
     </div>
   );
 }

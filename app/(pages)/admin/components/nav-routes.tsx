@@ -12,7 +12,6 @@ import { AdminNavRoutes } from '@/lib/constants';
 
 export default function NavRoutes({
     className,
-    ...props
     } : React.HTMLAttributes<HTMLElement>){
       const pathname = usePathname();
 

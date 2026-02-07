@@ -20,7 +20,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { CalendarIcon, Check, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { CalendarIcon, Check, ChevronsUpDown, Loader2, Plus, Trash2, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { FieldConfig, SelectOption, FieldComponentProps } from './data';
@@ -29,6 +29,81 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { useState, useEffect } from 'react';
 import { SimpleEditor } from '../text-editor';
 
+export function TagsField({ field, form }: FieldComponentProps) {
+  const [inputValue, setInputValue] = useState('');
+
+  const tags = (form.watch(field.name) as string[]) || [];
+
+  const updateTags = (newTags: string[]) => {
+    form.setValue(field.name, newTags);
+  };
+
+  const addTag = (tag: string) => {
+    const trimmed = tag.trim();
+    if (!trimmed || tags.includes(trimmed)) return;
+    updateTags([...tags, trimmed]);
+    setInputValue('');
+  };
+
+  const removeTag = (index: number) => {
+    updateTags(tags.filter((_, i) => i !== index));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (inputValue.trim()) addTag(inputValue);
+    }
+    if (e.key === 'Backspace' && !inputValue && tags.length > 0) {
+      removeTag(tags.length - 1);
+    }
+  };
+
+  return (
+    <div className='space-y-2'>
+      <div className='flex gap-2'>
+        <Input
+          placeholder={field.placeholder}
+          disabled={field.disabled}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <Button
+          type='button'
+          variant='outline'
+          size='icon'
+          className='shrink-0'
+          disabled={field.disabled || !inputValue.trim()}
+          onClick={() => addTag(inputValue)}
+        >
+          <Plus className='h-4 w-4' />
+        </Button>
+      </div>
+      {tags.length > 0 && (
+        <div className='flex flex-wrap gap-1'>
+          {tags.map((tag, i) => (
+            <span
+              key={`${tag}-${i}`}
+              className='group inline-flex width-fit items-center rounded-md border bg-muted px-2 py-0.5 text-xs transition-all hover:bg-destructive/10 hover:border-destructive/30 relative overflow-hidden cursor-default'
+            >
+              {tag}
+              <button
+                type='button'
+                onClick={() => removeTag(i)}
+                className='max-w-[0] group-hover:ml-1 overflow-hidden group-hover:max-w-fit transition-all text-muted-foreground hover:text-destructive right-1 cursor-pointer '
+              >
+                <Trash2 className='h-3 w-3' />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+//todo: move these into their own component files, i'm too lazy rn
 export function AsyncSelectField({ field, form }: FieldComponentProps) {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -257,15 +332,15 @@ export function renderField(
         <Textarea {...commonProps} {...(form.register(field.name) as object)} />
       );
 
-      case 'rich-text':
-        return (
-          <SimpleEditor 
-            value={(form.watch(field.name) as string) || ""}
-            onChange={(value) => form.setValue(field.name, value)}
-            placeholder={field.placeholder}
-            disabled={field.disabled}
-          />
-        );
+    case 'rich-text':
+      return (
+        <SimpleEditor
+          value={(form.watch(field.name) as string) || ""}
+          onChange={(value) => form.setValue(field.name, value)}
+          placeholder={field.placeholder}
+          disabled={field.disabled}
+        />
+      );
 
     case 'boolean':
       return (
@@ -305,6 +380,9 @@ export function renderField(
 
     case 'async-select':
       return <AsyncSelectField field={field} form={form} />;
+
+    case 'tags':
+      return <TagsField field={field} form={form} />;
 
     case 'date':
       return <DateField field={field} form={form} />;

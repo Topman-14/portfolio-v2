@@ -57,7 +57,7 @@ export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
         <Badge 
           variant={
             status === "PUBLISHED" 
-              ? "default" 
+              ? "malachite" 
               : status === "DRAFT" 
                 ? "amber" 
                 : "bittersweet"

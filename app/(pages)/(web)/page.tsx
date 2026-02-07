@@ -1,4 +1,3 @@
-import prismadb from '@/lib/prismadb';
 import { Expertise } from './components/expertise';
 import { Projects } from './components/projects';
 import SplinePlayer from '@/components/custom/spline';
@@ -7,19 +6,8 @@ import { GButton } from '@/components/ui/gbutton';
 import Image from 'next/image';
 import Parallax from '@/components/animations/parallax';
 import { RevealText } from '@/components/custom/reveal-text';
-import { isDev } from '@/lib/utils';
 
 export default async function Home() {
-  const works = await prismadb.work.findMany({
-    where: {
-      featured: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: 10,
-  });
-
   return (
     <main className='bg1'>
       {/* Hero Section */}
@@ -33,25 +21,25 @@ export default async function Home() {
             </p>
 
             <h1
-              className='text-7xl lg:text-8xl xl:text-9xl font-display font-bold text-white leading-[1.1] mb-8 text-left max-w-4xl'
+              className='text-7xl lg:text-8xl xl:text-9xl font-display font-bold text-white leading-[1.1] mb-8 text-left max-w-4xl xl:max-w-none'
             >
-              Bug Slasher, <br />
-              <span className='text-malachite'>Deadline Bender.</span>
+              Product Engineer, <br />
+              <span className='text-malachite'>Technical Writer.</span>
             </h1>
 
             <p
               className='text-white font-semibold max-w-xl font-sans text-lg md:text-xl'
             >
-              I&apos;m a Product engineer that works across the stack to create
+              I work across the stack to create
               systems that balance precision and practicality.
               <br />
               <br />
               From architecture to deployment, <br className='md:hidden' /> I build infrastructure nobody
-              notices; until it&apos;s missing.
+              notices until it&apos;s missing.
             </p>
           </div>
           <div className='md:absolute mx-auto xl:bottom-32 bottom-20 right-12 size-[300px] md:max-h-none lg:size-[400px] z-[20] pointer-events-none'>
-           {isDev ? <div className="size-full bg-white"/> : <SplinePlayer
+            <SplinePlayer
               scene='/3d/hero.splinecode'
               draggable={true}
               className='w-full h-full'
@@ -59,13 +47,13 @@ export default async function Home() {
               cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
               disableZoom={true}
               interactive={true}
-            />}
+            />
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section className='relative lg:h-screen min-h-screen py-32 px-4 md:px-8 lg:px-16'>
+      <section className='relative  min-h-screen py-32 px-4 md:px-8 lg:px-16'>
         <div className='max-w-7xl mx-auto h-full flex gap-7 flex-col'>
           <div className='space-y-8 flex-1 md:flex-none max-w-3xl'>
             <h2
@@ -76,7 +64,7 @@ export default async function Home() {
 
             <RevealText
               as='p'
-              className='text-white text-lg leading-relaxed font-sans'
+              className='text-white text-lg lg:text-xl leading-relaxed font-sans'
               start='top 90%'
               end='bottom 10%'
               stagger={0.008}
@@ -136,7 +124,7 @@ export default async function Home() {
       </section>
 
       <Expertise />
-      <Projects works={works} />
+      <Projects />
     </main>
   );
 }
@@ -144,7 +132,7 @@ export default async function Home() {
 
 const imageData = [
   {
-    src: '/img/jpg/me_small.jpg',
+    src: '/img/jpg/test.jpg',
     alt: 'Tope Akinkuade',
     speed: -5,
     colSpan: 'col-span-2',

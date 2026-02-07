@@ -38,7 +38,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const categories = await prismadb.category.findMany();
 
-  async function handleSubmit(data: Article & { tags: string }) {
+  async function handleSubmit(data: Article) {
     'use server';
 
     try {
@@ -48,11 +48,11 @@ export default async function ArticlePage({ params }: PageProps) {
       }
 
       if (!isNew) {
-        
+
         const justPublished =
           article?.status === ArticleStatus.DRAFT &&
           data.status === ArticleStatus.PUBLISHED;
-          
+
         await prismadb.article.update({
           where: { id },
           data: {
@@ -65,8 +65,7 @@ export default async function ArticlePage({ params }: PageProps) {
           data: {
             ...data,
             slug: generateSlug(data.title),
-            userId: session.user.id, 
-            tags: data.tags?.split(',').map((tag: string) => tag.trim()).filter(Boolean),
+            userId: session.user.id,
           },
         });
       }
@@ -89,22 +88,23 @@ export default async function ArticlePage({ params }: PageProps) {
         </p>
       </div>
 
-        <GenericForm
-          fields={articleFields(categories)}
-          onSubmit={handleSubmit}
-          defaultValues={{
-            ...article,
-            tags: article?.tags.join(','),
-          }}
-          submitText={isNew ? 'Create' : 'Update'}
-          itemName='Article'
-          callBackRoute='/admin/articles'
-        />
+      <GenericForm
+        fields={[
+          ...articleFields(categories),
+        ]}
+        onSubmit={handleSubmit}
+        defaultValues={{
+          ...article,
+        }}
+        submitText={isNew ? 'Create' : 'Update'}
+        itemName='Article'
+        callBackRoute='/admin/articles'
+      />
     </div>
   );
 }
 
- const articleFields = (categories: Category[]): FieldConfig[] => [
+const articleFields = (categories: Category[]): FieldConfig[] => [
   {
     name: 'coverImg',
     label: 'Cover Image',
@@ -132,10 +132,12 @@ export default async function ArticlePage({ params }: PageProps) {
     })),
   },
   {
-    name: 'tags',
-    label: 'Tags',
-    type: 'text',
-    placeholder: 'javascript, react, nextjs',
+    name: 'readTime',
+    label: 'Read Time (minutes)',
+    type: 'number',
+    min: 1,
+    max: 120,
+    defaultValue: 5,
   },
   {
     name: 'excerpt',
@@ -144,13 +146,21 @@ export default async function ArticlePage({ params }: PageProps) {
     placeholder: 'Brief summary of the article',
     colSpan: 2,
   },
+
   {
-    name: 'readTime',
-    label: 'Read Time (minutes)',
-    type: 'number',
-    min: 1,
-    max: 120,
-    defaultValue: 5,
+    name: 'tags',
+    label: 'Tags',
+    type: 'tags',
+    placeholder: 'Type a tag and press Enter',
+  },
+  {
+    name: 'content',
+    label: 'Content',
+    type: 'rich-text',
+    placeholder: 'Write your article content here...',
+    required: true,
+    colSpan: 3,
+    minHeight: 400,
   },
   {
     name: 'status',
@@ -162,14 +172,5 @@ export default async function ArticlePage({ params }: PageProps) {
       { label: 'Archived', value: ArticleStatus.ARCHIVED },
     ],
     defaultValue: ArticleStatus.DRAFT,
-  },
-  {
-    name: 'content',
-    label: 'Content',
-    type: 'rich-text',
-    placeholder: 'Write your article content here...',
-    required: true,
-    colSpan: 3,
-    minHeight: 400,
   },
 ];

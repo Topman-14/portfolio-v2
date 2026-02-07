@@ -9,8 +9,12 @@ import Marquee from 'react-fast-marquee';
 import { Work } from '@prisma/client';
 import { ProjectCard } from './project-card';
 import { getFontsReady } from '@/lib/fonts-ready';
+import { useQuery } from '@/hooks/use-query';
 
-export const Projects = ({ works }: { works: Work[] }) => {
+export const Projects = () => {
+  const { data: works = [], isLoading } = useQuery<Work[]>('/api/works', {
+    params: { featured: 'true', limit: '10' },
+  });
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subheadingRef = useRef<HTMLParagraphElement>(null);
@@ -92,6 +96,21 @@ export const Projects = ({ works }: { works: Work[] }) => {
     { scope: sectionRef }
   );
 
+  if (isLoading) {
+    return (
+      <section className='relative min-h-screen py-32 overflow-hidden'>
+        <div className='max-w-7xl mx-auto mb-12 px-4 md:px-8 lg:px-16'>
+          <h2 className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-6'>
+            Products
+          </h2>
+          <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans max-w-3xl'>
+            Loading...
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   if (works.length === 0) {
     return null;
   }
@@ -119,7 +138,24 @@ export const Projects = ({ works }: { works: Work[] }) => {
       </div>
 
       <div className='space-y-6'>
-      
+        {movingGrid.map((row, rowIndex) => (
+          <Marquee
+            key={rowIndex}
+            direction={row.dir}
+            speed={row.speed}
+            pauseOnHover
+            className='py-4'
+          >
+            {row.data.map((work, index) => (
+              <ProjectCard
+                key={`${work.id}-${index}`}
+                work={work}
+                index={index}
+                isMarquee
+              />
+            ))}
+          </Marquee>
+        ))}
       </div>
     </section>
   );

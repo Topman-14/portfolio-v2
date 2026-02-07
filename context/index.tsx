@@ -5,6 +5,7 @@ import { AlertProvider } from '@/context/alert';
 import PageLoader from '@/components/ui/page-loader';
 import { QueryProvider } from '@/context/queries';
 import { ParallaxProvider } from '@/context/parallax';
+import { CursorGlow } from '@/components/custom/cursor-glow';
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryProvider>
@@ -27,6 +28,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             speed={200}
             shadow='0 0 10px #2299DD,0 0 5px #2299DD'
           />
+          <CursorGlow />
           <AlertProvider>
             {children}
             <Toaster position='top-center' richColors />

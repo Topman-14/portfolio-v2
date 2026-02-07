@@ -82,6 +82,9 @@ export function generateSchema(
       case 'files':
         fieldSchema = z.array(z.string());
         break;
+      case 'tags':
+        fieldSchema = z.array(z.string());
+        break;
       case 'select':
       case 'async-select':
         fieldSchema = z.string();
@@ -129,12 +132,35 @@ export const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
   };
 };
 
+export const uploadToS3 = async (file: File): Promise<UploadedFile> => {
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filename: file.name, contentType: file.type }),
+  });
+
+  if (!res.ok) throw new Error('Failed to get upload URL');
+
+  const { presignedUrl, fileUrl } = await res.json();
+
+  const uploadRes = await fetch(presignedUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': file.type },
+    body: file,
+  });
+
+  if (!uploadRes.ok) throw new Error('Upload failed');
+
+  return { url: fileUrl, publicId: fileUrl, originalName: file.name };
+};
+
 export const extractPublicId = (url: string): string => {
-  const matches = url.match(/\/v\d+\/(.+)\./);
+  const matches = new RegExp(/\/v\d+\/(.+)\./).exec(url);
   return matches ? matches[1] : '';
 };
 
 export const extractFileName = (url: string): string => {
+  //but why new regexp, hmmn sonarqube??
   const matches = url.match(/\/([^/]+)\.[^.]+$/);
   return matches ? matches[1] : 'file';
 };
@@ -144,7 +170,7 @@ export const isImage = (url: string) =>
 
 export function cleanErrorMsg(error: Error): string {
   const lines = error.message.split('\n');
-  const lastLine = lines[lines.length - 1]?.trim();
+  const lastLine = lines.at(-1)?.trim();
 
   return lastLine &&
     !lastLine.includes('__TURBOPACK__') &&

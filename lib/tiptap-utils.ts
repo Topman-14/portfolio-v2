@@ -311,8 +311,8 @@ export const handleImageUpload = async (
     // Start progress tracking
     onProgress?.({ progress: 0 })
 
-    // Import uploadToCloudinary dynamically to avoid circular imports
-    const { uploadToCloudinary } = await import("@/lib/utils")
+    // avoids circular deps
+    const { uploadToS3 } = await import("@/lib/utils")
     
     // Simulate some progress during upload preparation
     onProgress?.({ progress: 10 })
@@ -322,8 +322,7 @@ export const handleImageUpload = async (
       throw new Error("Upload cancelled")
     }
 
-    // Upload to Cloudinary
-    const uploadedFile = await uploadToCloudinary(file)
+    const uploadedFile = await uploadToS3(file)
     
     // Complete progress
     onProgress?.({ progress: 100 })

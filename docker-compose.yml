@@ -17,32 +17,5 @@ services:
       timeout: 5s
       retries: 5
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev
-    container_name: portfolio-app
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://portfolio:portfolio_dev_password@db:5432/portfolio?schema=public
-      - AUTH_SECRET=${AUTH_SECRET:-dev-secret-change-in-production}
-      - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:-}
-      - NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=${NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET:-}
-      - GMAIL_USER=${GMAIL_USER:-}
-      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-}
-      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
-    depends_on:
-      db:
-        condition: service_healthy
-    command: npm run dev
-
 volumes:
   postgres_data:
