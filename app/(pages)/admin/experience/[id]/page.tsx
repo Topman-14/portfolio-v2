@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import prismadb from '@/lib/prismadb';
-import { GenericForm } from '@/components/generic-form';
+import { GenericForm } from '@/components/ui/generic-form';
 import { Experience } from '@prisma/client';
 import { cleanErrorMsg } from '@/lib/utils';
 import { auth } from '@/auth';

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import prismadb from '@/lib/prismadb';
-import { FieldConfig, GenericForm } from '@/components/generic-form';
+import { FieldConfig, GenericForm } from '@/components/ui/generic-form';
 import { Article, ArticleStatus, Category } from '@prisma/client';
 import { generateSlug, cleanErrorMsg } from '@/lib/utils';
 import { auth } from '@/auth';

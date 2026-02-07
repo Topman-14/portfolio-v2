@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import type { Editor } from "@tiptap/react"
-import { useWindowSize } from "@/hooks/use-window-size"
+import { useViewport } from "@/hooks/use-viewport"
 import { useBodyRect } from "./use-element-rect"
 
 export interface CursorVisibilityOptions {
@@ -28,7 +28,7 @@ export function useCursorVisibility({
   editor,
   overlayHeight = 0,
 }: CursorVisibilityOptions) {
-  const { height: windowHeight } = useWindowSize()
+  const { height: windowHeight } = useViewport()
   const rect = useBodyRect({
     enabled: true,
     throttleMs: 100,

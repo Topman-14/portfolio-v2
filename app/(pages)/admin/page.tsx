@@ -8,11 +8,11 @@ import {
   Award,
   Calendar
 } from 'lucide-react';
-import { ArticlesChart } from '../../../components/charts/articles-chart';
-import { TopArticles } from '../../../components/charts/top-articles';
-import { CategoryDistribution } from '../../../components/charts/category-distribution';
-import { RecentActivity } from '../../../components/charts/recent-activity';
-import { MetricCard, ChartCard } from '../../../components/dashboard/metric-card';
+import { ArticlesChart } from './components/articles-chart';
+import { TopArticles } from './components/top-articles';
+import { CategoryDistribution } from './components/category-distribution';
+import { RecentActivity } from './components/recent-activity';
+import { MetricCard, ChartCard } from './components/metric-card';
 import { routes } from '@/lib/constants';
 
 export default async function AdminDashboard() {

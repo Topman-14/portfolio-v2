@@ -1,4 +1,4 @@
-import Navbar from '@/components/admin/navbar';
+import Navbar from '@/app/(pages)/admin/components/navbar';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';

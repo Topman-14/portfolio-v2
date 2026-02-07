@@ -77,7 +77,8 @@ const experiences = [
 
 const works = [
   {
-    title: "BintaFinancial.com — Company Site & CMS",
+    title: "Testfinancial.com — Company Site & CMS",
+    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763801674/qirnxf1ofdwcz7curqu4.png',
     description: "I still remember the first week on BintaFinancial.com, everything was new, and it felt like stepping onto a live battlefield of data and users. My goal was to create a site that allowed marketing, growth, and product teams to publish content without constant engineering support. I mapped out the CMS structure, designed semantic SEO-friendly pages, and implemented incremental static regeneration so blog and webinar content could update seamlessly. Working with Strapi as a headless CMS, I had to create a robust schema for articles, webinars, ebooks, and careers that could evolve over time. I also built a cross-domain authentication system, handling both client and server-to-server flows, and introduced token streaming endpoints to preview large content efficiently. Watching the site go live and seeing teams publish autonomously made every late night worth it. Each challenge, from content migration scripts to live rate-limiting for our RAG-based internal search, taught me a lot about scaling real-world web platforms.",
     videoUrl: null,
     tools: ["TypeScript","Next.js","React","Strapi","Node.js","Tailwind","Postgres","Prisma","Socket.IO","LangChain","PGVector"],
@@ -90,6 +91,7 @@ const works = [
     title: "Topmart — Full Stack Ecommerce (storefront + admin)",
     description: "Working on Topmart, I had to balance the speed and responsiveness of the storefront with the full functionality of the admin dashboard. I designed an intuitive store interface where users could browse, filter, and purchase products seamlessly while the admin panel enabled sellers to manage inventory, handle orders, and configure Paystack payments. Using Next.js and TypeScript, I optimized server-side rendering and caching to ensure SEO and performance were top-notch. The admin panel used ShadCN UI for consistent design and responsive layouts. Handling asynchronous payment flows, ensuring idempotency, and reconciling order and payment state was tricky but satisfying. Each deployment refined usability, and watching real users complete orders without friction was extremely rewarding. The codebases, both client and admin, reflect careful attention to modularity, maintainability, and UX design.",
     videoUrl: null,
+    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763802008/sligvjkr6losfijsvelk.png',
     tools: ["TypeScript","Next.js","React","ShadCN UI","Paystack","MongoDB Atlas","Vercel","Tailwind"],
     githubLink: "https://github.com/Topman-14/topmart-client",
     liveUrl: null,
@@ -101,6 +103,7 @@ const works = [
     description: "MedSync was perhaps the most meaningful project I have contributed to. Clinics were struggling with fragmented patient data and inefficient workflows. I focused on building modules for centralized electronic health records with AI-powered summarization and fast retrieval. Using PGVector and LangChain, I enabled smart search for clinicians while keeping privacy and encryption at the forefront. I documented workflows extensively in Notion, iterated on prototypes, and optimized the system for speed and usability. Integrating existing clinic systems and handling sensitive medical data pushed me to implement careful audit trails and secure transformation pipelines. It was incredibly rewarding to see the system streamline patient lookup and billing processes. Each refinement, every user feedback session, reinforced the importance of building technology that tangibly improves healthcare delivery.",
     videoUrl: null,
     tools: ["TypeScript","Node.js","Postgres","PGVector","LangChain","Docker","OpenAI APIs"],
+    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763802008/sligvjkr6losfijsvelk.png',
     githubLink: null,
     liveUrl: null,
     featured: true,
@@ -111,6 +114,7 @@ const works = [
     description: "Hireflow was a research-driven project where I contributed to building the frontend of an AI-powered ATS. The system allowed recruiters to see candidate pipelines, parse resumes, and evaluate scoring models in real-time. Using React and TypeScript, I designed dashboards, candidate workflows, and interactive elements that made the process intuitive. While my colleague focused on AI and candidate scoring models, I ensured that the UI could handle dynamic updates, complex candidate flows, and visualization of AI recommendations without confusion. Ensuring explainability and avoiding bias in the interface were ongoing challenges. Watching recruiters interact with the system during pilot tests highlighted the value of combining research-driven AI with practical, user-friendly design.",
     videoUrl: null,
     tools: ["React","TypeScript","Django","Postgres","Celery","Redis"],
+    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763801674/qirnxf1ofdwcz7curqu4.png',
     githubLink: null,
     liveUrl: null,
     featured: false,
@@ -121,6 +125,7 @@ const works = [
     description: "At Binta Financial, I built the company's public website and admin panel, integrating Strapi CMS for content management. I also engineered a RAG-based internal search system using LangChain and PGVector, along with real-time streaming for tokenized outputs. I set up cross-domain authentication, ensuring smooth client and server-to-server flows, and implemented centralized CI/CD pipelines for onboarding new developers. Each feature deployment reinforced my understanding of scaling complex systems and balancing developer velocity with product stability.",
     videoUrl: null,
     tools: ["Next.js","TypeScript","Strapi","LangChain","PGVector","Socket.IO","Prisma"],
+    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763801674/qirnxf1ofdwcz7curqu4.png',
     githubLink: null,
     liveUrl: null,
     featured: true,
@@ -198,7 +203,7 @@ async function seed() {
         data: {
           title: work.title,
           description: work.description,
-          image: '',
+          image: work.image,
           videoUrl: work.videoUrl,
           tools: work.tools,
           githubLink: work.githubLink,

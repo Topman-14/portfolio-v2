@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import Lenis from 'lenis';
+import { useViewport } from './use-viewport';
 
 const premiumEasing = (t: number): number => {
   return Math.min(1, 1.001 - Math.pow(2, -10 * t));
@@ -30,6 +31,10 @@ export function useSmoothScroll(options: UseSmoothScrollOptions = {}) {
     wheelMultiplier = 1,
     easing = premiumEasing,
   } = options;
+  const { isDesktop } = useViewport();
+
+  const defaultLerp = isDesktop ? 0.05 : 0.1;
+  const finalLerp = lerp ?? defaultLerp;
 
   const lenisRef = useRef<Lenis | null>(null);
   const rafCallbackRef = useRef<((time: number) => void) | null>(null);
@@ -53,7 +58,7 @@ export function useSmoothScroll(options: UseSmoothScrollOptions = {}) {
     }
 
     const lenis = new Lenis({
-      lerp,
+      lerp: finalLerp,
       smoothWheel,
       syncTouch,
       duration,
@@ -80,7 +85,7 @@ export function useSmoothScroll(options: UseSmoothScrollOptions = {}) {
       lenisRef.current = null;
       rafCallbackRef.current = null;
     };
-  }, [enabled, lerp, smoothWheel, syncTouch, duration, touchInertiaExponent, wheelMultiplier, easing, handleRaf]);
+  }, [enabled, finalLerp, smoothWheel, syncTouch, duration, touchInertiaExponent, wheelMultiplier, easing, handleRaf, isDesktop]);
 
   return lenisRef.current;
 }
