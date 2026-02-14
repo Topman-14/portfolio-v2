@@ -98,14 +98,14 @@ export const Expertise = () => {
         <div className='grid lg:grid-cols-2 gap-12 lg:gap-20'>
           <div className='lg:sticky lg:top-[300px] lg:self-start space-y-6'>
             <h2
-              className='h2'
+              className='generic-h2'
             >
               Expertise
             </h2>
 
             <div className='space-y-4'>
               <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans'>
-                I work across the stack, but my obsession lies in clean
+                Obsession lies in clean
                 interfaces that feel effortless. I take projects from concept to
                 deployment, handling architecture, UX, and long-term
                 maintainability with equal attention. What sets me apart is

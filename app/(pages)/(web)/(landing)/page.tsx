@@ -6,6 +6,8 @@ import { GButton } from '@/components/ui/gbutton';
 import Image from 'next/image';
 import Parallax from '@/components/animations/parallax';
 import { RevealText } from '@/components/custom/reveal-text';
+import { Suspense } from '@/components/ui/suspense';
+import { RevealHeader } from '@/components/custom/reveal-header';
 
 export default async function Home() {
   return (
@@ -56,11 +58,7 @@ export default async function Home() {
       <section className='relative  min-h-screen py-32 px-4 md:px-8 lg:px-16'>
         <div className='max-w-7xl mx-auto h-full flex gap-7 flex-col'>
           <div className='space-y-8 flex-1 md:flex-none max-w-3xl'>
-            <h2
-              className='h2'
-            >
-              About
-            </h2>
+            <RevealHeader title="About" />
 
             <RevealText
               as='p'
@@ -100,13 +98,11 @@ export default async function Home() {
           >
             {imageData.map((image, index) => (
               <div
-              // bg underneath
+                // bg underneath
                 key={`${image.src}-${image.speed}-${index}`}
                 className={`${image.colSpan} relative ${image.height} overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
               >
-                {/* {((isMobile && index === 2 )|| (!isMobile && index === 3))? (
-                  <SpotifyNowPlaying />
-                ) : ( */}
+          
                 <Parallax speed={image.speed}>
                   <Image
                     src={image.src}
@@ -116,7 +112,6 @@ export default async function Home() {
                     priority={image.priority}
                   />
                 </Parallax>
-                {/* )} */}
               </div>
             ))}
           </div>
@@ -124,7 +119,10 @@ export default async function Home() {
       </section>
 
       <Expertise />
-      <Projects />
+
+      <Suspense>
+        <Projects />
+      </Suspense>
     </main>
   );
 }

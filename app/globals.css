@@ -144,8 +144,12 @@
   body {
     @apply bg-background text-foreground;
   }
-  .h2 {
+  .generic-h2 {
     @apply text-6xl lg:text-7xl font-display font-bold text-white;
+  }
+
+  .generic-subtitle {
+    @apply text-white/70 text-base md:text-lg leading-relaxed font-sans max-w-3xl;
   }
 }
 

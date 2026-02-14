@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { BASE_URL } from '@/lib/constants';
-import { AboutContent } from '@/app/(pages)/(web)/components/about-content';
 
 export const metadata: Metadata = {
   title: 'About | Tope Akinkuade',
@@ -40,5 +39,13 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  return <AboutContent />;
+  return (
+    <main className='bg1'>
+      <section className='relative min-h-screen py-32 px-4 md:px-8 lg:px-16'>
+        <div className='max-w-7xl mx-auto'>
+          <h1 className='generic-h2'>About</h1>
+        </div>
+      </section>
+    </main>
+  );
 }
