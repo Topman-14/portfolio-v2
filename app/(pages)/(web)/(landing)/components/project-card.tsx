@@ -11,7 +11,7 @@ type ProjectCardProps = {
 export const ProjectCard = ({ work }: ProjectCardProps) => {
   return (
     <article
-      className='relative w-full max-w-6xl mx-auto h-[75vh] md:h-[70vh]'
+      className='relative w-full max-w-7xl mx-auto h-[75vh] md:h-[70vh]'
     >
       <Link
         href={`/work/${work.id}`}

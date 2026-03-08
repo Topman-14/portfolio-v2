@@ -41,9 +41,9 @@ export const AdminNavRoutes = [
 
 export const navItems = [
   { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Work", href: "/work" },
   { name: "Blog", href: "/blog" },
+  { name: "Work", href: "/work" },
+  { name: "About", href: "/about" },
   // { name: "Contact", href: "/contact" },
 ];
 

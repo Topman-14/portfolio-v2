@@ -29,7 +29,7 @@ export const ProjectsStack = ({ works }: { works: ProjectWork[] }) => {
         <div className='relative'>
             <div
                 ref={containerRef}
-                style={{ height: `${length * 100}vh` }}
+                style={{ height: `${length * 80}vh` }}
                 className='relative'
             >
                 <div

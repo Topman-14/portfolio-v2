@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
+import { format } from 'date-fns';
 import { FieldConfig } from '@/components/ui/generic-form/data';
 import { UploadedFile } from '@/components/ui/file-upload';
 
@@ -180,3 +181,11 @@ export function cleanErrorMsg(error: Error): string {
 }
 
 export const isDev = process.env.NEXT_PUBLIC_NODE_ENV === 'development';
+
+export const formatPublishedDate = (
+  date: Date | null | undefined,
+  pattern: 'short' | 'long' = 'short'
+) => {
+  if (!date) return 'Draft';
+  return format(date, pattern === 'long' ? 'MMMM d, yyyy' : 'MMM d, yyyy');
+};

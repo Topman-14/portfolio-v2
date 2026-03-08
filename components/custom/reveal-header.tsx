@@ -34,8 +34,16 @@ export const RevealHeader = ({
       const subheading = subheadingRef.current;
 
       if (heading) {
-        const split = new SplitType(heading, { types: 'chars' });
+        const split = new SplitType(heading, { types: 'words,chars' });
         splits.push(split);
+        if (split.words) {
+          split.words.forEach((word) => {
+            if (word instanceof HTMLElement) {
+              word.style.display = 'inline-block';
+              word.style.whiteSpace = 'nowrap';
+            }
+          });
+        }
         gsap.set(split.chars, { willChange: 'opacity, transform' });
         const st = gsap.fromTo(
           split.chars,

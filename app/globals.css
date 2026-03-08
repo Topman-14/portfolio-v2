@@ -7,6 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --container-wide: 1440px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-display: var(--font-bricolage-grotesque);

@@ -8,6 +8,8 @@ import ScrollToTopButton from '@/app/(pages)/(web)/components/scroll-to-top-butt
 
 export default function Footer() {
 
+  console.log(navItems.reverse())
+
   return (
     <footer className='relative bg-coal border-t border-white/10 z-4'>
       <div className='max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-16 md:py-20'>
@@ -37,7 +39,7 @@ export default function Footer() {
               Quick Links
             </h4>
             <nav className='flex flex-col gap-2'>
-              {navItems.map((item) => (
+              {navItems.reverse().map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

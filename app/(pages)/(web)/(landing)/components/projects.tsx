@@ -19,7 +19,7 @@ export const Projects = async () => {
 
 
   return (
-    <section className='max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-28'>
+    <section className='max-w-7xl mx-auto py-28'>
       <ProjectsStack works={works} />
     </section>
   );
