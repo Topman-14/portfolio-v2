@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import prismadb from '@/lib/prismadb';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/config';
 import { WorkDetail } from '@/app/(pages)/(web)/work/components/work-detail';
 
 type PageProps = {

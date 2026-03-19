@@ -13,7 +13,7 @@ import { TopArticles } from './components/top-articles';
 import { CategoryDistribution } from './components/category-distribution';
 import { RecentActivity } from './components/recent-activity';
 import { MetricCard, ChartCard } from './components/metric-card';
-import { routes } from '@/lib/constants';
+import { routes } from '@/config';
 
 export default async function AdminDashboard() {
   const [

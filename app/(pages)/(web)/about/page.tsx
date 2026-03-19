@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/config';
 
 export const metadata: Metadata = {
   title: 'About | Tope Akinkuade',

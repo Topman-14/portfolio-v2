@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import prismadb from '@/lib/prismadb';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/config';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await prismadb.article.findMany({

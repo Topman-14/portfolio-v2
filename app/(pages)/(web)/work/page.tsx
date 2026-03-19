@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import prismadb from '@/lib/prismadb';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/config';
 import { WorksHero } from '@/app/(pages)/(web)/work/components/works-hero';
 import { WorksBentoGrid } from '@/app/(pages)/(web)/work/components/featured-works';
 import { ExperienceSection } from '@/app/(pages)/(web)/work/components/experience-section';

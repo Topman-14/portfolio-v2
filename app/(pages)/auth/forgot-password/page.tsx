@@ -19,7 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Mail, Loader2, ArrowLeft } from "lucide-react";
-import { routes } from "@/lib/constants";
+import { routes } from "@/config";
 
 const formSchema = z.object({
   email: z.string().email({

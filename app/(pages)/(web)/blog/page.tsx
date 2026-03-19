@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import prismadb from '@/lib/prismadb';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/config';
 import { RevealHeader } from '@/components/custom/reveal-header';
 import { Badge } from '@/components/ui/badge';
 import NewsletterForm from '@/app/(pages)/(web)/components/newsletter-form';

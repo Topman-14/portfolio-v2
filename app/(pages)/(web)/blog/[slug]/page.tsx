@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import prismadb from '@/lib/prismadb';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/config';
 import { Badge } from '@/components/ui/badge';
 import { BlogCard } from '../components/blog-card';
 import { formatPublishedDate } from '@/lib/utils';

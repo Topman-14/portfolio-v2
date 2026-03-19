@@ -4,9 +4,7 @@ import prismadb from '@/lib/prismadb';
 export async function GET() {
   try {
     const experiences = await prismadb.experience.findMany({
-      orderBy: {
-        startDate: 'desc',
-      },
+      orderBy: [{ isCurrentRole: 'desc' }, { startDate: 'desc' }],
     });
 
     return NextResponse.json(experiences);

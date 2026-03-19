@@ -1,10 +1,9 @@
 import { Expertise } from './components/expertise';
-import { Projects } from './components/projects';
+import { Projects2 } from './components/projects-2';
 import SplinePlayer from '@/components/custom/spline';
 import { ArrowRight } from 'lucide-react';
 import { GButton } from '@/components/ui/gbutton';
 import Image from 'next/image';
-import Parallax from '@/components/animations/parallax';
 import { RevealText } from '@/components/custom/reveal-text';
 import { Suspense } from '@/components/ui/suspense';
 import { RevealHeader } from '@/components/custom/reveal-header';
@@ -60,18 +59,7 @@ export default async function Home() {
           <div className='space-y-8 flex-1 md:flex-none max-w-3xl'>
             <RevealHeader title="About" />
 
-            <RevealText
-              as='p'
-              className='text-white text-lg lg:text-xl leading-relaxed font-sans'
-              start='top 90%'
-              end='bottom 10%'
-              stagger={0.008}
-              ease='none'
-              initialOpacity={0.3}
-              finalOpacity={1}
-              y={0}
-              scrub={0.5}
-            >
+            <p>
               Based in Lagos, I&apos;ve spent the last few
               years building products across logistics, fintech, and business
               infrastructure. I&apos;ve worked with teams of all sizes to create
@@ -85,7 +73,7 @@ export default async function Home() {
               Alongside engineering, I&apos;m big on design thinking, not in the
               corporate sense, but in the way a product feels when it&apos;s used.
               My work sits at the intersection of function and pragmatism.
-            </RevealText>
+            </p>
 
             <GButton href='/about' className='mt-5 mb-3 group'>
               <span>Read More</span>
@@ -103,7 +91,6 @@ export default async function Home() {
                 className={`${image.colSpan} relative ${image.height} overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
               >
           
-                <Parallax speed={image.speed}>
                   <Image
                     src={image.src}
                     alt={image.alt}
@@ -111,7 +98,6 @@ export default async function Home() {
                     className='object-cover'
                     priority={image.priority}
                   />
-                </Parallax>
               </div>
             ))}
           </div>
@@ -121,7 +107,7 @@ export default async function Home() {
       <Expertise />
 
       <Suspense>
-        <Projects />
+        <Projects2 />
       </Suspense>
     </main>
   );

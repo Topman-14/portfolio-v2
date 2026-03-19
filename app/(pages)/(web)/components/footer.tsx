@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Star } from 'lucide-react';
 import RollingText from '@/components/animations/rolling-text';
 import SocialIcons from '@/components/ui/social-icon';
-import { navItems, REPO_URL, socials } from '@/lib/constants';
+import { navItems, REPO_URL, socials } from '@/config';
 import NewsletterForm from '@/app/(pages)/(web)/components/newsletter-form';
 import ScrollToTopButton from '@/app/(pages)/(web)/components/scroll-to-top-button';
 
@@ -13,8 +13,8 @@ export default function Footer() {
   return (
     <footer className='relative bg-coal border-t border-white/10 z-4'>
       <div className='max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-16 md:py-20'>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16'>
-          <div className='lg:col-span-5 space-y-6'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16'>
+          {/* <div className='lg:col-span-5 space-y-6'>
             <h3 className='text-2xl md:text-3xl font-display font-bold text-white'>
               Let&apos;s build something great.
             </h3>
@@ -32,9 +32,9 @@ export default function Footer() {
                 />
               ))}
             </div>
-          </div>
+          </div> */}
 
-          <div className='lg:col-span-2 space-y-4'>
+          <div className='col-span-1 space-y-4'>
             <h4 className='text-lg font-display font-bold text-white mb-4'>
               Quick Links
             </h4>
@@ -53,7 +53,7 @@ export default function Footer() {
             </nav>
           </div>
 
-          <div className='lg:col-span-5 space-y-4'>
+          <div className='col-span-1 md:col-span-2 space-y-4'>
             <h4 className='text-lg font-display font-bold text-white mb-4'>
               Stay Updated
             </h4>
@@ -66,10 +66,10 @@ export default function Footer() {
 
         <div className='mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4'>
           <p className='text-white/50 text-sm font-sans'>
-            By Tope Akinkuade | {new Date().getFullYear()}
+            Tope Akinkuade | {new Date().getFullYear()}
           </p>
           <div className='flex gap-6 text-sm font-sans'>
-            <Link
+            {/* <Link
               href={REPO_URL}
               target='_blank'
               className='group flex items-center gap-2 text-white/50 hover:text-malachite transition-colors text-sm md:text-base font-sans'
@@ -79,7 +79,7 @@ export default function Footer() {
                 className='group-hover:fill-malachite transition-colors'
               />
               <span>Star this repo on GitHub!</span>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

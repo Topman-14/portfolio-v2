@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { BASE_URL } from "./constants";
+import { BASE_URL } from "../config";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",

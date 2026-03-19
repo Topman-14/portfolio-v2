@@ -2,7 +2,7 @@ import Navbar from '@/app/(pages)/admin/components/navbar';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import { routes } from '@/lib/constants';
+import { routes } from '@/config';
 
 export default async function AdminLayout({
   children,

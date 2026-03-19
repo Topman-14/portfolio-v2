@@ -1,12 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
-import SplitType from 'split-type';
 import { getFontsReady } from '@/lib/fonts-ready';
 import { useQuery } from '@/hooks/use-query';
-
+import { RevealHeader } from '@/components/custom/reveal-header';
 type Experience = {
   id: string;
   jobTitle: string;
@@ -20,64 +19,50 @@ type Experience = {
   achievements: string[];
 };
 
+function sortExperiences(list: Experience[]) {
+  return [...list].sort((a, b) => {
+    if (a.isCurrentRole !== b.isCurrentRole) {
+      return a.isCurrentRole ? -1 : 1;
+    }
+    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+  });
+}
+
 export const ExperienceSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
 
   const { data: experiences = [], isLoading } = useQuery<Experience[]>('/experiences');
 
+  const ordered = useMemo(() => sortExperiences(experiences), [experiences]);
+
   useGSAP(
     () => {
-      if (!sectionRef.current) return;
+      if (!sectionRef.current || ordered.length === 0) return;
 
-      const splits: SplitType[] = [];
       const scrollTriggers: ScrollTrigger[] = [];
 
       getFontsReady().then(() => {
-        const heading = headingRef.current;
-
-        if (heading) {
-          const split = new SplitType(heading, { types: 'words' });
-          splits.push(split);
-          gsap.set(split.words, { willChange: 'opacity, transform' });
-          const st = gsap.fromTo(
-            split.words,
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              stagger: 0.03,
-              ease: 'expo.out',
-              clearProps: 'willChange',
-              scrollTrigger: {
-                trigger: heading,
-                start: 'top 80%',
-              },
-            }
-          ).scrollTrigger;
-          if (st) scrollTriggers.push(st);
-        }
-
         const items = sectionRef.current?.querySelectorAll('.experience-item');
-        if (items) {
+        if (items?.length) {
           gsap.set(items, { willChange: 'opacity, transform' });
           for (const item of items) {
-            const st = gsap.fromTo(
-              item,
-              { opacity: 0, y: 50 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power3.out',
-                clearProps: 'willChange',
-                scrollTrigger: {
-                  trigger: item,
-                  start: 'top 85%',
-                },
-              }
-            ).scrollTrigger;
+            const st = gsap
+              .fromTo(
+                item,
+                { opacity: 0, y: 28 },
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.55,
+                  ease: 'power2.out',
+                  clearProps: 'willChange',
+                  scrollTrigger: {
+                    trigger: item,
+                    start: 'top 88%',
+                  },
+                }
+              )
+              .scrollTrigger;
             if (st) scrollTriggers.push(st);
           }
         }
@@ -87,12 +72,9 @@ export const ExperienceSection = () => {
         for (const st of scrollTriggers) {
           st?.kill();
         }
-        for (const split of splits) {
-          split.revert();
-        }
       };
     },
-    { scope: sectionRef, dependencies: [experiences] }
+    { scope: sectionRef, dependencies: [ordered] }
   );
 
   const formatDate = (dateString: string) => {
@@ -103,113 +85,111 @@ export const ExperienceSection = () => {
     });
   };
 
-  const getYear = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.getFullYear();
-  };
-
   return (
     <section
       ref={sectionRef}
-      className='relative bg3 min-h-screen py-32 px-4 md:px-8 lg:px-16'
+      className='relative bg3 px-4 py-24 md:px-8 md:py-28 lg:px-16'
     >
-      {isLoading ? (
-        <div className='max-w-7xl mx-auto text-center'>
-          <p className='text-white/70 text-lg font-sans'>
-            Loading experience...
+      <div className='mx-auto max-w-wide'>
+        {isLoading ? (
+          <p className='text-center font-sans text-lg text-white/60'>
+            Loading experience…
           </p>
-        </div>
-      ) : experiences.length > 0 ? (
-        <div className='max-w-7xl mx-auto'>
-          <h2
-            ref={headingRef}
-            className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-16 text-left'
-          >
-            Experience
-          </h2>
+        ) : ordered.length > 0 ? (
+          <>
+            <RevealHeader
+              title='Experience'
+              subtitle='Roles and teams — most recent first; current role at the top.'
+              className='mb-12 md:mb-14'
+            />
 
-          <div className='space-y-12'>
-            {experiences.map((exp) => (
-              <div
-                key={exp.id}
-                className='experience-item relative pl-8 md:pl-12 border-l-2 border-white/20'
-              >
-                {/* <div className='absolute -left-[20px] top-0 w-4 h-4 rounded-full bg-malachite border-4 border-coal z-10' /> */}
-                <div className='absolute -left-[9px] md:-left-[24px] top-0 flex items-center justify-center w-8 md:w-12'>
-                  <span className='text-amber text-lg md:text-xl font-display font-bold'>
-                    {getYear(exp.startDate)}
-                  </span>
-                </div>
-
-                <div className='space-y-4'>
-                  <div className='flex flex-col md:flex-row md:items-start md:justify-between gap-4'>
-                    <div className='space-y-2'>
-                      <div className='flex items-center gap-3 flex-wrap'>
-                        <h3 className='text-2xl md:text-3xl font-display font-bold text-white'>
-                          {exp.jobTitle}
-                        </h3>
-                        <span className='text-malachite text-lg font-sans font-semibold'>
-                          @ {exp.company}
-                        </span>
-                      </div>
-                      {exp.location && (
-                        <p className='text-white/60 text-sm font-sans'>
-                          {exp.location}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className='flex flex-col items-start md:items-end gap-1'>
-                      <span className='text-white/70 text-sm font-sans'>
-                        {formatDate(exp.startDate)} -{' '}
+            <div className='flex flex-col gap-6 md:gap-8'>
+              {ordered.map((exp) => (
+                <article
+                  key={exp.id}
+                  className={`experience-item rounded-2xl border p-6 md:p-8 ${
+                    exp.isCurrentRole
+                      ? 'border-malachite/35 bg-malachite/[0.06] ring-1 ring-malachite/20'
+                      : 'border-white/10 bg-white/[0.03]'
+                  } backdrop-blur-sm`}
+                >
+                  <div className='flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10'>
+                    <div className='min-w-0 flex-1 space-y-3'>
+                      <p className='font-sans text-sm text-white/50'>
+                        {formatDate(exp.startDate)}
+                        {' — '}
                         {exp.isCurrentRole ? (
-                          <span className='text-malachite'>Present</span>
+                          <span className='font-medium text-malachite'>Present</span>
                         ) : exp.endDate ? (
                           formatDate(exp.endDate)
                         ) : (
-                          'Present'
+                          <span className='font-medium text-malachite'>Present</span>
                         )}
-                      </span>
+                      </p>
+                      <div>
+                        <h3 className='font-display text-2xl font-bold text-white md:text-3xl'>
+                          {exp.jobTitle}
+                        </h3>
+                        <p className='mt-1 font-sans text-lg font-semibold text-malachite md:text-xl'>
+                          {exp.company}
+                        </p>
+                        {exp.location ? (
+                          <p className='mt-1 font-sans text-sm text-white/55'>
+                            {exp.location}
+                          </p>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
 
-                  <p className='text-white/80 text-base md:text-lg leading-relaxed font-sans max-w-3xl'>
+                  <p className='mt-5 font-sans text-base leading-relaxed text-white/75 md:text-lg'>
                     {exp.description}
                   </p>
 
-                  {exp.achievements.length > 0 && (
-                    <div className='space-y-2'>
-                      <h4 className='text-white/90 text-lg font-display font-semibold'>
-                        Key Achievements:
+                  {exp.achievements.length > 0 ? (
+                    <div className='mt-6 border-t border-white/10 pt-6'>
+                      <h4 className='mb-3 font-display text-sm font-semibold uppercase tracking-wide text-white/80'>
+                        Highlights
                       </h4>
-                      <ul className='list-disc list-inside space-y-1 text-white/70 font-sans'>
+                      <ul className='space-y-2 font-sans text-white/70'>
                         {exp.achievements.map((achievement) => (
-                          <li key={achievement} className='pl-2'>
-                            {achievement}
+                          <li
+                            key={achievement}
+                            className='flex gap-3 text-sm leading-relaxed md:text-base'
+                          >
+                            <span
+                              className='mt-2 h-1 w-1 shrink-0 rounded-full bg-malachite/80'
+                              aria-hidden
+                            />
+                            <span>{achievement}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                  )}
+                  ) : null}
 
-                  {exp.skills.length > 0 && (
-                    <div className='flex flex-wrap gap-2 pt-2'>
+                  {exp.skills.length > 0 ? (
+                    <div className='mt-6 flex flex-wrap gap-2'>
                       {exp.skills.map((skill) => (
                         <span
                           key={skill}
-                          className='px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/70 text-sm font-sans'
+                          className='rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-sans text-xs text-white/75 md:text-sm'
                         >
                           {skill}
                         </span>
                       ))}
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className='text-center font-sans text-white/50'>
+            No experience entries yet.
+          </p>
+        )}
+      </div>
     </section>
   );
 };

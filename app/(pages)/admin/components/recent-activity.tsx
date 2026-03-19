@@ -1,7 +1,7 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge';
-import { routes } from '@/lib/constants';
+import { routes } from '@/config';
 import { format } from 'date-fns';
 import Link from 'next/link';
 

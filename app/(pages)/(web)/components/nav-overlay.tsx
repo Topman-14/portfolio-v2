@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MAIN_EMAIL, navItems, REPO_URL, socials } from '@/lib/constants';
+import { MAIN_EMAIL, navItems, REPO_URL, socials } from '@/config';
 import Link from 'next/link';
 import { Check, Copy, SquareArrowOutUpRight, Star, X } from 'lucide-react';
 import { useGSAP } from '@gsap/react';

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/config';
 import Providers from '@/context';
 import { bricolageGrotesque, kronaOne, syne } from '@/assets/fonts';
 

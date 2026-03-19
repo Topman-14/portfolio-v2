@@ -11,6 +11,7 @@ interface GButtonProps extends React.ComponentProps<'button'> {
   children: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'green';
   className?: string;
+  containerClassName?: string;
 }
 
 export const GButton = ({
@@ -21,6 +22,7 @@ export const GButton = ({
   className = '',
   disabled,
   type = 'button',
+  containerClassName = '',
   ...props
 }: GButtonProps) => {
   const borderRef = useRef<SVGPathElement>(null);
@@ -142,11 +144,11 @@ export const GButton = ({
   );
 
   if (href) {
-    return <Link href={href}>{content}</Link>;
+    return <Link className={cn('block', containerClassName)} href={href}>{content}</Link>;
   }
 
   return (
-    <button onClick={onClick} type={type} disabled={disabled} {...props}>
+    <button className={cn(containerClassName)} onClick={onClick} type={type} disabled={disabled} {...props}>
       {content}
     </button>
   );

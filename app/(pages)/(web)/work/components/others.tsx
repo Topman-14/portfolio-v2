@@ -3,17 +3,16 @@
 import { useRef, useState } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
-import SplitType from 'split-type';
 import { GButton } from '@/components/ui/gbutton';
 import { getFontsReady } from '@/lib/fonts-ready';
 import { useQuery } from '@/hooks/use-query';
 import Logo from '@/components/ui/logo';
 import WorkCard from './others-work-card';
 import { Work } from '@prisma/client';
+import { RevealHeader } from '@/components/custom/reveal-header';
 
 const OtherWorksSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
   const [showAll, setShowAll] = useState(false);
 
   const { data: works = [], isLoading: loading } = useQuery<Work[]>(
@@ -26,56 +25,32 @@ const OtherWorksSection = () => {
 
   useGSAP(
     () => {
-      if (!sectionRef.current || !showAll) return;
+      if (!sectionRef.current || !showAll || works.length === 0) return;
 
-      const splits: SplitType[] = [];
       const scrollTriggers: ScrollTrigger[] = [];
 
       getFontsReady().then(() => {
-        const heading = headingRef.current;
-
-        if (heading) {
-          const split = new SplitType(heading, { types: 'words' });
-          splits.push(split);
-          gsap.set(split.words, { willChange: 'opacity, transform' });
-          const st = gsap.fromTo(
-            split.words,
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              stagger: 0.03,
-              ease: 'expo.out',
-              clearProps: 'willChange',
-              scrollTrigger: {
-                trigger: heading,
-                start: 'top 80%',
-              },
-            }
-          ).scrollTrigger;
-          if (st) scrollTriggers.push(st);
-        }
-
         const cards = sectionRef.current?.querySelectorAll('.work-card');
-        if (cards) {
+        if (cards?.length) {
           gsap.set(cards, { willChange: 'opacity, transform' });
-          const st = gsap.fromTo(
-            cards,
-            { opacity: 0, y: 50 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              stagger: 0.08,
-              ease: 'power3.out',
-              clearProps: 'willChange',
-              scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 70%',
-              },
-            }
-          ).scrollTrigger;
+          const st = gsap
+            .fromTo(
+              cards,
+              { opacity: 0, y: 24 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                stagger: 0.06,
+                ease: 'power2.out',
+                clearProps: 'willChange',
+                scrollTrigger: {
+                  trigger: sectionRef.current,
+                  start: 'top 82%',
+                },
+              }
+            )
+            .scrollTrigger;
           if (st) scrollTriggers.push(st);
         }
       });
@@ -83,9 +58,6 @@ const OtherWorksSection = () => {
       return () => {
         for (const st of scrollTriggers) {
           st?.kill();
-        }
-        for (const split of splits) {
-          split.revert();
         }
       };
     },
@@ -95,36 +67,45 @@ const OtherWorksSection = () => {
   return (
     <section
       ref={sectionRef}
-      className={`relative ${showAll ? 'min-h-screen' : ''} py-32 px-4 md:px-8 lg:px-16`}
+      className={`relative ${showAll ? 'pt-20 md:pt-24' : 'pt-16 md:pt-20'} px-4 md:px-8 lg:px-16`}
     >
-      <div className='max-w-7xl mx-auto'>
+      <div className='mx-auto max-w-7xl'>
         {showAll ? (
           <>
-            <h2
-              ref={headingRef}
-              className='text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-16 text-right'
-            >
-              Other Stuff
-            </h2>
+            <RevealHeader
+              title='More work'
+              subtitle='Additional projects not highlighted in featured.'
+              className='mb-10 md:mb-12'
+            />
 
             {loading ? (
-              <div className='flex justify-center items-center min-h-[400px]'>
+              <div className='flex min-h-[280px] items-center justify-center'>
                 <div className='animate-pulse'>
-                  <Logo color='white' width={64} height={64} />
+                  <Logo color='white' width={56} height={56} />
                 </div>
               </div>
             ) : works.length > 0 ? (
-              <div className='flex flex-wrap gap-4'>
+              <ul className='grid list-none grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8'>
                 {works.map((work) => (
-                  <WorkCard key={work.id} work={work} />
+                  <li key={work.id} className='min-w-0'>
+                    <WorkCard work={work} />
+                  </li>
                 ))}
-              </div>
-            ) : null}
+              </ul>
+            ) : (
+              <p className='text-center font-sans text-white/55'>
+                No other projects in the archive yet.
+              </p>
+            )}
           </>
         ) : (
-          <div className='text-center'>
-            <GButton onClick={() => setShowAll(true)} disabled={loading} variant='green'>
-              {loading ? 'Loading...' : 'See More Projects'}
+          <div className='flex justify-center border-t border-white/10 pt-14 md:pt-16'>
+            <GButton
+              onClick={() => setShowAll(true)}
+              disabled={loading}
+              variant='green'
+            >
+              {loading ? 'Loading…' : 'See more projects'}
             </GButton>
           </div>
         )}
