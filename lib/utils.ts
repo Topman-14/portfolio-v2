@@ -183,9 +183,10 @@ export function cleanErrorMsg(error: Error): string {
 export const isDev = process.env.NEXT_PUBLIC_NODE_ENV === 'development';
 
 export const formatPublishedDate = (
-  date: Date | null | undefined,
+  date: Date | string | null | undefined,
   pattern: 'short' | 'long' = 'short'
 ) => {
   if (!date) return 'Draft';
-  return format(date, pattern === 'long' ? 'MMMM d, yyyy' : 'MMM d, yyyy');
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return format(d, pattern === 'long' ? 'MMMM d, yyyy' : 'MMM d, yyyy');
 };

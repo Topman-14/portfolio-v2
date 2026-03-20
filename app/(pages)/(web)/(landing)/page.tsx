@@ -4,14 +4,26 @@ import SplinePlayer from '@/components/custom/spline';
 import { ArrowRight } from 'lucide-react';
 import { GButton } from '@/components/ui/gbutton';
 import Image from 'next/image';
-import { RevealText } from '@/components/custom/reveal-text';
-import { Suspense } from '@/components/ui/suspense';
 import { RevealHeader } from '@/components/custom/reveal-header';
+import prismadb from '@/lib/prismadb';
 
 export default async function Home() {
+  const featuredWorks = await prismadb.work.findMany({
+    where: { featured: true },
+    orderBy: { createdAt: 'desc' },
+    take: 10,
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      image: true,
+      tools: true,
+      category: true,
+    },
+  });
+
   return (
     <main className='bg1'>
-      {/* Hero Section */}
       <section className='relative pb-5 md:pb-0'>
         <div className='relative z-10 flex lg:items-center justify-center min-h-screen px-4 md:px-8 lg:px-16 flex-col md:flex-row gap-16 md:gap-0'>
           <div className='lg:max-w-6xl w-full sm:pt-20 md:pt-32 sm:pb-20 md:pb-48 xl:max-w-7xl z-[20] py-10'>
@@ -53,7 +65,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* About Section */}
       <section className='relative  min-h-screen py-32 px-4 md:px-8 lg:px-16'>
         <div className='max-w-7xl mx-auto h-full flex gap-7 flex-col'>
           <div className='space-y-8 flex-1 md:flex-none max-w-3xl'>
@@ -86,11 +97,9 @@ export default async function Home() {
           >
             {imageData.map((image, index) => (
               <div
-                // bg underneath
                 key={`${image.src}-${image.speed}-${index}`}
                 className={`${image.colSpan} relative ${image.height} overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
               >
-          
                   <Image
                     src={image.src}
                     alt={image.alt}
@@ -106,9 +115,7 @@ export default async function Home() {
 
       <Expertise />
 
-      <Suspense>
-        <Projects2 />
-      </Suspense>
+      <Projects2 works={featuredWorks} />
     </main>
   );
 }

@@ -1,23 +1,64 @@
+import dns from "node:dns";
 import nodemailer from "nodemailer";
 import { BASE_URL } from "../config";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
+const SMTP_TIMEOUT_MS = 15_000;
+
+if (process.env.GMAIL_SMTP_IPV4_FIRST === "1") {
+  dns.setDefaultResultOrder("ipv4first");
+}
+
+export function isPasswordResetEmailConfigured(): boolean {
+  const user = process.env.GMAIL_USER?.trim();
+  const pass = process.env.GMAIL_APP_PASSWORD?.trim();
+  return Boolean(user && pass);
+}
+
+function getAppBaseUrl(): string {
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:3000";
+  }
+  const explicit = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (explicit) {
+    return explicit.replace(/\/$/, "");
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL.replace(/^https?:\/\//, "")}`;
+  }
+  return BASE_URL.replace(/\/$/, "");
+}
+
+function getMailTransporter() {
+  const user = process.env.GMAIL_USER?.trim();
+  const pass = process.env.GMAIL_APP_PASSWORD?.trim();
+  if (!user || !pass) {
+    return null;
+  }
+  const port = Number(process.env.GMAIL_SMTP_PORT) || 587;
+  const secure = port === 465;
+
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port,
+    secure,
+    auth: { user, pass },
+    connectionTimeout: SMTP_TIMEOUT_MS,
+    greetingTimeout: SMTP_TIMEOUT_MS,
+    socketTimeout: SMTP_TIMEOUT_MS,
+    requireTLS: !secure,
+  });
+}
 
 export async function sendPasswordResetEmail(
   email: string,
   resetToken: string
 ) {
-  const isDevelopment = process.env.NODE_ENV === "development";
-  const baseUrl = isDevelopment 
-    ? "http://localhost:3001" 
-    : (process.env.NEXT_PUBLIC_APP_URL || BASE_URL);
-  
+  const transporter = getMailTransporter();
+  if (!transporter) {
+    throw new Error("Email transport is not configured");
+  }
+
+  const baseUrl = getAppBaseUrl();
   const resetUrl = `${baseUrl}/auth/reset-password?token=${resetToken}`;
 
   const mailOptions = {
@@ -36,6 +77,6 @@ export async function sendPasswordResetEmail(
     `,
   };
 
-  return await transporter.sendMail(mailOptions);
+  return transporter.sendMail(mailOptions);
 }
 

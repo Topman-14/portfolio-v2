@@ -11,6 +11,7 @@ export const routes = {
   adminWork: "/admin/work",
   adminExperience: "/admin/experience",
   adminCategories: "/admin/categories",
+  adminProfile: "/admin/profile",
   signIn: "/auth/sign-in",
   forgotPassword: "/auth/forgot-password",
   resetPassword: "/auth/reset-password",
@@ -36,6 +37,10 @@ export const AdminNavRoutes = [
   {
     href: `${routes.adminCategories}`,
     label: 'Categories',
+  },
+  {
+    href: `${routes.adminProfile}`,
+    label: 'Profile',
   },
 ]
 

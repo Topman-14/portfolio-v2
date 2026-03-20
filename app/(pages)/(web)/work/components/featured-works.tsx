@@ -1,19 +1,25 @@
 'use client';
 
 import { useRef } from 'react';
-import { Work } from '@prisma/client';
+import type { Work } from '@prisma/client';
 import { RevealHeader } from '@/components/custom/reveal-header';
-import { FeaturedWorkCard } from './featured-work-card';
+import { WorkCard } from './work-card';
 import OtherWorksSection from './others';
+import { cn } from '@/lib/utils';
 
-export const WorksBentoGrid = ({ works }: { works: Work[] }) => {
+type WorksBentoGridProps = {
+  works: Work[];
+  otherWorks: Work[];
+};
+
+export const WorksBentoGrid = ({ works, otherWorks }: WorksBentoGridProps) => {
   const sectionRef = useRef<HTMLElement>(null);
 
-  if (works.length === 0) {
+  if (works.length === 0 && otherWorks.length === 0) {
     return (
       <section
         ref={sectionRef}
-        className='relative bg3 px-4 py-24 md:px-8 md:py-28 lg:px-16'
+        className='relative bg3 px-4 py-24 md:py-28 lg:px-16'
       >
         <div className='mx-auto max-w-7xl text-center'>
           <h2 className='mb-4 font-display text-4xl font-bold text-white md:text-5xl'>
@@ -30,25 +36,41 @@ export const WorksBentoGrid = ({ works }: { works: Work[] }) => {
   return (
     <section
       ref={sectionRef}
-      className='relative bg3 px-4 py-24 md:px-8 md:py-28 lg:px-16'
+      className='relative bg3 px-4 py-24 md:py-28 lg:px-16'
     >
-      <div className='mx-auto max-w-7xl'>
-        <RevealHeader
-          title='Featured'
-          subtitle='Selected builds — larger scope, shipped end-to-end.'
-          className='mb-12 md:mb-14'
-        />
+      <div className='mx-auto max-w-wide'>
+        {works.length > 0 ? (
+          <>
+            <RevealHeader
+              title='Featured'
+              subtitle='Selected builds — larger scope, shipped end-to-end.'
+              className='mb-12 md:mb-14'
+            />
 
-        <ul className='grid list-none grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 xl:grid-cols-3 xl:gap-8'>
-          {works.map((work) => (
-            <li key={work.id} className='min-w-0'>
-              <FeaturedWorkCard work={work} />
-            </li>
-          ))}
-        </ul>
+            <ul className='grid list-none grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 xl:grid-cols-3 xl:gap-8'>
+              {works.map((work, index) => (
+                <li
+                  key={work.id}
+                  className={cn(
+                    'min-w-0',
+                    index === 0 && 'md:col-span-2'
+                  )}
+                >
+                  <WorkCard work={work} />
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <p className='mb-12 text-center font-sans text-lg text-white/65'>
+            No featured highlights right now — browse more work below.
+          </p>
+        )}
       </div>
 
-      <OtherWorksSection />
+      {otherWorks.length > 0 ? (
+        <OtherWorksSection initialWorks={otherWorks} />
+      ) : null}
     </section>
   );
 };

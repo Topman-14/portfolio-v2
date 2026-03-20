@@ -57,6 +57,7 @@ async function deleteExperience(id: string) {
     })
 
     revalidatePath('/admin/experience')
+    revalidatePath('/work')
   } catch (error) {
     console.error('Error deleting experience:', error)
     throw new Error('Failed to delete experience')

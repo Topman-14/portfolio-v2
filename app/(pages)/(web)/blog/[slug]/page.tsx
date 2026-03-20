@@ -2,10 +2,18 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Globe } from 'lucide-react';
+import {
+  FaGithub,
+  FaGlobe,
+  FaLinkedinIn,
+  FaXTwitter,
+} from 'react-icons/fa6';
 import prismadb from '@/lib/prismadb';
 import { BASE_URL } from '@/config';
 import { Badge } from '@/components/ui/badge';
+import { Avatar } from '@/components/ui/avatar';
+import { BlogPostShare } from '../components/blog-post-share';
 import { BlogCard } from '../components/blog-card';
 import { formatPublishedDate } from '@/lib/utils';
 import { createHtmlRenderData, HtmlRenderer } from '@/components/custom/html-renderer';
@@ -77,7 +85,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function BlogSlugPage({ params }: PageProps) {
+export default async function BlogDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const article = await prismadb.article.findFirst({
     where: { slug, status: 'PUBLISHED' },
@@ -87,6 +95,11 @@ export default async function BlogSlugPage({ params }: PageProps) {
         select: {
           name: true,
           image: true,
+          bio: true,
+          twitterUrl: true,
+          linkedinUrl: true,
+          githubUrl: true,
+          websiteUrl: true,
         },
       },
     },
@@ -100,15 +113,15 @@ export default async function BlogSlugPage({ params }: PageProps) {
 
   const categoryRelated = article.categoryId
     ? await prismadb.article.findMany({
-        where: {
-          status: 'PUBLISHED',
-          categoryId: article.categoryId,
-          id: { not: article.id },
-        },
-        orderBy: { publishedAt: 'desc' },
-        include: { category: true },
-        take: 3,
-      })
+      where: {
+        status: 'PUBLISHED',
+        categoryId: article.categoryId,
+        id: { not: article.id },
+      },
+      orderBy: { publishedAt: 'desc' },
+      include: { category: true },
+      take: 3,
+    })
     : [];
 
   const relatedIds = new Set(categoryRelated.map((item) => item.id));
@@ -117,20 +130,36 @@ export default async function BlogSlugPage({ params }: PageProps) {
   const fallbackRelated =
     fallbackNeeded > 0
       ? await prismadb.article.findMany({
-          where: {
-            status: 'PUBLISHED',
-            id: { not: article.id },
-          },
-          orderBy: { publishedAt: 'desc' },
-          include: { category: true },
-          take: 6,
-        })
+        where: {
+          status: 'PUBLISHED',
+          id: { not: article.id },
+        },
+        orderBy: { publishedAt: 'desc' },
+        include: { category: true },
+        take: 6,
+      })
       : [];
 
   const relatedArticles = [
     ...categoryRelated,
     ...fallbackRelated.filter((item) => !relatedIds.has(item.id)).slice(0, fallbackNeeded),
   ];
+
+  const author = article.user;
+  const displayName = author?.name || 'Tope Akinkuade';
+  const authorSocials = [
+    { href: author?.twitterUrl, label: 'X', Icon: FaXTwitter },
+    { href: author?.linkedinUrl, label: 'LinkedIn', Icon: FaLinkedinIn },
+    { href: author?.githubUrl, label: 'GitHub', Icon: FaGithub },
+    { href: author?.websiteUrl, label: 'Website', Icon: Globe },
+  ].filter(
+    (item): item is typeof item & { href: string } =>
+      typeof item.href === 'string' && item.href.length > 0
+  );
+
+  const articleUrl = `${BASE_URL}/blog/${article.slug}`;
+  const socialBtnClass =
+    'inline-flex size-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-white/80 hover:text-malachite hover:border-malachite/40 transition-colors';
 
   return (
     <main className='bg2 min-h-screen py-24 md:py-28'>
@@ -204,26 +233,46 @@ export default async function BlogSlugPage({ params }: PageProps) {
                 <p className='text-xs uppercase tracking-wide text-white/55 font-sans'>
                   Author
                 </p>
-                <div className='mt-3 flex items-center gap-3'>
-                  {article.user?.image ? (
-                    <Image
-                      src={article.user.image}
-                      alt={article.user?.name || 'Author'}
-                      width={42}
-                      height={42}
-                      className='size-10 rounded-full object-cover'
-                    />
-                  ) : (
-                    <div className='size-10 rounded-full bg-white/10 border border-white/15 grid place-items-center text-sm font-display text-white'>
-                      {(article.user?.name || 'A').charAt(0).toUpperCase()}
+                <div className='mt-4 space-y-4'>
+                  <div className='flex items-start gap-3.5'>
+                    <div className='shrink-0 rounded-full p-[2px] ring-1 ring-inset ring-white/12 bg-gradient-to-br from-white/[0.08] to-transparent'>
+                      <Avatar
+                        src={author?.image}
+                        alt={displayName}
+                        className='size-12 border border-white/10'
+                        fallbackClassName='bg-white/[0.08] text-white font-display text-base border-0'
+                      />
                     </div>
-                  )}
-                  <div>
-                    <p className='text-white font-sans font-semibold leading-none'>
-                      {article.user?.name || 'Tope Akinkuade'}
-                    </p>
-                    <p className='text-white/60 text-sm font-sans mt-1'>Author</p>
+                    <div className='min-w-0 flex-1 pt-1'>
+                      <p className='font-display text-lg font-semibold text-white leading-snug tracking-tight'>
+                        {displayName}
+                      </p>
+                    </div>
                   </div>
+                  {author?.bio ? (
+                    <>
+                      <div className='h-px bg-gradient-to-r from-transparent via-white/12 to-transparent' />
+                      <p className='text-sm text-white/65 font-sans leading-relaxed'>
+                        {author.bio}
+                      </p>
+                    </>
+                  ) : null}
+                  {authorSocials.length > 0 ? (
+                    <div className='flex flex-wrap gap-2 pt-0.5'>
+                      {authorSocials.map(({ href, label, Icon }) => (
+                        <Link
+                          key={label}
+                          href={href}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className={socialBtnClass}
+                          aria-label={label}
+                        >
+                          <Icon className='size-4' />
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </div>
 
@@ -245,6 +294,8 @@ export default async function BlogSlugPage({ params }: PageProps) {
                   </nav>
                 </div>
               ) : null}
+
+              <BlogPostShare articleUrl={articleUrl} title={article.title} />
             </div>
           </aside>
 

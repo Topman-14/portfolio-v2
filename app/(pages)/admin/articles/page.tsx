@@ -56,11 +56,20 @@ async function deleteArticle(id: string) {
   try {
     await checkAuthentication()
 
+    const row = await prismadb.article.findUnique({
+      where: { id },
+      select: { slug: true },
+    });
+
     await prismadb.article.delete({
       where: { id }
     })
 
     revalidatePath('/admin/articles')
+    revalidatePath('/blog')
+    if (row?.slug) {
+      revalidatePath(`/blog/${row.slug}`)
+    }
   } catch (error) {
     console.error('Error deleting article:', error)
     throw new Error('Failed to delete article')

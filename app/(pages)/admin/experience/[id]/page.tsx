@@ -5,6 +5,7 @@ import { Experience } from '@prisma/client';
 import { cleanErrorMsg } from '@/lib/utils';
 import { auth } from '@/auth';
 import { experienceFields } from '../data';
+import { revalidatePath } from 'next/cache';
 
 interface PageProps {
   params: {
@@ -62,6 +63,9 @@ export default async function ExperiencePage({ params }: PageProps) {
           },
         });
       }
+
+      revalidatePath('/work');
+      revalidatePath('/admin/experience');
     } catch (error) {
       const message = error instanceof Error ? cleanErrorMsg(error) : 'An unexpected error occurred';
       throw new Error(message);

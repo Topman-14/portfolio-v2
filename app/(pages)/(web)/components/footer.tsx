@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Star } from 'lucide-react';
 import RollingText from '@/components/animations/rolling-text';
 import SocialIcons from '@/components/ui/social-icon';
 import { navItems, REPO_URL, socials } from '@/config';
@@ -7,8 +6,6 @@ import NewsletterForm from '@/app/(pages)/(web)/components/newsletter-form';
 import ScrollToTopButton from '@/app/(pages)/(web)/components/scroll-to-top-button';
 
 export default function Footer() {
-
-  console.log(navItems.reverse())
 
   return (
     <footer className='relative bg-coal border-t border-white/10 z-4'>
@@ -23,16 +20,7 @@ export default function Footer() {
               opportunities. Whether you have a question or just want to say hi,
               I&apos;ll try my best to get back to you.
             </p>
-            <div className='flex gap-3'>
-              {socials.map((social) => (
-                <SocialIcons
-                  key={social.href}
-                  link={social.href}
-                  name={social.name}
-                />
-              ))}
-            </div>
-          </div> */}
+            </div> */}
 
           <div className='col-span-1 space-y-4'>
             <h4 className='text-lg font-display font-bold text-white mb-4'>
@@ -69,6 +57,15 @@ export default function Footer() {
             Tope Akinkuade | {new Date().getFullYear()}
           </p>
           <div className='flex gap-6 text-sm font-sans'>
+            <div className='flex gap-3'>
+              {socials.map((social) => (
+                <SocialIcons
+                  key={social.href}
+                  link={social.href}
+                  name={social.name}
+                />
+              ))}
+            </div>
             {/* <Link
               href={REPO_URL}
               target='_blank'

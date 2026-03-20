@@ -4,9 +4,9 @@ import { useMemo, useRef } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 import { getFontsReady } from '@/lib/fonts-ready';
-import { useQuery } from '@/hooks/use-query';
 import { RevealHeader } from '@/components/custom/reveal-header';
-type Experience = {
+
+export type ExperienceListItem = {
   id: string;
   jobTitle: string;
   company: string;
@@ -19,7 +19,7 @@ type Experience = {
   achievements: string[];
 };
 
-function sortExperiences(list: Experience[]) {
+function sortExperiences(list: ExperienceListItem[]) {
   return [...list].sort((a, b) => {
     if (a.isCurrentRole !== b.isCurrentRole) {
       return a.isCurrentRole ? -1 : 1;
@@ -28,10 +28,12 @@ function sortExperiences(list: Experience[]) {
   });
 }
 
-export const ExperienceSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
+type ExperienceSectionProps = {
+  experiences: ExperienceListItem[];
+};
 
-  const { data: experiences = [], isLoading } = useQuery<Experience[]>('/experiences');
+export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
+  const sectionRef = useRef<HTMLElement>(null);
 
   const ordered = useMemo(() => sortExperiences(experiences), [experiences]);
 
@@ -91,11 +93,7 @@ export const ExperienceSection = () => {
       className='relative bg3 px-4 py-24 md:px-8 md:py-28 lg:px-16'
     >
       <div className='mx-auto max-w-wide'>
-        {isLoading ? (
-          <p className='text-center font-sans text-lg text-white/60'>
-            Loading experience…
-          </p>
-        ) : ordered.length > 0 ? (
+        {ordered.length > 0 ? (
           <>
             <RevealHeader
               title='Experience'

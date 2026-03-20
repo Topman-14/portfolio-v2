@@ -1,4 +1,3 @@
-import prismadb from '@/lib/prismadb';
 import Link from 'next/link';
 import Image from 'next/image';
 import { RevealHeader } from '@/components/custom/reveal-header';
@@ -6,21 +5,20 @@ import { GButton } from '@/components/ui/gbutton';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-export async function Projects2() {
-  const works = await prismadb.work.findMany({
-    where: { featured: true },
-    orderBy: { createdAt: 'desc' },
-    take: 10,
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      image: true,
-      tools: true,
-      category: true,
-    },
-  });
+export type FeaturedWorkListItem = {
+  id: string;
+  title: string;
+  description: string;
+  image: string | null;
+  tools: string[];
+  category: string | null;
+};
 
+type Projects2Props = {
+  works: FeaturedWorkListItem[];
+};
+
+export function Projects2({ works }: Projects2Props) {
   return (
     <section className='px-4 md:px-8 lg:px-16'>
       <div className='mx-auto max-w-7xl py-28'>

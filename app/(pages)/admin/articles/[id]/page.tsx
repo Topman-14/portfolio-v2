@@ -4,11 +4,10 @@ import { FieldConfig, GenericForm } from '@/components/ui/generic-form';
 import { Article, ArticleStatus, Category } from '@prisma/client';
 import { generateSlug, cleanErrorMsg } from '@/lib/utils';
 import { auth } from '@/auth';
+import { revalidatePath } from 'next/cache';
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function ArticlePage({ params }: PageProps) {
@@ -38,6 +37,9 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const categories = await prismadb.category.findMany();
 
+  const existingSlug = article?.slug ?? null;
+  const existingStatus = article?.status ?? null;
+
   async function handleSubmit(data: Article) {
     'use server';
 
@@ -50,7 +52,7 @@ export default async function ArticlePage({ params }: PageProps) {
       if (!isNew) {
 
         const justPublished =
-          article?.status === ArticleStatus.DRAFT &&
+          existingStatus === ArticleStatus.DRAFT &&
           data.status === ArticleStatus.PUBLISHED;
 
         await prismadb.article.update({
@@ -60,14 +62,21 @@ export default async function ArticlePage({ params }: PageProps) {
             publishedAt: justPublished ? new Date() : undefined,
           },
         });
+        revalidatePath('/blog');
+        if (existingSlug) {
+          revalidatePath(`/blog/${existingSlug}`);
+        }
       } else {
+        const slug = generateSlug(data.title);
         await prismadb.article.create({
           data: {
             ...data,
-            slug: generateSlug(data.title),
+            slug,
             userId: session.user.id,
           },
         });
+        revalidatePath('/blog');
+        revalidatePath(`/blog/${slug}`);
       }
     } catch (error) {
       const message = error instanceof Error ? cleanErrorMsg(error) : 'An unexpected error occurred';
@@ -94,7 +103,7 @@ export default async function ArticlePage({ params }: PageProps) {
         ]}
         onSubmit={handleSubmit}
         defaultValues={{
-          ...article,
+          ...(article ? article : {}),
         }}
         submitText={isNew ? 'Create' : 'Update'}
         itemName='Article'
