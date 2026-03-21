@@ -46,14 +46,6 @@ export const metadata: Metadata = {
       'I’m Tope — a software engineer building clean, scalable apps with TypeScript & Node.js. Perfectionist at heart, always shipping with style.',
     url: BASE_URL,
     siteName: 'Tope Akinkuade',
-    images: [
-      {
-        url: `${BASE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Tope Akinkuade Portfolio',
-      },
-    ],
     locale: 'en_NG',
     alternateLocale: ['en_US', 'en_GB'],
     type: 'website',
@@ -63,7 +55,6 @@ export const metadata: Metadata = {
     title: 'Tope Akinkuade | Software Engineer',
     description:
       'I’m Tope — a software engineer building clean, scalable apps with TypeScript & Node.js. Perfectionist at heart, always shipping with style.',
-    images: [`${BASE_URL}/og-image.png`],
     creator: '@topeakinkuade',
   },
   metadataBase: new URL(BASE_URL),

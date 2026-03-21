@@ -1,5 +1,9 @@
 export const BASE_URL = "https://findtope.dev";
 
+export const DEFAULT_OG_IMAGE_PATH = "/opengraph-image.png";
+
+export const DEFAULT_OG_IMAGE_URL = `${BASE_URL}${DEFAULT_OG_IMAGE_PATH}`;
+
 export const routes = {
   root: "/",
   about: "/about",

@@ -46,7 +46,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const description = article.excerpt || `Read ${article.title} on Tope Akinkuade's blog.`;
-  const ogImage = article.coverImg || `${BASE_URL}/og-image.png`;
+  const coverOg = article.coverImg
+    ? {
+        openGraph: {
+          images: [
+            {
+              url: article.coverImg,
+              width: 1200,
+              height: 630,
+              alt: article.title,
+            },
+          ],
+        },
+        twitter: { images: [article.coverImg] },
+      }
+    : {};
 
   return {
     title: `${article.title} | Tope Akinkuade`,
@@ -64,22 +78,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: `${BASE_URL}/blog/${article.slug}`,
       siteName: 'Tope Akinkuade',
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: article.title,
-        },
-      ],
       type: 'article',
       publishedTime: article.publishedAt?.toISOString(),
+      ...coverOg.openGraph,
     },
     twitter: {
       card: 'summary_large_image',
       title: `${article.title} | Tope Akinkuade`,
       description,
-      images: [ogImage],
+      ...coverOg.twitter,
     },
   };
 }

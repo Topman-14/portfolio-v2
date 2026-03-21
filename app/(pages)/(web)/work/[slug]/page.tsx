@@ -38,6 +38,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const projectOg = work.image
+    ? {
+        openGraph: {
+          images: [
+            {
+              url: work.image,
+              width: 1200,
+              height: 630,
+              alt: work.title,
+            },
+          ],
+        },
+        twitter: { images: [work.image] },
+      }
+    : {};
+
   return {
     title: `${work.title} | Tope Akinkuade`,
     description: work.description,
@@ -54,30 +70,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: work.description,
       url: `${BASE_URL}/work/${slug}`,
       siteName: 'Tope Akinkuade',
-      images: work.image
-        ? [
-            {
-              url: work.image,
-              width: 1200,
-              height: 630,
-              alt: work.title,
-            },
-          ]
-        : [
-            {
-              url: `${BASE_URL}/og-image.png`,
-              width: 1200,
-              height: 630,
-              alt: work.title,
-            },
-          ],
       type: 'website',
+      ...projectOg.openGraph,
     },
     twitter: {
       card: 'summary_large_image',
       title: `${work.title} | Tope Akinkuade`,
       description: work.description,
-      images: work.image ? [work.image] : [`${BASE_URL}/og-image.png`],
+      ...projectOg.twitter,
     },
   };
 }

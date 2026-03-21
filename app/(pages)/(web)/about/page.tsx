@@ -19,14 +19,6 @@ export const metadata: Metadata = {
       'I\'m a software engineer who\'s spent the last few years building products across logistics, fintech, and business infrastructure.',
     url: `${BASE_URL}/about`,
     siteName: 'Tope Akinkuade',
-    images: [
-      {
-        url: `${BASE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Tope Akinkuade - About',
-      },
-    ],
     type: 'website',
   },
   twitter: {
@@ -34,7 +26,6 @@ export const metadata: Metadata = {
     title: 'About | Tope Akinkuade',
     description:
       'I\'m a software engineer who\'s spent the last few years building products across logistics, fintech, and business infrastructure.',
-    images: [`${BASE_URL}/og-image.png`],
   },
 };
 

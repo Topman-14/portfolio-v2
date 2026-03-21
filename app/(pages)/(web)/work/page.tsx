@@ -27,14 +27,6 @@ export const metadata: Metadata = {
       'A collection of projects I\'ve built — from internal dashboards to public-facing apps.',
     url: `${BASE_URL}/work`,
     siteName: 'Tope Akinkuade',
-    images: [
-      {
-        url: `${BASE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Tope Akinkuade - Work',
-      },
-    ],
     type: 'website',
   },
   twitter: {
@@ -42,7 +34,6 @@ export const metadata: Metadata = {
     title: 'Work | Tope Akinkuade',
     description:
       'A collection of projects I\'ve built — from internal dashboards to public-facing apps.',
-    images: [`${BASE_URL}/og-image.png`],
   },
 };
 

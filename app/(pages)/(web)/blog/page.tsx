@@ -113,14 +113,6 @@ export const metadata: Metadata = {
       'Thoughts, tutorials, and insights about web development, software engineering, and technology.',
     url: `${BASE_URL}/blog`,
     siteName: 'Tope Akinkuade',
-    images: [
-      {
-        url: `${BASE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Tope Akinkuade - Blog',
-      },
-    ],
     type: 'website',
   },
   twitter: {
@@ -128,6 +120,5 @@ export const metadata: Metadata = {
     title: 'Blog | Tope Akinkuade',
     description:
       'Thoughts, tutorials, and insights about web development, software engineering, and technology.',
-    images: [`${BASE_URL}/og-image.png`],
   },
 };
