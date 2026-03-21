@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ArrowLeft, Globe } from 'lucide-react';
 import {
   FaGithub,
-  FaGlobe,
   FaLinkedinIn,
   FaXTwitter,
 } from 'react-icons/fa6';
@@ -239,7 +238,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
                       <Avatar
                         src={author?.image}
                         alt={displayName}
-                        className='size-12 border border-white/10'
+                        className='size-9 border border-white/10'
                         fallbackClassName='bg-white/[0.08] text-white font-display text-base border-0'
                       />
                     </div>
@@ -247,6 +246,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
                       <p className='font-display text-lg font-semibold text-white leading-snug tracking-tight'>
                         {displayName}
                       </p>
+                      {/* <p>{author?.header}</p> */}
                     </div>
                   </div>
                   {author?.bio ? (

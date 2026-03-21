@@ -28,6 +28,7 @@ export async function GET(request: Request) {
           ? {
               OR: [
                 { title: { contains: q, mode: 'insensitive' } },
+                { slug: { contains: q, mode: 'insensitive' } },
                 { description: { contains: q, mode: 'insensitive' } },
                 { category: { contains: q, mode: 'insensitive' } },
                 { tools: { has: q } },

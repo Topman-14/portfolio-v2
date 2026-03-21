@@ -8,7 +8,7 @@ import CircleButton from '@/components/ui/circle-button';
 export function WorkCard({ work }: { work: Work }) {
   return (
     <Link
-      href={`/work/${work.id}`}
+      href={`/work/${work.slug}`}
       className='group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm transition-[border-color,box-shadow] duration-300 hover:border-white/20 hover:shadow-[0_20px_60px_rgba(0,0,0,0.35)]'
     >
       <div className='relative min-h-[200px] w-full shrink-0 overflow-hidden'>
@@ -25,7 +25,7 @@ export function WorkCard({ work }: { work: Work }) {
         )}
         <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-coal/70 via-coal/20 to-transparent' />
         <CircleButton
-          href={`/work/${work.id}`}
+          href={`/work/${work.slug}`}
           className='absolute bottom-4 right-4 z-10'
         >
           <ArrowRight className='size-4 stroke-white text-transparent' />

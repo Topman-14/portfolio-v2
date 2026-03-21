@@ -10,32 +10,16 @@ const GRID_ROWS = 10;
 
 export default function PageLoader() {
   const loaderRef = useRef<HTMLDivElement>(null);
+  const logoWrapRef = useRef<HTMLDivElement>(null);
   const { pending } = useLinkStatus();
   const [initialLoad, setInitialLoad] = useState(true);
 
   const fadeOut = () => {
-    if (!loaderRef.current) return;
+    if (!loaderRef.current || !logoWrapRef.current) return;
     const squares = loaderRef.current.querySelectorAll('.square');
-    const logo = loaderRef.current.querySelector('.logo');
     const contentElements = document.querySelectorAll('[data-content]');
 
-    gsap.fromTo(logo, {
-      opacity: 1,
-    }, {
-      opacity: 0,
-      duration: 0.05,
-      ease: 'power2.inOut',
-    });
-
-    gsap.to(squares, {
-      duration: 0.2,
-      opacity: 0,
-      ease: 'sine',
-      stagger: {
-        grid: [GRID_ROWS, GRID_COLS],
-        from: 'end',
-        amount: 0.5,
-      },
+    const tl = gsap.timeline({
       onComplete: () => {
         gsap.to(contentElements, {
           opacity: 1,
@@ -53,6 +37,26 @@ export default function PageLoader() {
         });
       },
     });
+
+    tl.to(logoWrapRef.current, {
+      opacity: 0,
+      scale: 0.92,
+      duration: 0.28,
+      ease: 'power2.in',
+    }).to(
+      squares,
+      {
+        duration: 0.2,
+        opacity: 0,
+        ease: 'sine',
+        stagger: {
+          grid: [GRID_ROWS, GRID_COLS],
+          from: 'end',
+          amount: 0.5,
+        },
+      },
+      0.12
+    );
   };
 
   useGSAP(() => {
@@ -87,10 +91,12 @@ export default function PageLoader() {
       <div className='grid grid-cols-10 h-full w-full -scale-x-100'>
         {squares}
       </div>
-      <Logo
-        color='white'
-        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[80px] animate-pulse logo'
-      />
+      <div
+        ref={logoWrapRef}
+        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse'
+      >
+        <Logo color='white' className='size-[80px]' />
+      </div>
     </div>
   );
 }

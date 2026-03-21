@@ -4,18 +4,10 @@ import { RevealHeader } from '@/components/custom/reveal-header';
 import { GButton } from '@/components/ui/gbutton';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-
-export type FeaturedWorkListItem = {
-  id: string;
-  title: string;
-  description: string;
-  image: string | null;
-  tools: string[];
-  category: string | null;
-};
+import { Work } from '@prisma/client';
 
 type Projects2Props = {
-  works: FeaturedWorkListItem[];
+  works: Work[];
 };
 
 export function Projects2({ works }: Projects2Props) {
@@ -35,7 +27,7 @@ export function Projects2({ works }: Projects2Props) {
             {works.map((work, i) => (
               <li key={work.id}>
                 <Link
-                  href={`/work/${work.id}`}
+                  href={`/work/${work.slug}`}
                   className='group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm transition-[border-color,box-shadow] duration-300 md:flex-row md:items-stretch hover:border-white/20 hover:shadow-[0_24px_80px_rgba(0,0,0,0.35)]'
                 >
                   <div className='relative aspect-[16/10] w-full shrink-0 overflow-hidden md:aspect-auto md:h-auto md:w-[min(42%,320px)] lg:w-[min(40%,380px)]'>

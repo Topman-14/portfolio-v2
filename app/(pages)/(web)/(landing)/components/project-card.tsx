@@ -5,7 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 import type { Work } from '@prisma/client';
 
 type ProjectCardProps = {
-  work: Pick<Work, 'id' | 'title' | 'description' | 'image' | 'tools' | 'category'>;
+  work: Work;
 };
 
 export const ProjectCard = ({ work }: ProjectCardProps) => {
@@ -14,7 +14,7 @@ export const ProjectCard = ({ work }: ProjectCardProps) => {
       className='relative w-full max-w-7xl mx-auto h-[75vh] md:h-[70vh]'
     >
       <Link
-        href={`/work/${work.id}`}
+        href={`/work/${work.slug}`}
         className='group relative block h-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_20px_80px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.05)] backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_30px_100px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.1)]'
       >
         <div className='absolute inset-0'>

@@ -6,6 +6,7 @@ import { GButton } from '@/components/ui/gbutton';
 import Image from 'next/image';
 import { RevealHeader } from '@/components/custom/reveal-header';
 import prismadb from '@/lib/prismadb';
+import { Work } from '@prisma/client';
 
 export default async function Home() {
   const featuredWorks = await prismadb.work.findMany({
@@ -19,8 +20,9 @@ export default async function Home() {
       image: true,
       tools: true,
       category: true,
+      slug: true,
     },
-  });
+  }) as Work[];
 
   return (
     <main className='bg1'>

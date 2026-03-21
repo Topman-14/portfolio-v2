@@ -2,15 +2,13 @@ import { notFound } from 'next/navigation';
 import prismadb from '@/lib/prismadb';
 import { GenericForm } from '@/components/ui/generic-form';
 import { Work } from '@prisma/client';
-import { cleanErrorMsg } from '@/lib/utils';
+import { cleanErrorMsg, generateSlug } from '@/lib/utils';
 import { auth } from '@/auth';
 import { workFields } from '../data';
 import { revalidatePath } from 'next/cache';
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function WorkPage({ params }: PageProps) {
@@ -35,6 +33,9 @@ export default async function WorkPage({ params }: PageProps) {
     }
   }
 
+  const wasFeaturedBefore = !isNew && work ? work.featured : false;
+  const previousPublicSlug = !isNew && work ? work.slug : null;
+
   async function handleSubmit(data: Work & { tools: string }) {
     'use server';
 
@@ -44,18 +45,25 @@ export default async function WorkPage({ params }: PageProps) {
         throw new Error('You must be logged in to perform this action');
       }
 
+      const slugInput =
+        typeof data.slug === 'string' ? data.slug.trim() : '';
+      const resolvedSlug =
+        slugInput ||
+        previousPublicSlug ||
+        generateSlug(data.title);
+
       const processedData = {
         ...data,
+        slug: resolvedSlug,
         tools: data.tools?.split(',').map((tool: string) => tool.trim()).filter(Boolean) || [],
         videoUrl: data.videoUrl || null,
         liveUrl: data.liveUrl || null,
         githubLink: data.githubLink || null,
+        content: data.content ?? '',
       };
 
-      let workId = id;
-      const wasFeatured = !isNew ? work?.featured : false;
       const isNowFeatured = processedData.featured;
-      const featuredStatusChanged = wasFeatured !== isNowFeatured;
+      const featuredStatusChanged = wasFeaturedBefore !== isNowFeatured;
       
       if (!isNew) {
         await prismadb.work.update({
@@ -63,17 +71,19 @@ export default async function WorkPage({ params }: PageProps) {
           data: processedData,
         });
       } else {
-        const newWork = await prismadb.work.create({
+        await prismadb.work.create({
           data: {
             ...processedData,
             userId: session.user.id,
           },
         });
-        workId = newWork.id;
       }
 
       revalidatePath('/work');
-      revalidatePath(`/work/${workId}`);
+      if (previousPublicSlug && previousPublicSlug !== resolvedSlug) {
+        revalidatePath(`/work/${previousPublicSlug}`);
+      }
+      revalidatePath(`/work/${resolvedSlug}`);
       
       // Only revalidate home page if featured status changed or new work is featured
       if (featuredStatusChanged || isNowFeatured) {
@@ -102,8 +112,10 @@ export default async function WorkPage({ params }: PageProps) {
         fields={workFields}
         onSubmit={handleSubmit}
         defaultValues={{
-          ...work,
-          tools: work?.tools.join(','),
+          ...(work ? work : {}),
+          tools: work?.tools.join(',') ?? '',
+          content: work?.content ?? '',
+          slug: work?.slug ?? '',
         }}
         submitText={isNew ? 'Create' : 'Update'}
         itemName='Work'
