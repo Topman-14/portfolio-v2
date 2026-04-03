@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { BASE_URL } from '@/lib/constants';
-import { AboutContent } from '@/app/(pages)/(web)/components/about-content';
+import { BASE_URL } from '@/config';
 
 export const metadata: Metadata = {
   title: 'About | Tope Akinkuade',
@@ -20,14 +19,6 @@ export const metadata: Metadata = {
       'I\'m a software engineer who\'s spent the last few years building products across logistics, fintech, and business infrastructure.',
     url: `${BASE_URL}/about`,
     siteName: 'Tope Akinkuade',
-    images: [
-      {
-        url: `${BASE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Tope Akinkuade - About',
-      },
-    ],
     type: 'website',
   },
   twitter: {
@@ -35,10 +26,17 @@ export const metadata: Metadata = {
     title: 'About | Tope Akinkuade',
     description:
       'I\'m a software engineer who\'s spent the last few years building products across logistics, fintech, and business infrastructure.',
-    images: [`${BASE_URL}/og-image.png`],
   },
 };
 
 export default function AboutPage() {
-  return <AboutContent />;
+  return (
+    <main className='bg1'>
+      <section className='relative min-h-screen py-32 px-4 md:px-8 lg:px-16'>
+        <div className='max-w-7xl mx-auto'>
+          <h1 className='generic-h2'>About</h1>
+        </div>
+      </section>
+    </main>
+  );
 }

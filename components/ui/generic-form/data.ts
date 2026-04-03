@@ -14,7 +14,8 @@ export type FieldType =
   | "number" 
   | "email" 
   | "url"
-  | "password";
+  | "password"
+  | "tags";
 
 export interface SelectOption {
   label: string;

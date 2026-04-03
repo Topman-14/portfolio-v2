@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { MAIN_EMAIL, navItems, REPO_URL, socials } from '@/lib/constants';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { MAIN_EMAIL, navItems, REPO_URL, socials } from '@/config';
 import Link from 'next/link';
 import { Check, Copy, SquareArrowOutUpRight, Star, X } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
@@ -22,8 +22,9 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const navItemsRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(isOpen);
+  const [stayMounted, setStayMounted] = useState(false);
   const [mailCopied, setMailCopied] = useState(false);
+  const mounted = isOpen || stayMounted;
 
   useEffect(() => {
     if (mailCopied) {
@@ -33,8 +34,8 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
     }
   }, [mailCopied]);
 
-  useEffect(() => {
-    if (isOpen) setVisible(true);
+  useLayoutEffect(() => {
+    if (isOpen) setStayMounted(true);
   }, [isOpen]);
 
   useGSAP(() => {
@@ -42,68 +43,86 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      
+
+      const overlayEl = overlayRef.current;
+      const contentEl = contentRef.current;
+      const navLinks = navItemsRef.current?.querySelectorAll('a') ?? [];
+      const sidebarChildren = sidebarRef.current?.children ?? [];
+
+      gsap.killTweensOf([overlayEl, contentEl, navLinks, sidebarChildren]);
+
+      gsap.set(overlayEl, { opacity: 0 });
+      gsap.set(contentEl, { scale: 0.95, opacity: 0, y: 20 });
+      if (navLinks.length) gsap.set(navLinks, { opacity: 0, y: 30 });
+      if (sidebarChildren.length)
+        gsap.set(sidebarChildren, { opacity: 0, x: 20 });
+
       const tl = gsap.timeline();
-      
+
       tl.fromTo(
-        overlayRef.current,
+        overlayEl,
         { opacity: 0 },
         { opacity: 1, duration: 0.3, ease: 'power2.out' }
       ).fromTo(
-        contentRef.current,
+        contentEl,
         { scale: 0.95, opacity: 0, y: 20 },
-        { 
-          scale: 1, 
-          opacity: 1, 
+        {
+          scale: 1,
+          opacity: 1,
           y: 0,
-          duration: 0.5, 
-          ease: 'power3.out' 
+          duration: 0.5,
+          ease: 'power3.out',
         },
         '-=0.2'
       );
 
-      if (navItemsRef.current) {
-        const navLinks = navItemsRef.current.querySelectorAll('a');
+      if (navLinks.length) {
         tl.fromTo(
           navLinks,
           { opacity: 0, y: 30 },
-          { 
-            opacity: 1, 
-            y: 0, 
+          {
+            opacity: 1,
+            y: 0,
             duration: 0.6,
             stagger: 0.1,
-            ease: 'power3.out'
+            ease: 'power3.out',
           },
           '-=0.3'
         );
       }
 
-      if (sidebarRef.current) {
+      if (sidebarChildren.length) {
         tl.fromTo(
-          sidebarRef.current.children,
+          sidebarChildren,
           { opacity: 0, x: 20 },
-          { 
-            opacity: 1, 
-            x: 0, 
+          {
+            opacity: 1,
+            x: 0,
             duration: 0.5,
             stagger: 0.1,
-            ease: 'power2.out'
+            ease: 'power2.out',
           },
           '-=0.4'
         );
       }
     } else {
       document.body.style.overflow = '';
+      gsap.killTweensOf([
+        overlayRef.current,
+        contentRef.current,
+        navItemsRef.current?.querySelectorAll('a') ?? [],
+        sidebarRef.current?.children ?? [],
+      ]);
       gsap.to(overlayRef.current, {
         opacity: 0,
         duration: 0.3,
         ease: 'power2.in',
-        onComplete: () => setVisible(false),
+        onComplete: () => setStayMounted(false),
       });
     }
   }, [isOpen]);
 
-  if (!visible) return null;
+  if (!mounted) return null;
 
   return (
     <div
@@ -170,7 +189,7 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
             
             <div className='space-y-4'>
               <h2 className='text-white/50 text-xs font-sans uppercase tracking-wider'>
-                Follow Mee
+                Follow Mee!
               </h2>
               <div className='flex flex-col gap-6'>
                 {socials.filter((social) => social.name !== 'Email').map((social) => (
@@ -201,7 +220,7 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
           </div>
         </nav>
 
-        <div className='flex flex-col md:items-end items-center gap-2 md:ml-auto md:mr-5 md:-mt-10 mt-8'>
+        {/* <div className='flex flex-col md:items-end items-center gap-2 md:ml-auto md:mr-5 md:-mt-10 mt-8'>
           <Link
             href={REPO_URL}
             target='_blank'
@@ -210,7 +229,7 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
             <Star size={16} className='group-hover:fill-malachite transition-colors' />
             <span>Star this repo on GitHub!</span>
           </Link>
-        </div>
+        </div> */}
 
       </div>
     </div>

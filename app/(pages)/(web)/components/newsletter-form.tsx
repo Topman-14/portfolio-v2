@@ -13,7 +13,7 @@ type NewsletterResponse = {
 
 
 
-export default function NewsletterForm() {
+export default function NewsletterForm({ source = 'footer' }: { source?: string }) {
   const [email, setEmail] = useState('');
 
   const { mutate: subscribe, isPending: isSubmitting } = useMutate<
@@ -39,7 +39,7 @@ export default function NewsletterForm() {
       return;
     }
 
-    subscribe({ email, source: 'footer' });
+    subscribe({ email, source });
   };
 
   return (

@@ -17,7 +17,7 @@ export default async function WorkPage() {
     <div className="container mx-auto py-6 px-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Work</h1>
+          <h1 className="text-3xl font-bold">Projects</h1>
           <p className="text-muted-foreground">
             Manage your portfolio projects and work samples
           </p>
@@ -54,7 +54,7 @@ async function deleteWork(id: string) {
 
     const work = await prismadb.work.findUnique({
       where: { id },
-      select: { featured: true }
+      select: { featured: true, slug: true },
     })
 
     await prismadb.work.delete({
@@ -63,7 +63,9 @@ async function deleteWork(id: string) {
 
     revalidatePath('/admin/work')
     revalidatePath('/work')
-    revalidatePath(`/work/${id}`)
+    if (work?.slug) {
+      revalidatePath(`/work/${work.slug}`)
+    }
     
     // Only revalidate home page if deleted work was featured
     if (work?.featured) {

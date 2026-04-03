@@ -1,0 +1,80 @@
+export const BASE_URL = "https://findtope.dev";
+
+export const DEFAULT_OG_IMAGE_PATH = "/opengraph-image.png";
+
+export const DEFAULT_OG_IMAGE_URL = `${BASE_URL}${DEFAULT_OG_IMAGE_PATH}`;
+
+export const routes = {
+  root: "/",
+  about: "/about",
+  work: "/work",
+  blog: "/blog",
+  contact: "/contact",
+  admin: "/admin",
+  adminBlog: "/admin/articles",
+  adminWork: "/admin/work",
+  adminExperience: "/admin/experience",
+  adminCategories: "/admin/categories",
+  adminProfile: "/admin/profile",
+  signIn: "/auth/sign-in",
+  forgotPassword: "/auth/forgot-password",
+  resetPassword: "/auth/reset-password",
+}
+
+export const AdminNavRoutes = [
+  {
+    href: `${routes.admin}`,
+    label: 'Overview',
+  },
+  {
+    href: `${routes.adminBlog}`,
+    label: 'Articles',
+  },
+  {
+    href: `${routes.adminWork}`,
+    label: 'Projects',
+  },
+  {
+    href: `${routes.adminExperience}`,
+    label: 'Experience',
+  },
+  {
+    href: `${routes.adminCategories}`,
+    label: 'Categories',
+  },
+  {
+    href: `${routes.adminProfile}`,
+    label: 'Profile',
+  },
+]
+
+export const navItems = [
+  { name: "Home", href: "/" },
+  { name: "Blog", href: "/blog" },
+  { name: "Work", href: "/work" },
+  // { name: "About", href: "/about" },
+  // { name: "Contact", href: "/contact" },
+];
+
+export const socials = [
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/in/tope-akinkuade/"
+  },
+  {
+    name: "Twitter",
+    href: "https://www.twitter.com/therealtope_"
+  },
+  {
+    name: "GitHub",
+    href: "https://www.github.com/Topman-14"
+  },
+  {
+    name: "Email",
+    href: "mailto:topeakinkuade78@gmail.com"
+  }
+];
+
+export const MAIN_EMAIL = 'topeakinkuade78@gmail.com';
+
+export const REPO_URL = 'https://github.com/Topman-14/portfolio-v2';

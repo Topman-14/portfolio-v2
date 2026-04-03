@@ -60,6 +60,7 @@ export function RevealText({
           split.words.forEach((word) => {
             if (word instanceof HTMLElement) {
               word.style.display = 'inline-block';
+              word.style.whiteSpace = 'nowrap';
             }
           });
         }

@@ -1,0 +1,19 @@
+---
+description: Prisma schema and blog/article domain conventions
+globs: "{prisma/**/*.prisma,prisma/migrations/**/*.sql,app/(pages)/(web)/blog/**/*.tsx,app/(pages)/admin/articles/**/*.tsx,scripts/seed.ts,lib/prismadb.ts,lib/utils.ts}"
+alwaysApply: false
+---
+
+# Prisma And Blog Domain
+
+- There is no `Blog` model in Prisma; blog content is represented by `Article`.
+- `Article` domain fields to preserve: `title`, `slug`, `content`, `excerpt`, `coverImg`, `status`, `readTime`, `tags`, `publishedAt`, `categoryId`, `userId`.
+- `ArticleStatus` enum is authoritative: `DRAFT`, `PUBLISHED`, `ARCHIVED`.
+- Existing blog listing behavior queries only `PUBLISHED` articles ordered by `publishedAt` descending and includes `category`.
+- Keep slug generation consistent with existing utility patterns (`generateSlug`) when creating article records.
+- Preserve model relations and ownership rules:
+  - `Article -> User` (required)
+  - `Article -> Category` (optional)
+  - `Article -> Comment[]`
+- For admin article update flow, preserve publish-transition behavior (draft to published controls `publishedAt` assignment).
+- When editing Prisma schema/migrations, avoid unrelated changes to other models/enums.

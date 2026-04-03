@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { routes } from "@/lib/constants";
+import { routes } from "@/config";
 import { UserRole } from "@prisma/client";
 
 export function AuthButton() {

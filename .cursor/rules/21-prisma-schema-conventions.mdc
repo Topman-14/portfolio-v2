@@ -1,0 +1,18 @@
+---
+description: Prisma schema and migration editing conventions
+globs: "{prisma/schema.prisma,prisma/migrations/**/*.sql,prisma/migrations/**/migration.sql}"
+alwaysApply: false
+---
+
+# Prisma Schema Conventions
+
+- Edit Prisma schema with minimal, intentional changes; avoid touching unrelated models or enums.
+- Keep datasource and generator configuration unchanged unless explicitly requested.
+- Preserve model naming and mappings already in use (for example `@@map("articles")`, `@@map("works")`).
+- Keep relational integrity intact when editing fields:
+  - required foreign keys remain required unless requested otherwise
+  - `onDelete` behavior should not change without explicit instruction
+- For blog domain, `Article` is the source of truth (no separate `Blog` model).
+- Preserve `ArticleStatus` enum values unless explicitly asked to evolve workflow.
+- Add migrations only when schema changes are requested; avoid speculative migration edits.
+- Prefer backward-compatible schema evolution and avoid destructive changes unless requested.

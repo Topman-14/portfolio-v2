@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
+import type { Experience } from '@prisma/client';
 import prismadb from '@/lib/prismadb';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/config';
 import { WorksHero } from '@/app/(pages)/(web)/work/components/works-hero';
 import { WorksBentoGrid } from '@/app/(pages)/(web)/work/components/featured-works';
-import { ExperienceSection } from '@/app/(pages)/(web)/work/components/experience-section';
+import {
+  ExperienceSection,
+  type ExperienceListItem,
+} from '@/app/(pages)/(web)/work/components/experience-section';
 
 export const metadata: Metadata = {
   title: 'Work | Tope Akinkuade',
@@ -23,14 +27,6 @@ export const metadata: Metadata = {
       'A collection of projects I\'ve built — from internal dashboards to public-facing apps.',
     url: `${BASE_URL}/work`,
     siteName: 'Tope Akinkuade',
-    images: [
-      {
-        url: `${BASE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Tope Akinkuade - Work',
-      },
-    ],
     type: 'website',
   },
   twitter: {
@@ -38,25 +34,55 @@ export const metadata: Metadata = {
     title: 'Work | Tope Akinkuade',
     description:
       'A collection of projects I\'ve built — from internal dashboards to public-facing apps.',
-    images: [`${BASE_URL}/og-image.png`],
   },
 };
 
+function serializeExperiences(rows: Experience[]): ExperienceListItem[] {
+  return rows.map((e) => ({
+    id: e.id,
+    jobTitle: e.jobTitle,
+    company: e.company,
+    location: e.location,
+    description: e.description,
+    startDate: e.startDate.toISOString(),
+    endDate: e.endDate?.toISOString() ?? null,
+    isCurrentRole: e.isCurrentRole,
+    skills: e.skills,
+    achievements: e.achievements,
+  }));
+}
+
 export default async function WorkPage() {
-  const featuredWorks = await prismadb.work.findMany({
-    where: {
-      featured: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  const [featuredWorks, otherWorks, experienceRows] = await Promise.all([
+    prismadb.work.findMany({
+      where: {
+        featured: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    }),
+    prismadb.work.findMany({
+      where: {
+        featured: false,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 48,
+    }),
+    prismadb.experience.findMany({
+      orderBy: [{ isCurrentRole: 'desc' }, { startDate: 'desc' }],
+    }),
+  ]);
+
+  const experiences = serializeExperiences(experienceRows);
 
   return (
-    <main>
+    <main className='bg1'>
       <WorksHero />
-      <WorksBentoGrid works={featuredWorks} />
-      <ExperienceSection />
+      <WorksBentoGrid works={featuredWorks} otherWorks={otherWorks} />
+      <ExperienceSection experiences={experiences} />
     </main>
   );
 }

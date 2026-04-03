@@ -1,27 +1,43 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma";
-import { sendPasswordResetEmail } from "@/lib/email";
+import {
+  isPasswordResetEmailConfigured,
+  sendPasswordResetEmail,
+} from "@/lib/email";
 import { randomBytes } from "crypto";
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const body = await request.json();
+    const rawEmail = typeof body?.email === "string" ? body.email : "";
 
-    if (!email) {
+    if (!rawEmail.trim()) {
       return NextResponse.json(
         { error: "Email is required" },
         { status: 400 }
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
+    if (!isPasswordResetEmailConfigured()) {
+      return NextResponse.json(
+        {
+          error:
+            "Password reset email is not configured on this server. Contact the administrator.",
+        },
+        { status: 503 }
+      );
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        email: { equals: rawEmail.trim(), mode: "insensitive" },
+      },
     });
 
     if (!user) {
       return NextResponse.json(
-        { message: "If an account with that email exists, we've sent a password reset link." },
-        { status: 200 }
+        { error: "No account exists for this email address." },
+        { status: 404 }
       );
     }
 
@@ -41,10 +57,25 @@ export async function POST(request: Request) {
       },
     });
 
-    await sendPasswordResetEmail(user.email, token);
+    try {
+      await sendPasswordResetEmail(user.email, token);
+    } catch (sendError) {
+      await prisma.passwordResetToken.delete({ where: { token } });
+      console.error("Forgot password send mail error:", sendError);
+      return NextResponse.json(
+        {
+          error:
+            "We could not send the reset email. Try again later or contact support.",
+        },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json(
-      { message: "If an account with that email exists, we've sent a password reset link." },
+      {
+        message:
+          "We sent a password reset link to your email. Check your spam folder if you do not see it.",
+      },
       { status: 200 }
     );
   } catch (error) {

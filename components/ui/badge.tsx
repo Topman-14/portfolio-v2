@@ -11,7 +11,7 @@ const variantStyles = {
   amber: 'bg-amber/20 text-amber border-amber/30',
   bittersweet: 'bg-bittersweet/20 text-bittersweet border-bittersweet/30',
   white: 'bg-white/20 text-white border-coal/30',
-  default: 'bg-coal/10 text-coal/70 border-coal/20',
+  default: 'bg-coal/10 text-coal/70 border-coal/20 dark:bg-white/10 dark:text-white/70 dark:border-white/20',
 };
 
 export const Badge = ({

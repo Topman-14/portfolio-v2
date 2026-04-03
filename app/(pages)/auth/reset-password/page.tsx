@@ -19,7 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Eye, EyeOff, Loader2, Lock, ArrowLeft } from "lucide-react";
-import { routes } from "@/lib/constants";
+import { routes } from "@/config";
 
 const formSchema = z.object({
   password: z.string().min(8, {

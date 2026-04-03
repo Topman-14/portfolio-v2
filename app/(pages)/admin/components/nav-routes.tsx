@@ -7,12 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Fragment } from 'react';
-import { AdminNavRoutes } from '@/lib/constants';
+import { AdminNavRoutes } from '@/config';
 
 
 export default function NavRoutes({
     className,
-    ...props
     } : React.HTMLAttributes<HTMLElement>){
       const pathname = usePathname();
 

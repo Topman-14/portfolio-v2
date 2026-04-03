@@ -27,7 +27,7 @@ function AvatarImage({
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
-      className={cn("aspect-square size-full", className)}
+      className={cn("aspect-square size-full object-cover", className)}
       {...props}
     />
   )
@@ -50,23 +50,31 @@ function AvatarFallback({
 }
 
 interface AvatarProps {
-  src: string;
+  src?: string | null;
   alt: string;
+  className?: string;
+  fallbackClassName?: string;
 }
 
-export const Avatar:FC<AvatarProps> = ({ src, alt }) => {
-
+export const Avatar: FC<AvatarProps> = ({
+  src,
+  alt,
+  className,
+  fallbackClassName,
+}) => {
   return (
-    <AvatarBase>
-    <AvatarImage
-      src={src || ""}
-      alt={alt || "User"}
-    />
-    <AvatarFallback className="text-primary font-medium bg-transparent">
+    <AvatarBase className={className}>
+      {src ? (
+        <AvatarImage src={src} alt={alt || "User"} />
+      ) : null}
+      <AvatarFallback
+        className={cn(
+          "text-primary font-medium bg-transparent",
+          fallbackClassName
+        )}
+      >
         {getInitials(alt)}
-    </AvatarFallback>
-  </AvatarBase>
-  )
-}
-
-// good, now i want to implement the create pages of the data items in my setu up, not the shad cns components, 
+      </AvatarFallback>
+    </AvatarBase>
+  );
+};

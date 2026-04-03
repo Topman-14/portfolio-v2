@@ -44,6 +44,12 @@ const assetHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  generateBuildId: async () =>
+    process.env.VERCEL_DEPLOYMENT_ID ??
+    process.env.CF_PAGES_COMMIT_SHA ??
+    process.env.GITHUB_SHA ??
+    process.env.BUILD_ID ??
+    'development',
   images: {
     remotePatterns: [
       {
@@ -53,6 +59,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.s3.*.amazonaws.com',
       },
     ],
   },
@@ -115,42 +125,6 @@ const runtimeCaching: RuntimeCaching[] = [
         maxEntries: 100,
         maxAgeSeconds: 30 * 24 * 60 * 60,
       },
-    },
-  },
-  {
-    urlPattern: ({ request }: { request: Request }) => request.destination === 'document',
-    handler: 'NetworkFirst',
-    options: {
-      cacheName: 'pagesCache',
-      expiration: {
-        maxEntries: 50,
-        maxAgeSeconds: 24 * 60 * 60,
-      },
-      networkTimeoutSeconds: 10,
-    },
-  },
-  {
-    urlPattern: ({ request }: { request: Request }) => request.mode === 'navigate',
-    handler: 'NetworkFirst',
-    options: {
-      cacheName: 'navigateCache',
-      expiration: {
-        maxEntries: 50,
-        maxAgeSeconds: 24 * 60 * 60,
-      },
-      networkTimeoutSeconds: 10,
-    },
-  },
-  {
-    urlPattern: /^https?.*/,
-    handler: 'NetworkFirst',
-    options: {
-      cacheName: 'offlineCache',
-      expiration: {
-        maxEntries: 200,
-        maxAgeSeconds: 7 * 24 * 60 * 60,
-      },
-      networkTimeoutSeconds: 15,
     },
   },
 ];

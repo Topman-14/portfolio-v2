@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import Link from "next/link";
-import { routes } from "@/lib/constants";
+import { routes } from "@/config";
 
 const formSchema = z.object({
   email: z.string().email({

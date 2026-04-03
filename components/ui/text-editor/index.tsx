@@ -291,6 +291,7 @@ export function SimpleEditor({
 
         <EditorContent
           editor={editor}
+          height={100}
           role="presentation"
           className="simple-editor-content"
         />

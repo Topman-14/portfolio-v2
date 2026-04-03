@@ -1,0 +1,19 @@
+---
+description: UI primitives, typography, tokens, and styling conventions
+globs: "{app/**/*.tsx,components/**/*.tsx,app/**/*.css,components/**/*.scss,styles/**/*.scss}"
+alwaysApply: false
+---
+
+# Design System And Theme
+
+- Reuse existing UI primitives before building new UI controls:
+  - `Button`, `Badge`, `Input`, `Textarea`, `Table`, `DataTable`, `Dialog`, `Popover`, `Dropdown`, `Switch`, `Calendar`.
+- Font system is defined in `assets/fonts.ts` and applied in `app/layout.tsx`:
+  - display: Bricolage (`font-display`)
+  - heading: Krona One (`font-heading`)
+  - body/sans: Syne (`font-sans`)
+- Prefer semantic theme tokens from `app/globals.css` (`primary`, `muted`, `foreground`, etc.) instead of raw values.
+- Brand accent palette should stay consistent with existing tokens/classes: `malachite`, `amber`, `bittersweet`, `coal`, `white`.
+- Reuse established utility patterns when possible: `generic-h2`, `generic-subtitle`, `bg1`, `bg2`.
+- Keep styles Tailwind-first and token-driven; avoid introducing one-off hardcoded styling unless explicitly required.
+- For repeatable UI blocks, map from arrays/config data instead of duplicating JSX.

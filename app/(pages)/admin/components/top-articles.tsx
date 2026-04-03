@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { routes } from '@/lib/constants';
+import { routes } from '@/config';
 
 interface Article {
   title: string;

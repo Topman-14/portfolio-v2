@@ -5,18 +5,37 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const featured = searchParams.get('featured');
-    const limit = searchParams.get('limit');
+    const limitRaw = searchParams.get('limit');
+    const q = searchParams.get('q')?.trim() ?? '';
 
-    const where =
+    const baseWhere =
       featured === 'true'
         ? { featured: true }
         : featured === 'false'
           ? { featured: false }
           : {};
-    const take = limit ? parseInt(limit) : undefined;
+
+    const take = limitRaw
+      ? Math.min(Number.parseInt(limitRaw, 10) || 48, 100)
+      : featured === 'false'
+        ? 48
+        : undefined;
 
     const works = await prismadb.work.findMany({
-      where,
+      where: {
+        ...baseWhere,
+        ...(q
+          ? {
+              OR: [
+                { title: { contains: q, mode: 'insensitive' } },
+                { slug: { contains: q, mode: 'insensitive' } },
+                { description: { contains: q, mode: 'insensitive' } },
+                { category: { contains: q, mode: 'insensitive' } },
+                { tools: { has: q } },
+              ],
+            }
+          : {}),
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -32,4 +51,3 @@ export async function GET(request: Request) {
     );
   }
 }
-

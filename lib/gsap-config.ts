@@ -1,8 +1,9 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Observer } from 'gsap/Observer';
 
 if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger, Observer);
   
   ScrollTrigger.config({
     autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load',
@@ -23,5 +24,5 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export { gsap, ScrollTrigger };
+export { gsap, ScrollTrigger, Observer };
 
