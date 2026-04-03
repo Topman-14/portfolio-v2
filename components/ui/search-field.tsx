@@ -1,6 +1,6 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
+import GInput from '@/components/ui/ginput';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -30,24 +30,20 @@ export function SearchField({
 }: SearchFieldProps) {
   return (
     <div className={cn('flex w-full min-w-0 items-center gap-2', className)}>
-      <div className='relative min-w-0 w-full group/search'>
-        <Input
-          value={value}
-          onChange={(e) => onValueChange(e.target.value)}
-          placeholder={placeholder}
-          className={cn(
-            'h-10 w-full rounded-none border-0 bg-transparent text-white placeholder:text-white/45 focus-visible:ring-0 px-5',
-            inputClassName
-          )}
-          onKeyDown={(e) => {
-            if (variant === 'hero' && e.key === 'Enter') {
-              onAction?.();
-            }
-          }}
-        />
-        <span className='pointer-events-none absolute bottom-0 left-0 h-px w-full bg-white/20' />
-        <span className='pointer-events-none absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-malachite transition-transform duration-300 ease-out group-focus-within/search:scale-x-100' />
-      </div>
+      <GInput
+        value={value}
+        onChange={(e) => onValueChange(e.target.value)}
+        placeholder={placeholder}
+        className={cn(
+          'h-10 bg-transparent backdrop-blur-none text-white placeholder:text-white/45 focus-visible:ring-0 px-5',
+          inputClassName
+        )}
+        onKeyDown={(e) => {
+          if (variant === 'hero' && e.key === 'Enter') {
+            onAction?.();
+          }
+        }}
+      />
       <Button
         variant='link'
         size='icon'

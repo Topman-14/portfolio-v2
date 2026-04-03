@@ -16,7 +16,7 @@ export function Projects2({ works }: Projects2Props) {
       <div className='mx-auto max-w-7xl py-28'>
         <RevealHeader
           title='Projects'
-          subtitle='Featured builds from the archive — tap through for case studies and detail.'
+          subtitle='The details, the decisions, the outcomes.'
           className='mb-12 md:mb-16'
         />
 

@@ -11,35 +11,35 @@ const specializations = [
   {
     title: 'Frontend Development',
     description:
-      'Built dynamic dashboards, fully featured business sites (careers, blogs and all) and design systems with React, Angular Next.js, and TypeScript. Developed custom voice-enabled UI components for AI and created adaptive layouts for business and logistics tools.',
-    tools: ['React', 'Next.js', 'TypeScript', 'Zustand', 'Tailwind', 'Vite', 'Figma'],
+      'Mostly React, Next and Angular, TypeScript everywhere. Dashboards, full marketing sites, design systems people pretend they do not need until the third inconsistent button, and Three.js when the brief calls for it. I design too.',
+    tools: ['React', 'Next.js', 'Angular', 'TypeScript', 'Zustand', 'Tailwind', 'Vite', 'Figma'],
     color: 'malachite' as const,
   },
   {
     title: 'Backend Engineering',
     description:
-      'Architected microservices and RESTful APIs with Typescript, optimized for scalability and performance. Implemented unified cross-domain authentication across multiple products and microservices and integrated multiple third-party services securely.',
+      'Service layers and APIs I can still explain six months later: auth across products, integrations with third-party providers, and data models that do not fall apart when the domain shifts.',
     tools: ['Nest.js', 'Express', 'Prisma', 'TypeORM', 'MongoDB', 'PostgreSQL', 'Redis', 'Docker'],
     color: 'amber' as const,
   },
   {
     title: 'Mobile Engineering',
     description:
-      'Worked on the Binta mobile app, ensuring seamless integration and real-time transaction updates. Focused on offline-first experiences and fast UI rendering.',
-    tools: ['React Native', 'Expo', 'Zustand', 'Firebase'],
+      'React Native with Expo for production apps; EAS for builds, store submissions, and env management so releases stay predictable instead of improvised.',
+    tools: ['React Native', 'Expo', 'EAS'],
     color: 'bittersweet' as const,
   },
   {
     title: 'Cloud & DevOps',
     description:
-      'Automated deployments, implemented CI/CD pipelines, and managed containerized apps. Deployed multi-service environments with SSL, load balancing, and monitoring.',
-    tools: ['AWS', 'Caddy', 'Docker', 'GitHub Actions', 'Cloudflare', 'GCP'],
+      `Docker, Elasticsearch, GitHub Actions, Cloudflare, AWS, GCP, Azure—whatever the environment already uses. Working toward an AWS Solutions Architect Associate certification, and comfortable with CloudFormation and Terraform.`,
+    tools: ['AWS', 'Caddy', 'Docker', 'GitHub Actions', 'Cloudflare', 'GCP', 'Terraform'],
     color: 'malachite' as const,
   },
   {
     title: 'AI Integrations',
     description:
-      'Built RAG chatbots using OpenAI and custom vector stores for internal knowledge retrieval. Integrated voice and text AI tools into real products to enhance usability and interactivity.',
+      'RAG over internal docs, embeddings living in PGVector, LangChain, FastAPI when Python is the shortest path.',
     tools: ['OpenAI API', 'LangChain', 'PGVector', 'FastAPI'],
     color: 'amber' as const,
   },
@@ -105,21 +105,9 @@ export const Expertise = () => {
 
             <div className='space-y-4'>
               <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans'>
-                Obsession lies in clean
-                interfaces that feel effortless. I take projects from concept to
-                deployment, handling architecture, UX, and long-term
-                maintainability with equal attention. What sets me apart is
-                consistency I ship, I document, I debug, and I refine until
-                it&apos;s solid.
-              </p>
-
-              <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans'>
-                I believe engineering isn&apos;t just about code; it&apos;s about
-                control. Control over performance, cost, and experience. Whether
-                I&apos;m integrating AI models, setting up efficient infra, or
-                laying out code architecture won&apos;t become a headache over
-                time, the goal stays the same; to keep it elegant, fast, and
-                dependable.
+                Contract work has taken me through Binta Financial, Compass AI, and
+                Husridge. Most of the time full-stack product and platform
+                engineering, zero-to-one MVPs with small teams—mostly remote, with an uncharacteristic bias for speed.
               </p>
             </div>
           </div>

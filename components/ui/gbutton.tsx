@@ -1,10 +1,11 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn, ROUNDED_PILL_STROKE_WIDTH, roundedPillPathD } from '@/lib/utils';
+import { useElementDimensions } from '@/hooks/use-element-dimensions';
 
 interface GButtonProps extends React.ComponentProps<'button'> {
   href?: string;
@@ -27,32 +28,19 @@ export const GButton = ({
 }: GButtonProps) => {
   const borderRef = useRef<SVGPathElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const dimensions = useElementDimensions(containerRef);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        setDimensions({ width: rect.width, height: rect.height });
-      }
-    };
-
-    updateDimensions();
-    const resizeObserver = new ResizeObserver(updateDimensions);
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
+  const strokeWidth = ROUNDED_PILL_STROKE_WIDTH;
+  const pathData = roundedPillPathD(
+    dimensions.width,
+    dimensions.height,
+    strokeWidth
+  );
 
   useGSAP(
     () => {
-      if (!borderRef.current || !containerRef.current || dimensions.width === 0) return;
+      if (!borderRef.current || !containerRef.current || dimensions.width === 0)
+        return;
 
       const path = borderRef.current;
       const length = path.getTotalLength();
@@ -92,28 +80,12 @@ export const GButton = ({
 
   const baseClasses =
     'relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full backdrop-blur-md font-sans font-medium transition-all duration-300 overflow-hidden cursor-pointer';
-  
+
   const variantClasses = {
     primary: 'bg-white/10 text-white',
     secondary: 'bg-coal/10 text-coal',
     green: 'bg-malachite/20 border border-malachite/30 text-malachite hover:bg-malachite/30',
   };
-
-  const radius = Math.min(dimensions.height / 2, dimensions.width / 2, 999);
-  const strokeWidth = 1.5;
-  const halfStroke = strokeWidth / 2;
-  
-  const pathData = dimensions.width > 0 && dimensions.height > 0
-    ? `M ${radius + halfStroke},${halfStroke} 
-       L ${dimensions.width - radius - halfStroke},${halfStroke} 
-       A ${radius} ${radius} 0 0 1 ${dimensions.width - halfStroke},${radius + halfStroke} 
-       L ${dimensions.width - halfStroke},${dimensions.height - radius - halfStroke} 
-       A ${radius} ${radius} 0 0 1 ${dimensions.width - radius - halfStroke},${dimensions.height - halfStroke} 
-       L ${radius + halfStroke},${dimensions.height - halfStroke} 
-       A ${radius} ${radius} 0 0 1 ${halfStroke},${dimensions.height - radius - halfStroke} 
-       L ${halfStroke},${radius + halfStroke} 
-       A ${radius} ${radius} 0 0 1 ${radius + halfStroke},${halfStroke} Z`
-    : '';
 
   const content = (
     <div
@@ -126,7 +98,7 @@ export const GButton = ({
       )}
     >
       <svg
-        className='absolute inset-0 w-full h-full pointer-events-none'
+        className='absolute inset-0 size-full pointer-events-none'
         style={{ overflow: 'visible' }}
       >
         {pathData && (
@@ -153,4 +125,3 @@ export const GButton = ({
     </button>
   );
 };
-

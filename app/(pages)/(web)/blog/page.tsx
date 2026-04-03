@@ -47,8 +47,8 @@ export default async function Blog() {
         <div className='max-w-wide mx-auto space-y-18'>
           <section className='space-y-8'>
             <RevealHeader
-              title='Stories, opinions, and engineering insights'
-              subtitle='Transform how you design and build for the web.'
+              title='Thoughts & Writeups'
+              subtitle='Engineering, product, and the occasional unpopular opinion.'
               className='max-w-6xl md:mt-16'
               subtitleClassName='mt-5'
             />
@@ -74,10 +74,10 @@ export default async function Blog() {
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center'>
               <div>
                 <h3 className='text-2xl md:text-3xl font-display font-bold text-white'>
-                  Join my Newsletter!
+                  Stay in the loop.
                 </h3>
                 <p className='text-white/70 font-sans mt-2'>
-                  Subscribe for practical engineering notes, product essays, and new article updates.
+                Bi-monthly-ish drops of new posts and recent work.
                 </p>
               </div>
               <NewsletterForm source='blog-page' />

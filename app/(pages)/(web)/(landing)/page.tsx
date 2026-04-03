@@ -3,11 +3,18 @@ import { Projects2 } from './components/projects-2';
 import SplinePlayer from '@/components/custom/spline';
 import { ArrowRight } from 'lucide-react';
 import { GButton } from '@/components/ui/gbutton';
-import Image from 'next/image';
+import Image, { type StaticImageData } from 'next/image';
 import { RevealHeader } from '@/components/custom/reveal-header';
 import prismadb from '@/lib/prismadb';
 import { Work } from '@prisma/client';
-
+import aboutEmma from '@/public/me/emma.jpg';
+import aboutMe1 from '@/public/me/me1.webp';
+import aboutMe3 from '@/public/me/placeholder.png';
+import aboutMe2 from '@/public/me/me2.jpg';
+import aboutMe5 from '@/public/me/me5.jpg';
+import aboutMe4 from '@/public/me/me4.jpg';
+import aboutSodiq from '@/public/me/sodiq.webp';
+import aboutMe6 from '@/public/me/me6.jpg';
 export default async function Home() {
   const featuredWorks = await prismadb.work.findMany({
     where: { featured: true },
@@ -45,12 +52,7 @@ export default async function Home() {
             <p
               className='text-white font-semibold max-w-xl font-sans text-lg md:text-xl'
             >
-              I work across the stack to create
-              systems that balance precision and practicality.
-              <br />
-              <br />
-              From architecture to deployment, <br className='md:hidden' /> I build infrastructure nobody
-              notices until it&apos;s missing.
+              I build production systems and the documentation that makes them usable.
             </p>
           </div>
           <div className='md:absolute mx-auto xl:bottom-32 bottom-20 right-12 size-[300px] md:max-h-none lg:size-[400px] z-[20] pointer-events-none'>
@@ -69,46 +71,48 @@ export default async function Home() {
 
       <section className='relative  min-h-screen py-32 px-4 md:px-8 lg:px-16'>
         <div className='max-w-7xl mx-auto h-full flex gap-7 flex-col'>
-          <div className='space-y-8 flex-1 md:flex-none max-w-3xl'>
+          <div className='space-y-8 flex-1 md:flex-none max-w-4xl'>
             <RevealHeader title="About" />
 
             <p>
-              Based in Lagos, I&apos;ve spent the last few
-              years building products across logistics, fintech, and business
-              infrastructure. I&apos;ve worked with teams of all sizes to create
-              tools that power real operations from supply chain platforms used by
-              truck drivers to modular business systems for enterprises. My focus
-              is on clarity, performance, and systems that scale without
-              unnecessary complexity.
+              I&apos;m based in Lagos. Lately my work has skewed toward fintech and
+              edutech: shipping products end to end, keeping internal systems
+              maintainable, and writing technical docs when the codebase needs a
+              clear story.
               <br />
               <br />
-
-              Alongside engineering, I&apos;m big on design thinking, not in the
-              corporate sense, but in the way a product feels when it&apos;s used.
-              My work sits at the intersection of function and pragmatism.
+              I work remotely, so most weeks I&apos;m at home in front of a screen.
+              That&apos;s why I gravitate toward meetups, conferences, and casual
+              community events when I can; they&apos;re a reset and a reminder that
+              software is still made by people in rooms.
+              <br />
+              <br />
+              Away from the keyboard I read, poke at side projects, listen to Coldplay and hunt for more reasons to leave the house.
             </p>
 
-            <GButton href='/about' className='mt-5 mb-3 group'>
+            {/* <GButton href='/about' className='mt-5 mb-3 group'>
               <span>Read More</span>
               <ArrowRight className='w-4 h-4 group-hover:translate-x-1 transition-transform' />
-            </GButton>
+            </GButton> */}
           </div>
 
           <div
-            className='relative flex-1 md:flex-none grid grid-cols-3 ml-auto my-auto gap-4 lg:max-w-[600px] w-full'
+            className='relative flex-1 md:flex-none grid mt-12 grid-cols-3 md:grid-cols-6 grid-rows-2 ml-auto my-auto gap-4 w-full'
           >
             {imageData.map((image, index) => (
               <div
-                key={`${image.src}-${image.speed}-${index}`}
-                className={`${image.colSpan} relative ${image.height} overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
+                key={`about-gallery-${index}`}
+                className={`${image.colSpan} lg:max-w-[600px] relative h-[200px] overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
               >
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className='object-cover'
-                    priority={image.priority}
-                  />
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  placeholder='blur'
+                  className='object-cover'
+                  priority={true}
+                  sizes='(max-width: 768px) 50vw, 33vw'
+                />
               </div>
             ))}
           </div>
@@ -123,37 +127,17 @@ export default async function Home() {
 }
 
 
-const imageData = [
-  {
-    src: '/img/jpg/test.jpg',
-    alt: 'Tope Akinkuade',
-    speed: -5,
-    colSpan: 'col-span-2',
-    height: 'h-[200px] lg:h-[200px]',
-    priority: true,
-  },
-  {
-    src: '/img/jpg/test.jpg',
-    alt: 'Tope Akinkuade',
-    speed: 4,
-    colSpan: 'col-span-1',
-    height: 'h-[200px] lg:h-[200px]',
-    priority: true,
-  },
-  {
-    alt: 'Tope Akinkuade',
-    src: '/img/jpg/me.jpg',
-    speed: 6,
-    colSpan: 'col-span-1',
-    height: 'h-[200px] lg:h-[200px]',
-    priority: false,
-  },
-  {
-    src: '/img/png/test_img.png',
-    alt: 'Tope Akinkuade',
-    speed: 3,
-    colSpan: 'col-span-2',
-    height: 'h-[200px] lg:h-[200px]',
-    priority: false,
-  },
-]
+const imageData: {
+  src: StaticImageData;
+  alt: string;
+  colSpan: string;
+}[] = [
+    { src: aboutEmma, alt: 'Tope Akinkuade', colSpan: 'col-span-2' },
+    { src: aboutMe1, alt: 'Tope Akinkuade', colSpan: 'col-span-1' },
+    { src: aboutMe3, alt: 'Tope Akinkuade', colSpan: 'col-span-2' },
+    { src: aboutMe2, alt: 'Tope Akinkuade', colSpan: 'col-span-1' },
+    { src: aboutMe5, alt: 'Tope Akinkuade', colSpan: 'col-span-1 hidden md:block' },
+    { src: aboutMe4, alt: 'Tope Akinkuade', colSpan: 'col-span-2 hidden md:block' },
+    { src: aboutSodiq, alt: 'Tope Akinkuade', colSpan: 'col-span-1 hidden md:block' },
+    { src: aboutMe6, alt: 'Tope Akinkuade', colSpan: 'col-span-2 hidden md:block' },
+  ];

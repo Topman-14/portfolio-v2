@@ -190,3 +190,9 @@ export const formatPublishedDate = (
   const d = typeof date === 'string' ? new Date(date) : date;
   return format(d, pattern === 'long' ? 'MMMM d, yyyy' : 'MMM d, yyyy');
 };
+
+export {
+  ROUNDED_PILL_STROKE_WIDTH,
+  roundedPillPathD,
+  roundedPillRadius,
+} from './rounded-rect-path';
