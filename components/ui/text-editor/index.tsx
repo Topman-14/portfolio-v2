@@ -13,6 +13,7 @@ import { Highlight } from "@tiptap/extension-highlight"
 import { Subscript } from "@tiptap/extension-subscript"
 import { Superscript } from "@tiptap/extension-superscript"
 import { Selection } from "@tiptap/extensions"
+import { TableKit } from "@tiptap/extension-table"
 
 // --- UI Primitives ---
 import { Button } from "@/components/ui/text-editor/tiptap-ui-primitive/button"
@@ -40,6 +41,7 @@ import { ImageUploadButton } from "@/components/ui/text-editor/tiptap-ui/image-u
 import { ListDropdownMenu } from "@/components/ui/text-editor/tiptap-ui/list-dropdown-menu"
 import { BlockquoteButton } from "@/components/ui/text-editor/tiptap-ui/blockquote-button"
 import { CodeBlockButton } from "@/components/ui/text-editor/tiptap-ui/code-block-button"
+import { TableInsertButton } from "@/components/ui/text-editor/tiptap-ui/table-insert-button"
 import {
   ColorHighlightPopover,
   ColorHighlightPopoverContent,
@@ -100,6 +102,7 @@ const MainToolbarContent = ({
         />
         <BlockquoteButton />
         <CodeBlockButton />
+        <TableInsertButton />
       </ToolbarGroup>
 
       <ToolbarSeparator />
@@ -237,6 +240,7 @@ export function SimpleEditor({
         upload: handleImageUpload,
         onError: (error) => console.error("Upload failed:", error),
       }),
+      TableKit,
     ],
     content: value,
     onUpdate: ({ editor }) => {
