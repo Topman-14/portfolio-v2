@@ -82,3 +82,16 @@ body,
     padding: 1rem 1.5rem 30vh;
   }
 }
+
+.simple-editor-content .tiptap.ProseMirror.simple-editor table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.simple-editor-content .tiptap.ProseMirror.simple-editor td,
+.simple-editor-content .tiptap.ProseMirror.simple-editor th {
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  vertical-align: top;
+}
