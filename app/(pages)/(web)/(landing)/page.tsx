@@ -32,7 +32,7 @@ export default async function Home() {
   }) as Work[];
 
   return (
-    <main className='bg1'>
+    <main className='bg1 px-2'>
       <section className='relative pb-5 md:pb-0'>
         <div className='relative z-10 flex lg:items-center justify-center min-h-screen px-4 md:px-8 lg:px-16 flex-col md:flex-row gap-16 md:gap-0'>
           <div className='lg:max-w-6xl w-full sm:pt-20 md:pt-32 sm:pb-20 md:pb-48 xl:max-w-7xl z-[20] py-10'>
