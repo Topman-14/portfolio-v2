@@ -4,7 +4,6 @@ import NextTopLoader from 'nextjs-toploader';
 import { AlertProvider } from '@/context/alert';
 import PageLoader from '@/components/ui/page-loader';
 import { QueryProvider } from '@/context/queries';
-import { ParallaxProvider } from '@/context/parallax';
 import { CursorGlow } from '@/components/custom/cursor-glow';
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -15,7 +14,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        <ParallaxProvider>
           <PageLoader />
           <NextTopLoader
             color='#14cc5e'
@@ -33,7 +31,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             {children}
             <Toaster position='top-center' richColors />
           </AlertProvider>
-        </ParallaxProvider>
       </ThemeProvider>
     </QueryProvider>
   );

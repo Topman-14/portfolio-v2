@@ -24,6 +24,7 @@ export function WorkCard({ work }: { work: Work }) {
           <div className='absolute inset-0 bg-gradient-to-br from-malachite/25 via-coal to-amber/20' />
         )}
         <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-coal/70 via-coal/20 to-transparent' />
+        
         <CircleButton
           href={`/work/${work.slug}`}
           className='absolute bottom-4 right-4 z-10'

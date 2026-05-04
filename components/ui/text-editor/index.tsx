@@ -14,6 +14,7 @@ import { Subscript } from "@tiptap/extension-subscript"
 import { Superscript } from "@tiptap/extension-superscript"
 import { Selection } from "@tiptap/extensions"
 import { TableKit } from "@tiptap/extension-table"
+import { Embed } from "@/components/ui/text-editor/tiptap-node/embed-node/embed-extension"
 
 // --- UI Primitives ---
 import { Button } from "@/components/ui/text-editor/tiptap-ui-primitive/button"
@@ -52,6 +53,12 @@ import {
   LinkContent,
   LinkButton,
 } from "@/components/ui/text-editor/tiptap-ui/link-popover"
+import {
+  EmbedPopover,
+  EmbedContent,
+  EmbedButton,
+  canInsertEmbed,
+} from "@/components/ui/text-editor/tiptap-ui/embed-popover/embed-popover"
 import { MarkButton } from "@/components/ui/text-editor/tiptap-ui/mark-button"
 import { TextAlignButton } from "@/components/ui/text-editor/tiptap-ui/text-align-button"
 import { UndoRedoButton } from "@/components/ui/text-editor/tiptap-ui/undo-redo-button"
@@ -60,9 +67,11 @@ import { UndoRedoButton } from "@/components/ui/text-editor/tiptap-ui/undo-redo-
 import { ArrowLeftIcon } from "@/components/ui/text-editor/tiptap-icons/arrow-left-icon"
 import { HighlighterIcon } from "@/components/ui/text-editor/tiptap-icons/highlighter-icon"
 import { LinkIcon } from "@/components/ui/text-editor/tiptap-icons/link-icon"
+import { EmbedIcon } from "@/components/ui/text-editor/tiptap-icons/embed-icon"
 
 // --- Hooks ---
 import { useViewport } from "@/hooks/use-viewport"
+import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility"
 
 // --- Components ---
@@ -77,12 +86,15 @@ import "./styles.scss"
 const MainToolbarContent = ({
   onHighlighterClick,
   onLinkClick,
+  onEmbedClick,
   isMobile,
 }: {
   onHighlighterClick: () => void
   onLinkClick: () => void
+  onEmbedClick: () => void
   isMobile: boolean
 }) => {
+  const { editor } = useTiptapEditor()
   return (
     <>
       <Spacer />
@@ -141,6 +153,15 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <ImageUploadButton text="Add" />
+        {!isMobile ? (
+          <EmbedPopover />
+        ) : (
+          <EmbedButton
+            onClick={onEmbedClick}
+            disabled={!canInsertEmbed(editor)}
+            data-disabled={!canInsertEmbed(editor)}
+          />
+        )}
       </ToolbarGroup>
 
       <Spacer />
@@ -158,7 +179,7 @@ const MobileToolbarContent = ({
   type,
   onBack,
 }: {
-  type: "highlighter" | "link"
+  type: "highlighter" | "link" | "embed"
   onBack: () => void
 }) => (
   <>
@@ -167,8 +188,10 @@ const MobileToolbarContent = ({
         <ArrowLeftIcon className="tiptap-button-icon" />
         {type === "highlighter" ? (
           <HighlighterIcon className="tiptap-button-icon" />
-        ) : (
+        ) : type === "link" ? (
           <LinkIcon className="tiptap-button-icon" />
+        ) : (
+          <EmbedIcon className="tiptap-button-icon" />
         )}
       </Button>
     </ToolbarGroup>
@@ -177,8 +200,10 @@ const MobileToolbarContent = ({
 
     {type === "highlighter" ? (
       <ColorHighlightPopoverContent />
-    ) : (
+    ) : type === "link" ? (
       <LinkContent />
+    ) : (
+      <EmbedContent />
     )}
   </>
 )
@@ -198,7 +223,7 @@ export function SimpleEditor({
 }: SimpleEditorProps) {
   const { height, isMobile } = useViewport()
   const [mobileView, setMobileView] = useState<
-    "main" | "highlighter" | "link"
+    "main" | "highlighter" | "link" | "embed"
   >("main")
   const toolbarRef = useRef<HTMLDivElement>(null)
 
@@ -241,6 +266,7 @@ export function SimpleEditor({
         onError: (error) => console.error("Upload failed:", error),
       }),
       TableKit,
+      Embed,
     ],
     content: value,
     onUpdate: ({ editor }) => {
@@ -283,11 +309,18 @@ export function SimpleEditor({
             <MainToolbarContent
               onHighlighterClick={() => setMobileView("highlighter")}
               onLinkClick={() => setMobileView("link")}
+              onEmbedClick={() => setMobileView("embed")}
               isMobile={isMobile}
             />
           ) : (
             <MobileToolbarContent
-              type={mobileView === "highlighter" ? "highlighter" : "link"}
+              type={
+                mobileView === "highlighter"
+                  ? "highlighter"
+                  : mobileView === "embed"
+                    ? "embed"
+                    : "link"
+              }
               onBack={() => setMobileView("main")}
             />
           )}

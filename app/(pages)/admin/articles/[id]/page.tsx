@@ -1,10 +1,11 @@
 import { notFound } from 'next/navigation';
-import prismadb from '@/lib/prismadb';
+import prismadb, { checkAuthentication } from '@/lib/prismadb';
 import { FieldConfig, GenericForm } from '@/components/ui/generic-form';
 import { Article, ArticleStatus, Category } from '@prisma/client';
 import { generateSlug, cleanErrorMsg } from '@/lib/utils';
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
+import { ArticleCommentsPanel } from '../components/article-comments-panel';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -13,7 +14,10 @@ interface PageProps {
 export default async function ArticlePage({ params }: PageProps) {
   const { id } = await params;
   const isNew = id === 'new';
-  let article: Article | undefined = undefined;
+  let article: (Article & {
+    category: Category | null;
+    comments: { id: string; text: string; email: string | null; createdAt: Date }[];
+  }) | undefined = undefined;
 
   if (!isNew) {
     try {
@@ -24,6 +28,10 @@ export default async function ArticlePage({ params }: PageProps) {
           },
           include: {
             category: true,
+            comments: {
+              orderBy: { createdAt: 'desc' },
+              select: { id: true, text: true, email: true, createdAt: true },
+            },
           },
         })) || undefined;
       if (!article) {
@@ -84,6 +92,39 @@ export default async function ArticlePage({ params }: PageProps) {
     }
   }
 
+  async function deleteArticleComment(commentId: string) {
+    'use server';
+
+    await checkAuthentication();
+
+    const comment = await prismadb.comment.findUnique({
+      where: { id: commentId },
+      select: { articleId: true, article: { select: { slug: true } } },
+    });
+
+    if (!comment || comment.articleId !== id) {
+      throw new Error('Comment not found or does not belong to this article.');
+    }
+
+    await prismadb.comment.delete({ where: { id: commentId } });
+
+    revalidatePath(`/admin/articles/${id}`);
+    revalidatePath('/blog');
+    if (comment.article.slug) {
+      revalidatePath(`/blog/${comment.article.slug}`);
+    }
+  }
+
+  const commentRows =
+    !isNew && article
+      ? article.comments.map((c) => ({
+          id: c.id,
+          text: c.text,
+          email: c.email,
+          createdAt: c.createdAt.toISOString(),
+        }))
+      : [];
+
   return (
     <div className='container mx-auto py-6 px-4'>
       <div className='mb-6 border-b'>
@@ -103,12 +144,29 @@ export default async function ArticlePage({ params }: PageProps) {
         ]}
         onSubmit={handleSubmit}
         defaultValues={{
-          ...(article ? article : {}),
+          ...(article
+            ? (() => {
+                const { comments: _comments, category: _category, ...rest } = article;
+                return rest;
+              })()
+            : {}),
         }}
         submitText={isNew ? 'Create' : 'Update'}
         itemName='Article'
         callBackRoute='/admin/articles'
       />
+
+      {!isNew ? (
+        <div className='mt-10 space-y-4'>
+          <div>
+            <h2 className='text-xl font-semibold'>Comments</h2>
+            <p className='text-sm text-muted-foreground'>
+              Reader comments on this post. Email is only stored if they chose to leave one.
+            </p>
+          </div>
+          <ArticleCommentsPanel comments={commentRows} deleteComment={deleteArticleComment} />
+        </div>
+      ) : null}
     </div>
   );
 }

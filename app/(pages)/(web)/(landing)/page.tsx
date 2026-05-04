@@ -9,7 +9,7 @@ import prismadb from '@/lib/prismadb';
 import { Work } from '@prisma/client';
 import aboutEmma from '@/public/me/emma.jpg';
 import aboutMe1 from '@/public/me/me1.webp';
-import aboutMe3 from '@/public/me/placeholder.png';
+import aboutMe10 from '@/public/me/me10.jpg';
 import aboutMe2 from '@/public/me/me2.jpg';
 import aboutMe5 from '@/public/me/me5.jpg';
 import aboutMe4 from '@/public/me/me4.jpg';
@@ -74,11 +74,10 @@ export default async function Home() {
           <div className='space-y-8 flex-1 md:flex-none max-w-4xl'>
             <RevealHeader title="About" />
 
-            <p>
+            <p className='font-sans text-base'>
               I&apos;m based in Lagos. Lately my work has skewed toward fintech and
               edutech: shipping products end to end, keeping internal systems
-              maintainable, and writing technical docs when the codebase needs a
-              clear story.
+              maintainable, and writing technical docs.
               <br />
               <br />
               I work remotely, so most weeks I&apos;m at home in front of a screen.
@@ -134,7 +133,7 @@ const imageData: {
 }[] = [
     { src: aboutEmma, alt: 'Tope Akinkuade', colSpan: 'col-span-2' },
     { src: aboutMe1, alt: 'Tope Akinkuade', colSpan: 'col-span-1' },
-    { src: aboutMe3, alt: 'Tope Akinkuade', colSpan: 'col-span-2' },
+    { src: aboutMe10, alt: 'Tope Akinkuade', colSpan: 'col-span-2' },
     { src: aboutMe2, alt: 'Tope Akinkuade', colSpan: 'col-span-1' },
     { src: aboutMe5, alt: 'Tope Akinkuade', colSpan: 'col-span-1 hidden md:block' },
     { src: aboutMe4, alt: 'Tope Akinkuade', colSpan: 'col-span-2 hidden md:block' },
