@@ -5,6 +5,7 @@ import { AlertProvider } from '@/context/alert';
 import PageLoader from '@/components/ui/page-loader';
 import { QueryProvider } from '@/context/queries';
 import { CursorGlow } from '@/components/custom/cursor-glow';
+import { Suspense } from 'react';
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryProvider>
@@ -14,7 +15,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-          <PageLoader />
+          <Suspense fallback={null}>
+            <PageLoader />
+          </Suspense>
           <NextTopLoader
             color='#14cc5e'
             initialPosition={0.08}
