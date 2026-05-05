@@ -99,17 +99,17 @@ export default async function WorkDetailPage({ params }: PageProps) {
   const hasBodyContent = contentHtml.replaceAll(/<[^>]+>/g, '').trim().length > 0;
 
   return (
-    <main className='bg2 min-h-screen py-24 md:py-28'>
-      <div className='mx-auto max-w-[1500px] space-y-12 px-4 md:px-8 lg:px-12'>
+    <main className='bg2 min-h-screen md:pb-24 pt-10 md:py-28'>
+      <div className='mx-auto max-w-[1500px] space-y-12 md:px-8 lg:px-12'>
         <Link
           href='/work'
-          className='inline-flex items-center gap-2 font-sans text-white/70 transition-colors hover:text-malachite'
+          className='inline-flex items-center gap-2 font-sans text-white/70 transition-colors hover:text-malachite ml-4 md:ml-0'
         >
           <ArrowLeft className='size-4' />
           Back to work
         </Link>
 
-        <div className='relative aspect-[16/10] w-full min-h-[220px] overflow-hidden rounded-3xl md:aspect-[2.6/1] md:min-h-[300px]'>
+        <div className='relative aspect-[16/10] w-full min-h-[220px] overflow-hidden md:rounded-3xl md:aspect-[2.6/1] md:min-h-[300px]'>
           {work.image ? (
             <Image
               src={work.image}
@@ -151,7 +151,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        <section className='overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))]'>
+        <section className='overflow-hidden md:rounded-3xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))]'>
           <div className='space-y-6 p-6 md:p-8 lg:p-10'>
             <p className='font-sans text-lg leading-relaxed text-white/80 md:text-xl'>
               {work.description}

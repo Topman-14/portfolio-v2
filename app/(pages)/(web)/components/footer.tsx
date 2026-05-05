@@ -9,18 +9,8 @@ export default function Footer() {
 
   return (
     <footer className='relative bg-coal border-t border-white/10 z-4'>
-      <div className='max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-16 md:py-20'>
+      <div className='max-w-7xl mx-auto px-6 md:px-8 lg:px-16 py-16 md:py-20'>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16'>
-          {/* <div className='lg:col-span-5 space-y-6'>
-            <h3 className='text-2xl md:text-3xl font-display font-bold text-white'>
-              Let&apos;s build something great.
-            </h3>
-            <p className='text-white/70 text-base leading-relaxed font-sans max-w-md'>
-              I&apos;m always interested in hearing about new projects and
-              opportunities. Whether you have a question or just want to say hi,
-              I&apos;ll try my best to get back to you.
-            </p>
-            </div> */}
 
           <div className='col-span-1 space-y-4'>
             <h4 className='text-lg font-display font-bold text-white mb-4'>

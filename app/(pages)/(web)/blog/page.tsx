@@ -43,7 +43,7 @@ export default async function Blog() {
   const categoryChips = categories.map((c) => ({ id: c.id, name: c.name }));
 
   return (
-      <main className='bg2 min-h-screen py-28 px-4 md:px-8 lg:px-16'>
+      <main className='bg2 min-h-screen py-28 px-5 md:px-8 lg:px-16'>
         <div className='max-w-wide mx-auto space-y-18'>
           <section className='space-y-8'>
             <RevealHeader

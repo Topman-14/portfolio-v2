@@ -16,10 +16,13 @@ import { BlogPostShare } from '../components/blog-post-share';
 import { BlogCard } from '../components/blog-card';
 import { formatPublishedDate } from '@/lib/utils';
 import { createHtmlRenderData, HtmlRenderer } from '@/components/custom/html-renderer';
+import { BlogPostEngagement } from '../components/blog-post-engagement';
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
+
+export const revalidate = 120;
 
 export async function generateStaticParams() {
   const articles = await prismadb.article.findMany({
@@ -97,6 +100,10 @@ export default async function BlogDetailPage({ params }: PageProps) {
     where: { slug, status: 'PUBLISHED' },
     include: {
       category: true,
+      comments: {
+        orderBy: { createdAt: 'asc' },
+        select: { id: true, name: true, text: true, createdAt: true },
+      },
       user: {
         select: {
           name: true,
@@ -168,17 +175,17 @@ export default async function BlogDetailPage({ params }: PageProps) {
     'inline-flex size-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-white/80 hover:text-malachite hover:border-malachite/40 transition-colors';
 
   return (
-    <main className='bg2 min-h-screen py-24 md:py-28'>
-      <div className='max-w-[1500px] mx-auto space-y-14 px-4 md:px-8 lg:px-12'>
+    <main className='bg2 min-h-screen pb-24 pt-10 md:pb-28'>
+      <div className='max-w-[1500px] mx-auto space-y-14  md:px-8 lg:px-12'>
         <Link
           href='/blog'
-          className='inline-flex items-center gap-2 text-white/70 hover:text-malachite transition-colors font-sans'
+          className='inline-flex items-center gap-2 text-white/70 hover:text-malachite transition-colors font-sans ml-4 md:ml-0'
         >
           <ArrowLeft className='w-4 h-4' />
           Back to Blog
         </Link>
 
-        <section className='rounded-3xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))] p-6 md:p-8 lg:p-10'>
+        <section className='md:rounded-3xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))] p-6 md:p-8 lg:p-10'>
           <div className='grid grid-cols-1 xl:grid-cols-[1fr_620px] gap-8 xl:gap-12 items-stretch'>
             <div className='space-y-5 my-auto'>
               <div className='flex flex-wrap items-center gap-3 text-sm font-sans'>
@@ -190,6 +197,9 @@ export default async function BlogDetailPage({ params }: PageProps) {
                 {article.publishedAt ? (
                   <span className='text-white/70'>{formatPublishedDate(article.publishedAt, 'long')}</span>
                 ) : null}
+                <span className='text-white/70 tabular-nums'>
+                  {article.reads.toLocaleString()} {article.reads === 1 ? 'view' : 'views'}
+                </span>
                 {article.readTime ? (
                   <span className='text-white/70'>{article.readTime} min read</span>
                 ) : null}
@@ -306,11 +316,23 @@ export default async function BlogDetailPage({ params }: PageProps) {
             </div>
           </aside>
 
-          <HtmlRenderer html={contentWithIds} />
+          <div className='min-w-0 space-y-12 lg:space-y-14'>
+            <HtmlRenderer html={contentWithIds} />
+            <BlogPostEngagement
+              articleSlug={article.slug}
+              articleId={article.id}
+              initialComments={article.comments.map((c) => ({
+                id: c.id,
+                name: c.name,
+                text: c.text,
+                createdAt: c.createdAt.toISOString(),
+              }))}
+            />
+          </div>
         </section>
 
         {relatedArticles.length > 0 ? (
-          <section className='space-y-6 pt-8'>
+          <section className='space-y-6 pt-8 px-5'>
             <div className='flex items-center justify-between gap-4'>
               <h2 className='text-3xl md:text-4xl font-display font-bold text-white'>
                 Related articles
