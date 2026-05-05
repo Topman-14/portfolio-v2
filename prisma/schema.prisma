@@ -107,6 +107,7 @@ model Article {
 
 model Comment {
   id        String   @id @default(cuid())
+  name      String?
   text      String
   email     String?
   articleId String

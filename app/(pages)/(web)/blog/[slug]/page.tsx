@@ -102,7 +102,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
       category: true,
       comments: {
         orderBy: { createdAt: 'asc' },
-        select: { id: true, text: true, createdAt: true },
+        select: { id: true, name: true, text: true, createdAt: true },
       },
       user: {
         select: {
@@ -323,6 +323,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
               articleId={article.id}
               initialComments={article.comments.map((c) => ({
                 id: c.id,
+                name: c.name,
                 text: c.text,
                 createdAt: c.createdAt.toISOString(),
               }))}

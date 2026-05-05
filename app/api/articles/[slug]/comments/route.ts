@@ -4,6 +4,11 @@ import { z } from 'zod';
 import prismadb from '@/lib/prismadb';
 
 const commentBodySchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, 'Please enter your name.')
+    .max(120, 'Name is too long.'),
   text: z
     .string()
     .trim()
@@ -50,6 +55,7 @@ export async function GET(
       orderBy: { createdAt: 'asc' },
       select: {
         id: true,
+        name: true,
         text: true,
         createdAt: true,
       },
@@ -100,16 +106,18 @@ export async function POST(
       return NextResponse.json({ message: msg }, { status: 400 });
     }
 
-    const { text, email } = parsed.data;
+    const { name, text, email } = parsed.data;
 
     const comment = await prismadb.comment.create({
       data: {
+        name,
         text,
         email: email ?? null,
         articleId: article.id,
       },
       select: {
         id: true,
+        name: true,
         text: true,
         createdAt: true,
       },

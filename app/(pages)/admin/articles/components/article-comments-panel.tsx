@@ -20,6 +20,7 @@ import { cleanErrorMsg } from '@/lib/utils';
 
 export type AdminArticleCommentRow = {
   id: string;
+  name: string | null;
   text: string;
   email: string | null;
   createdAt: string;
@@ -66,6 +67,10 @@ export function ArticleCommentsPanel({
           <div key={c.id} className='p-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
             <div className='min-w-0 space-y-1 flex-1'>
               <p className='text-xs text-muted-foreground'>
+                <span className='font-medium text-foreground'>
+                  {c.name?.trim() || 'Anonymous'}
+                </span>
+                {' · '}
                 {format(new Date(c.createdAt), 'MMM d, yyyy · HH:mm')}
                 {c.email ? (
                   <span className='ml-2'>

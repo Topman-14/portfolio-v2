@@ -16,7 +16,7 @@ export default async function ArticlePage({ params }: PageProps) {
   const isNew = id === 'new';
   let article: (Article & {
     category: Category | null;
-    comments: { id: string; text: string; email: string | null; createdAt: Date }[];
+    comments: { id: string; name: string | null; text: string; email: string | null; createdAt: Date }[];
   }) | undefined = undefined;
 
   if (!isNew) {
@@ -30,7 +30,7 @@ export default async function ArticlePage({ params }: PageProps) {
             category: true,
             comments: {
               orderBy: { createdAt: 'desc' },
-              select: { id: true, text: true, email: true, createdAt: true },
+              select: { id: true, name: true, text: true, email: true, createdAt: true },
             },
           },
         })) || undefined;
@@ -119,6 +119,7 @@ export default async function ArticlePage({ params }: PageProps) {
     !isNew && article
       ? article.comments.map((c) => ({
           id: c.id,
+          name: c.name,
           text: c.text,
           email: c.email,
           createdAt: c.createdAt.toISOString(),
@@ -146,7 +147,9 @@ export default async function ArticlePage({ params }: PageProps) {
         defaultValues={{
           ...(article
             ? (() => {
-                const { comments: _comments, category: _category, ...rest } = article;
+                const { comments, category, ...rest } = article;
+                void comments;
+                void category;
                 return rest;
               })()
             : {}),
