@@ -146,6 +146,7 @@ export default function NavOverlay({ isOpen, onClose }: NavOverlayProps) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={true}
                   onClick={onClose}
                   className='text-5xl md:text-6xl lg:text-8xl  font-semibold hover:text-malachite/70 transition-colors w-fit flex items-center gap-2 font-display group'
                 >

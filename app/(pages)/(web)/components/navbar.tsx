@@ -11,13 +11,20 @@ import SocialIcons from '../../../../components/ui/social-icon';
 import DomAnimate from '../../../../components/animations/dom-animate';
 import CircleButton from '../../../../components/ui/circle-button';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { isMobile } = useViewport();
   const pathname = usePathname();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    navItems.forEach(item => router.prefetch(item.href));
+  }, [router]);
+
 
   useEffect(() => {
     const handleScroll = () => {

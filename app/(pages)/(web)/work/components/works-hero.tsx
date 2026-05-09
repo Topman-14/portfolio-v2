@@ -6,12 +6,13 @@ import { useGSAP } from '@gsap/react';
 import SplitType from 'split-type';
 import SplinePlayer from '@/components/custom/spline';
 import { getFontsReady } from '@/lib/fonts-ready';
+import { useViewport } from '@/hooks/use-viewport';
 
 export const WorksHero = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const { isMobile } = useViewport();
   useGSAP(() => {
     const heading = headingRef.current;
     const description = descriptionRef.current;
@@ -73,7 +74,7 @@ export const WorksHero = () => {
               cameraPosition={{ x: 50, y: -90, z: 380 }}
               cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
               disableZoom={true}
-              interactive={true}
+              interactive={!isMobile}
             />
           </div>
           
