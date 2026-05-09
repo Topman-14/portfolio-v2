@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { Fragment, useMemo, useRef } from 'react';
+import { MAIN_EMAIL } from '@/config';
 import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
 import { getFontsReady } from '@/lib/fonts-ready';
@@ -19,13 +20,32 @@ export type ExperienceListItem = {
   achievements: string[];
 };
 
+function isPresentRole(exp: ExperienceListItem) {
+  return exp.isCurrentRole || !exp.endDate;
+}
+
 function sortExperiences(list: ExperienceListItem[]) {
   return [...list].sort((a, b) => {
-    if (a.isCurrentRole !== b.isCurrentRole) {
-      return a.isCurrentRole ? -1 : 1;
+    const aPresent = isPresentRole(a);
+    const bPresent = isPresentRole(b);
+    if (aPresent !== bPresent) {
+      return aPresent ? -1 : 1;
     }
-    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+    if (aPresent && bPresent) {
+      return (
+        new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+      );
+    }
+    const endA = a.endDate ? new Date(a.endDate).getTime() : 0;
+    const endB = b.endDate ? new Date(b.endDate).getTime() : 0;
+    return endB - endA;
   });
+}
+
+function splitOnEmDash(text: string) {
+  if (!text.includes('\u2014')) return [text];
+  const parts = text.split(/\u2014/).map((s) => s.trim()).filter(Boolean);
+  return parts.length ? parts : [text];
 }
 
 type ExperienceSectionProps = {
@@ -87,6 +107,8 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
     });
   };
 
+  console.log(splitOnEmDash(ordered[0].description))
+
   return (
     <section
       ref={sectionRef}
@@ -97,7 +119,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
           <>
             <RevealHeader
               title='Experience'
-              subtitle='Roles and teams — most recent first; current role at the top.'
+              subtitle='A small excerpt of my Résumé.'
               className='mb-12 md:mb-14'
             />
 
@@ -106,7 +128,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                 <article
                   key={exp.id}
                   className={`experience-item rounded-2xl border p-6 md:p-8 ${
-                    exp.isCurrentRole
+                    isPresentRole(exp)
                       ? 'border-malachite/35 bg-malachite/[0.06] ring-1 ring-malachite/20'
                       : 'border-white/10 bg-white/[0.03]'
                   } backdrop-blur-sm`}
@@ -140,8 +162,8 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                     </div>
                   </div>
 
-                  <p className='mt-5 font-sans text-base leading-relaxed text-white/75 md:text-lg'>
-                    {exp.description}
+                  <p className='mt-5 font-sans text-base leading-relaxed text-white/95 md:text-lg whitespace-pre-line'>
+                    {splitOnEmDash(exp.description)}
                   </p>
 
                   {exp.achievements.length > 0 ? (
@@ -159,7 +181,14 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                               className='mt-2 h-1 w-1 shrink-0 rounded-full bg-malachite/80'
                               aria-hidden
                             />
-                            <span>{achievement}</span>
+                            <span className='line-clamp-4 min-w-0'>
+                              {splitOnEmDash(achievement).map((segment, i) => (
+                                <Fragment key={i}>
+                                  {i > 0 ? <br /> : null}
+                                  {segment}
+                                </Fragment>
+                              ))}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -181,6 +210,17 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                 </article>
               ))}
             </div>
+
+            <p className='mt-12 max-w-2xl font-sans text-sm leading-relaxed text-white/55 md:text-base'>
+              For my full work history, kindly{' '}
+              <a
+                href={`mailto:${MAIN_EMAIL}?subject=Resume%20%2F%20experience`}
+                className='text-malachite underline decoration-malachite/40 underline-offset-2 transition-colors hover:text-malachite/90'
+              >
+                reach out by email
+              </a>
+              .
+            </p>
           </>
         ) : (
           <p className='text-center font-sans text-white/50'>

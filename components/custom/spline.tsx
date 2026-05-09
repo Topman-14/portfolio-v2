@@ -14,6 +14,8 @@ interface SplinePlayerProps {
   cameraRotation?: { x?: number; y?: number; z?: number };
   disableZoom?: boolean;
   interactive?: boolean;
+  hideOffScreen?: boolean;
+  hideOffScreenMargin?: string;
   onLoad?: (app: any) => void;
 }
 
@@ -27,11 +29,44 @@ export default function SplinePlayer({
   cameraRotation,
   disableZoom = false,
   interactive = true,
+  hideOffScreen = false,
+  hideOffScreenMargin = '320px',
   onLoad,
 }: SplinePlayerProps) {
   const splineRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [calculatedZoom, setCalculatedZoom] = useState<number>(1);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [nearViewport, setNearViewport] = useState(true);
+
+  const mountSpline = !hideOffScreen || nearViewport;
+
+  useEffect(() => {
+    if (!hideOffScreen) {
+      setNearViewport(true);
+      return;
+    }
+
+    const el = containerRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setNearViewport(entry.isIntersecting);
+      },
+      { root: null, rootMargin: hideOffScreenMargin, threshold: 0 },
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, [hideOffScreen, hideOffScreenMargin]);
+
+  useEffect(() => {
+    if (!mountSpline) {
+      splineRef.current = null;
+      setIsLoaded(false);
+    }
+  }, [mountSpline]);
 
   const adjustCameraFOV = useCallback((app: any) => {
     if (!containerRef.current || !app?.scene?.activeCamera) return;
@@ -162,6 +197,7 @@ export default function SplinePlayer({
       app.setInteractive(true);
     }
 
+    setIsLoaded(true);
     onLoad?.(app);
   };
 
@@ -218,9 +254,13 @@ export default function SplinePlayer({
         disableZoom && 'overflow-hidden',
         className
       )}
-      style={{ pointerEvents: interactive ? 'auto' : 'none' }}
+      style={{
+        pointerEvents: interactive ? 'auto' : 'none',
+        opacity: isLoaded ? 1 : 0,
+        transition: 'opacity 0.6s ease',
+      }}
     >
-      <Spline scene={scene} onLoad={handleLoad} />
+      {mountSpline ? <Spline scene={scene} onLoad={handleLoad} /> : null}
     </div>
   );
 }

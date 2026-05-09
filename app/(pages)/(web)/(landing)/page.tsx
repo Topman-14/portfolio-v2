@@ -1,12 +1,10 @@
+import { Suspense } from 'react';
 import { Expertise } from './components/expertise';
-import { Projects2 } from './components/projects-2';
-import SplinePlayer from '@/components/custom/spline';
-import { ArrowRight } from 'lucide-react';
-import { GButton } from '@/components/ui/gbutton';
+import { FeaturedProjectsSection } from './components/featured-projects-section';
+import { RecentBlogsSection } from './components/recent-blogs-section';
 import Image, { type StaticImageData } from 'next/image';
 import { RevealHeader } from '@/components/custom/reveal-header';
-import prismadb from '@/lib/prismadb';
-import { Work } from '@prisma/client';
+import { LoadingFallback } from '@/components/ui/suspense';
 import aboutEmma from '@/public/me/emma.jpg';
 import aboutMe1 from '@/public/me/me1.webp';
 import aboutMe10 from '@/public/me/me10.jpg';
@@ -15,22 +13,9 @@ import aboutMe5 from '@/public/me/me5.jpg';
 import aboutMe4 from '@/public/me/me4.jpg';
 import aboutSodiq from '@/public/me/sodiq.webp';
 import aboutMe6 from '@/public/me/me6.jpg';
-export default async function Home() {
-  const featuredWorks = await prismadb.work.findMany({
-    where: { featured: true },
-    orderBy: { createdAt: 'desc' },
-    take: 10,
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      image: true,
-      tools: true,
-      category: true,
-      slug: true,
-    },
-  }) as Work[];
+import SplinePlayer from '@/components/custom/spline';
 
+export default function Home() {
   return (
     <main className='bg1 px-2'>
       <section className='relative pb-5 md:pb-0'>
@@ -64,6 +49,7 @@ export default async function Home() {
               cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
               disableZoom={true}
               interactive={true}
+              hideOffScreen
             />
           </div>
         </div>
@@ -120,7 +106,13 @@ export default async function Home() {
 
       <Expertise />
 
-      <Projects2 works={featuredWorks} />
+      <Suspense fallback={<LoadingFallback className='min-h-[280px] py-28' />}>
+        <RecentBlogsSection />
+      </Suspense>
+
+      <Suspense fallback={<LoadingFallback className='min-h-[320px] py-28' />}>
+        <FeaturedProjectsSection />
+      </Suspense>
     </main>
   );
 }
@@ -131,10 +123,10 @@ const imageData: {
   alt: string;
   colSpan: string;
 }[] = [
-    { src: aboutEmma, alt: 'Tope Akinkuade', colSpan: 'col-span-2' },
-    { src: aboutMe1, alt: 'Tope Akinkuade', colSpan: 'col-span-1' },
-    { src: aboutMe10, alt: 'Tope Akinkuade', colSpan: 'col-span-2' },
-    { src: aboutMe2, alt: 'Tope Akinkuade', colSpan: 'col-span-1' },
+    { src: aboutEmma, alt: 'Tope Akinkuade', colSpan: 'col-span-2 max-md:order-1' },
+    { src: aboutMe1, alt: 'Tope Akinkuade', colSpan: 'col-span-1 max-md:order-2' },
+    { src: aboutMe10, alt: 'Tope Akinkuade', colSpan: 'col-span-2 max-md:order-4' },
+    { src: aboutMe2, alt: 'Tope Akinkuade', colSpan: 'col-span-1 max-md:order-3' },
     { src: aboutMe5, alt: 'Tope Akinkuade', colSpan: 'col-span-1 hidden md:block' },
     { src: aboutMe4, alt: 'Tope Akinkuade', colSpan: 'col-span-2 hidden md:block' },
     { src: aboutSodiq, alt: 'Tope Akinkuade', colSpan: 'col-span-1 hidden md:block' },

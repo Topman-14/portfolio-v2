@@ -7,7 +7,6 @@ import NewsletterForm from '@/app/(pages)/(web)/components/newsletter-form';
 import { BlogHero } from './components/blog-hero';
 import { BlogBrowseSection } from './components/browse-blogs';
 import { BlogSearch } from './components/blog-search';
-import { LoadingFallback } from '@/components/ui/suspense';
 
 export default async function Blog() {
   const [heroArticles, popularArticles, categories, allArticles] = await Promise.all([
@@ -84,7 +83,7 @@ export default async function Blog() {
             </div>
           </section>
 
-          <Suspense fallback={<LoadingFallback />}>
+          <Suspense fallback={null}>
             <BlogBrowseSection
               initialBrowseArticles={allArticles}
               categories={categoryChips}

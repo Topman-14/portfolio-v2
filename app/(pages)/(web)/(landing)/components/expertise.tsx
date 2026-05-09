@@ -11,21 +11,21 @@ const specializations = [
   {
     title: 'Frontend Development',
     description:
-      'Mostly React, Next and Angular, TypeScript everywhere. Dashboards, full marketing sites, design systems people pretend they do not need until the third inconsistent button, and Three.js when the brief calls for it. I design too.',
+      'Usually React, Next and Angular. TypeScript everywhere. Dashboards, full marketing sites; design systems people pretend they do not need until the third inconsistent button, and 3D. I design too, rarely.',
     tools: ['React', 'Next.js', 'Angular', 'TypeScript', 'Zustand', 'Tailwind', 'Vite', 'Figma'],
     color: 'malachite' as const,
   },
   {
     title: 'Backend Engineering',
     description:
-      'Service layers and APIs I can still explain six months later: auth across products, integrations with third-party providers, and data models that do not fall apart when the domain shifts.',
+      'Service layers and APIs I can still explain six months later, integrations with third-party providers, and data models that do not fall apart when the domain shifts.',
     tools: ['Nest.js', 'Express', 'Prisma', 'TypeORM', 'MongoDB', 'PostgreSQL', 'Redis', 'Docker'],
     color: 'amber' as const,
   },
   {
     title: 'Mobile Engineering',
     description:
-      'React Native with Expo for production apps; EAS for builds, store submissions, and env management so releases stay predictable instead of improvised.',
+      'React Native with Expo for production apps; EAS for builds, store submissions, and env management.',
     tools: ['React Native', 'Expo', 'EAS'],
     color: 'bittersweet' as const,
   },
@@ -106,8 +106,8 @@ export const Expertise = () => {
             <div className='space-y-4'>
               <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans'>
                 Contract work has taken me through Binta Financial, Compass AI, and
-                Husridge. Most of the time full-stack product and platform
-                engineering, zero-to-one MVPs with small teams—mostly remote, with an uncharacteristic bias for speed.
+                Husridge. I do full-stack product and platform
+                engineering, zero-to-one MVPs with small teams; mostly remote, with an uncharacteristic bias for speed.
               </p>
             </div>
           </div>
