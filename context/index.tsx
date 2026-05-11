@@ -15,9 +15,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-          <Suspense fallback={null}>
+          {/* <Suspense fallback={null}>
             <PageLoader />
-          </Suspense>
+          </Suspense> */}
           <NextTopLoader
             color='#14cc5e'
             initialPosition={0.08}
