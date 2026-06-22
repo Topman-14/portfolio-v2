@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma";
-import {
-  isPasswordResetEmailConfigured,
-  sendPasswordResetEmail,
-} from "@/lib/email";
+import { isEmailConfigured, sendPasswordResetEmail } from "@/lib/email";
 import { randomBytes } from "crypto";
 
 export async function POST(request: Request) {
@@ -18,7 +15,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!isPasswordResetEmailConfigured()) {
+    if (!isEmailConfigured()) {
       return NextResponse.json(
         {
           error:

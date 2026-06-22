@@ -312,17 +312,17 @@ export const handleImageUpload = async (
     onProgress?.({ progress: 0 })
 
     // avoids circular deps
-    const { uploadToS3 } = await import("@/lib/utils")
-    
+    const { uploadToCloudinary } = await import("@/lib/utils")
+
     // Simulate some progress during upload preparation
     onProgress?.({ progress: 10 })
-    
+
     // Check for abort before actual upload
     if (abortSignal?.aborted) {
       throw new Error("Upload cancelled")
     }
 
-    const uploadedFile = await uploadToS3(file)
+    const uploadedFile = await uploadToCloudinary(file)
     
     // Complete progress
     onProgress?.({ progress: 100 })

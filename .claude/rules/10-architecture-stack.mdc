@@ -1,0 +1,18 @@
+---
+description: Repository architecture, stack, and structural conventions
+alwaysApply: true
+---
+
+# Architecture And Stack
+
+- Tech stack is Next.js App Router + TypeScript (`strict`) + Prisma/PostgreSQL + Tailwind CSS v4.
+- Use `npm` for installs/scripts because `package-lock.json` is the lockfile.
+- Use alias imports via `@/*` (configured in `tsconfig.json`).
+- Route and page structure is under `app/`, with web pages in `app/(pages)/(web)` and admin in `app/(pages)/admin`.
+- Prefer server components for page/data loading and client components only for interactive UI, animation, or browser-only logic.
+- Shared app providers are composed in `context/index.tsx`; follow existing provider layering pattern.
+- Reuse existing patterns before introducing new architecture:
+  - DB access through `lib/prismadb.ts`
+  - common constants in `lib/constants.ts`
+  - common fetch wrapper in `lib/api-client.ts`
+  - reusable UI from `components/ui/*`

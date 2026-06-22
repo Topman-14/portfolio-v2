@@ -192,7 +192,7 @@ export function BlogPostEngagement({
                 autoComplete='email'
               />
               <p className='text-xs text-white/55 font-sans leading-relaxed max-w-lg'>
-                If you add an email, only Tope will see it so he can reply if needed. <br /> It is not shown on this page or shared publicly.
+                Emails are hidden.
               </p>
             </div>
             <Label htmlFor={`comment-text-${articleId}`} className='text-white/80 font-sans'>
