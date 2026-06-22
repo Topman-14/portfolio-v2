@@ -1,0 +1,16 @@
+---
+description: Non-negotiable editing and scope guardrails
+alwaysApply: true
+---
+
+# Core Guardrails
+
+- Make code changes only when the user explicitly asks to update, change, modify, create, add, remove, fix, or implement.
+- For question-only prompts, provide answers and context only; do not edit files.
+- Never make code changes when the user asks exploratory prompts such as: "how", "is it possible", "can I", "what if", "should I", "would it be better".
+- Preserve existing behavior unless the user clearly requests a behavior change.
+- Keep diffs minimal and local; touch only what is required for the current request.
+- Do not add extra fixes, refactors, features, or cleanup outside requested scope.
+- If the task is ambiguous or combines multiple goals, ask for clarification before editing.
+- During debugging, identify root cause first, then apply the smallest valid fix.
+- Avoid over-engineering, premature abstractions, and unrelated architectural changes.

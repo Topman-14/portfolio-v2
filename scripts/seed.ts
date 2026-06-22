@@ -3,136 +3,6 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-const categories = [
-  { name: 'Web Development', description: 'Articles about web development technologies and practices' },
-  { name: 'React', description: 'React.js tutorials, tips, and best practices' },
-  { name: 'Next.js', description: 'Next.js framework guides and tutorials' },
-  { name: 'TypeScript', description: 'TypeScript programming language articles' },
-  { name: 'Database', description: 'Database design and management articles' },
-  { name: 'DevOps', description: 'DevOps practices and tools' },
-  { name: 'UI/UX', description: 'User interface and user experience design' },
-  { name: 'JavaScript', description: 'JavaScript programming articles' },
-  { name: 'Node.js', description: 'Node.js backend development' },
-  { name: 'CSS', description: 'CSS styling and design techniques' }
-];
-
-
-const experiences = [
-  {
-    jobTitle: "Fullstack Engineer | Contract",
-    company: "Binta Financial",
-    location: "Remote",
-    description: "At Binta Financial, I took on a variety of responsibilities that spanned fullstack development and system architecture. I launched the company's website in just three weeks, including a full-featured blog, webinar hub, and careers section. I worked extensively with TypeScript, Node.js, React, and Strapi to design a custom CMS and admin panel that allowed non-technical teams to manage content independently. Additionally, I engineered a Retrieval-Augmented Generation (RAG) application using LangChain and PGVector with NestJS, implementing real-time token streaming via Socket.IO and backend rate limiting to handle high volumes of queries. I also designed and deployed a unified cross-domain authentication system supporting both client and server-to-server flows across web products and React Native mobile apps, while establishing centralized testing, monitoring, and automated CI/CD pipelines for onboarding new developers.",
-    startDate: "2024-12-01T00:00:00.000Z",
-    endDate: null,
-    isCurrentRole: true,
-    skills: ["TypeScript","Node.js","React","Strapi","LangChain","PGVector","NestJS","Socket.IO","CI/CD"],
-    achievements: ["Launched full-featured company website in 3 weeks","Built RAG application with real-time streaming","Implemented cross-domain auth system"]
-  },
-  {
-    jobTitle: "Frontend Engineer | Contract",
-    company: "Compass AI",
-    location: "Remote",
-    description: "I developed the ReactJS client for an AI-powered LMS built on Django. My work involved creating real-time audio streaming interfaces and custom UI components like dynamic module calendars and course views from scratch. I collaborated closely with backend developers to ensure seamless integration with AI-powered learning features.",
-    startDate: "2024-08-01T00:00:00.000Z",
-    endDate: "2024-12-31T00:00:00.000Z",
-    isCurrentRole: false,
-    skills: ["React","JavaScript","TypeScript","Django integration","WebRTC"],
-    achievements: ["Built complex, dynamic UI components for AI LMS","Implemented real-time audio streaming for course content"]
-  },
-  {
-    jobTitle: "Fullstack Engineer | Contract",
-    company: "Husridge Limited",
-    location: "Remote",
-    description: "I bolstered the engineering team to build a well-received MVP featuring a Node.js-based application layer with multiple microservices, a React client, and a document-object store. My work included integrating seamlessly with third-party services like Dojah. I contributed to building scalable features while ensuring high-quality code and maintainable architecture.",
-    startDate: "2025-03-01T00:00:00.000Z",
-    endDate: "2025-07-31T00:00:00.000Z",
-    isCurrentRole: false,
-    skills: ["Node.js","React","Microservices","Integration","Document-store"],
-    achievements: ["Contributed to MVP launch","Integrated third-party services successfully"]
-  },
-  {
-    jobTitle: "Frontend Engineer | Part-time",
-    company: "Lengoal",
-    location: "Remote",
-    description: "I played a pivotal role in crafting an e-learning platform using Next.js, delivering an intuitive, engaging experience for modern learners with WebRTC technology. I collaborated with backend teams and designers to revamp the codebase, introducing mobile-first interfaces while maintaining high-quality and maintainable code.",
-    startDate: "2024-06-01T00:00:00.000Z",
-    endDate: "2025-07-31T00:00:00.000Z",
-    isCurrentRole: false,
-    skills: ["Next.js","React","WebRTC","Frontend development","UI/UX"],
-    achievements: ["Revamped codebase for mobile-first interfaces","Enhanced learner experience with WebRTC integration"]
-  },
-  {
-    jobTitle: "Frontend Engineer",
-    company: "Kobo360 Logistics",
-    location: "Lagos, Nigeria",
-    description: "I contributed to a ReactJS fleet management SaaS intended to expand the company's truck logistics offerings. I was heavily involved in building a price estimation module for the Angular-based CRM software, which increased customer retention and reduced sales overhead by 48 hours. My work focused on scalable frontend architecture and improving usability for internal users.",
-    startDate: "2024-02-01T00:00:00.000Z",
-    endDate: "2024-08-31T00:00:00.000Z",
-    isCurrentRole: false,
-    skills: ["React","Angular","Frontend development","Fleet management SaaS"],
-    achievements: ["Developed price estimation module","Improved user workflow and retention"]
-  }
-];
-
-const works = [
-  {
-    title: "Testfinancial.com — Company Site & CMS",
-    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763801674/qirnxf1ofdwcz7curqu4.png',
-    description: "I still remember the first week on BintaFinancial.com, everything was new, and it felt like stepping onto a live battlefield of data and users. My goal was to create a site that allowed marketing, growth, and product teams to publish content without constant engineering support. I mapped out the CMS structure, designed semantic SEO-friendly pages, and implemented incremental static regeneration so blog and webinar content could update seamlessly. Working with Strapi as a headless CMS, I had to create a robust schema for articles, webinars, ebooks, and careers that could evolve over time. I also built a cross-domain authentication system, handling both client and server-to-server flows, and introduced token streaming endpoints to preview large content efficiently. Watching the site go live and seeing teams publish autonomously made every late night worth it. Each challenge, from content migration scripts to live rate-limiting for our RAG-based internal search, taught me a lot about scaling real-world web platforms.",
-    videoUrl: null,
-    tools: ["TypeScript","Next.js","React","Strapi","Node.js","Tailwind","Postgres","Prisma","Socket.IO","LangChain","PGVector"],
-    githubLink: null,
-    liveUrl: "https://bintafinancial.com",
-    featured: true,
-    category: "Company Sites"
-  },
-  {
-    title: "Topmart — Full Stack Ecommerce (storefront + admin)",
-    description: "Working on Topmart, I had to balance the speed and responsiveness of the storefront with the full functionality of the admin dashboard. I designed an intuitive store interface where users could browse, filter, and purchase products seamlessly while the admin panel enabled sellers to manage inventory, handle orders, and configure Paystack payments. Using Next.js and TypeScript, I optimized server-side rendering and caching to ensure SEO and performance were top-notch. The admin panel used ShadCN UI for consistent design and responsive layouts. Handling asynchronous payment flows, ensuring idempotency, and reconciling order and payment state was tricky but satisfying. Each deployment refined usability, and watching real users complete orders without friction was extremely rewarding. The codebases, both client and admin, reflect careful attention to modularity, maintainability, and UX design.",
-    videoUrl: null,
-    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763802008/sligvjkr6losfijsvelk.png',
-    tools: ["TypeScript","Next.js","React","ShadCN UI","Paystack","MongoDB Atlas","Vercel","Tailwind"],
-    githubLink: "https://github.com/Topman-14/topmart-client",
-    liveUrl: null,
-    featured: true,
-    category: "Ecommerce"
-  },
-  {
-    title: "MedSync — AI Powered Electronic Health Records",
-    description: "MedSync was perhaps the most meaningful project I have contributed to. Clinics were struggling with fragmented patient data and inefficient workflows. I focused on building modules for centralized electronic health records with AI-powered summarization and fast retrieval. Using PGVector and LangChain, I enabled smart search for clinicians while keeping privacy and encryption at the forefront. I documented workflows extensively in Notion, iterated on prototypes, and optimized the system for speed and usability. Integrating existing clinic systems and handling sensitive medical data pushed me to implement careful audit trails and secure transformation pipelines. It was incredibly rewarding to see the system streamline patient lookup and billing processes. Each refinement, every user feedback session, reinforced the importance of building technology that tangibly improves healthcare delivery.",
-    videoUrl: null,
-    tools: ["TypeScript","Node.js","Postgres","PGVector","LangChain","Docker","OpenAI APIs"],
-    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763802008/sligvjkr6losfijsvelk.png',
-    githubLink: null,
-    liveUrl: null,
-    featured: true,
-    category: "HealthTech"
-  },
-  {
-    title: "Hireflow — AI Powered Applicant Tracking System",
-    description: "Hireflow was a research-driven project where I contributed to building the frontend of an AI-powered ATS. The system allowed recruiters to see candidate pipelines, parse resumes, and evaluate scoring models in real-time. Using React and TypeScript, I designed dashboards, candidate workflows, and interactive elements that made the process intuitive. While my colleague focused on AI and candidate scoring models, I ensured that the UI could handle dynamic updates, complex candidate flows, and visualization of AI recommendations without confusion. Ensuring explainability and avoiding bias in the interface were ongoing challenges. Watching recruiters interact with the system during pilot tests highlighted the value of combining research-driven AI with practical, user-friendly design.",
-    videoUrl: null,
-    tools: ["React","TypeScript","Django","Postgres","Celery","Redis"],
-    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763801674/qirnxf1ofdwcz7curqu4.png',
-    githubLink: null,
-    liveUrl: null,
-    featured: false,
-    category: "HR Tech"
-  },
-  {
-    title: "Binta Financial — Fullstack Engineer Contract Experience",
-    description: "At Binta Financial, I built the company's public website and admin panel, integrating Strapi CMS for content management. I also engineered a RAG-based internal search system using LangChain and PGVector, along with real-time streaming for tokenized outputs. I set up cross-domain authentication, ensuring smooth client and server-to-server flows, and implemented centralized CI/CD pipelines for onboarding new developers. Each feature deployment reinforced my understanding of scaling complex systems and balancing developer velocity with product stability.",
-    videoUrl: null,
-    tools: ["Next.js","TypeScript","Strapi","LangChain","PGVector","Socket.IO","Prisma"],
-    image: 'https://res.cloudinary.com/doaq5feum/image/upload/v1763801674/qirnxf1ofdwcz7curqu4.png',
-    githubLink: null,
-    liveUrl: null,
-    featured: true,
-    category: "Experience"
-  }
-];
-
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
@@ -142,98 +12,336 @@ function generateSlug(title: string): string {
     .trim();
 }
 
+const experiences = [
+  {
+    jobTitle: "Software Engineer",
+    company: "Binta Financial",
+    location: "Remote",
+    description: "Took ownership of key AWS cloud and delivery infrastructure, transforming deployment, testing, and release reliability with CloudFormation stacks and enabling the team to scale faster with minimal operational overhead.",
+    startDate: "2024-12-01T00:00:00.000Z",
+    endDate: null,
+    isCurrentRole: true,
+    skills: ["AWS", "NestJS", "React Native", "GH Actions", "TypeScript", "PostgreSQL", "LangChain"],
+    achievements: [
+      "Took ownership of key AWS cloud and delivery infra, enabling the team to scale faster with minimal operational overhead via CloudFormation stacks.",
+      "Engineered and shipped a RAG platform leveraging a proprietary knowledge base to onboard new immigrants, with low-latency token streaming via SSE using LangChain, PGVector, and NestJS.",
+      "Launched the company website in 3 weeks, including SEO-optimized blog, webinar hub, and careers section with a custom CMS and admin panel.",
+      "Elevated user engagement by embedding a gamified learning platform into the React Native mobile app to educate users on credit fundamentals.",
+    ],
+  },
+  {
+    jobTitle: "Software Engineer",
+    company: "Husridge Limited",
+    location: "Remote",
+    description: "Took over and delivered a talent management system that was behind schedule, end-to-end; provisioning AWS infrastructure, launching two Node-based backend services with a React client, and seamless third-party integrations that enabled reliable service delivery at scale.",
+    startDate: "2025-08-01T00:00:00.000Z",
+    endDate: "2025-12-31T00:00:00.000Z",
+    isCurrentRole: false,
+    skills: ["React", "TypeScript", "ExpressJS", "AWS", "GH Actions"],
+    achievements: [
+      "Took over and delivered a talent management system that was behind schedule, end-to-end.",
+      "Provisioned AWS infrastructure and launched two Node-based backend services with a React client.",
+      "Delivered seamless third-party integrations enabling reliable service delivery at scale.",
+    ],
+  },
+  {
+    jobTitle: "Frontend Engineer | Contract",
+    company: "CompasAI",
+    location: "Remote",
+    description: "Delivered the flagship React client for an AI-powered, Django-based LMS enabling real-time audio transcription and interactive learning experiences at scale. Set a new UX standard by implementing a bespoke UI system from scratch with complex custom components.",
+    startDate: "2025-03-01T00:00:00.000Z",
+    endDate: "2025-07-31T00:00:00.000Z",
+    isCurrentRole: false,
+    skills: ["TypeScript", "React", "ShadCN"],
+    achievements: [
+      "Delivered the flagship React client for an AI-powered, Django-based LMS enabling real-time audio transcription.",
+      "Set a new UX standard by implementing a bespoke UI system from scratch with dynamic module calendars, integrated AI assistants, and immersive course views.",
+    ],
+  },
+  {
+    jobTitle: "Frontend Engineer",
+    company: "Lengoal",
+    location: "Remote",
+    description: "Played a major role in the development of a modern e-learning platform using NextJS, shipping a fast, intuitive, and highly engaging learning experience, with real-time features powered by LiveKit.",
+    startDate: "2024-06-01T00:00:00.000Z",
+    endDate: "2025-06-30T00:00:00.000Z",
+    isCurrentRole: false,
+    skills: ["NextJS", "TypeScript", "React", "LiveKit"],
+    achievements: [
+      "Played a major role in developing a modern e-learning platform using NextJS.",
+      "Shipped real-time features powered by LiveKit for engaging learning experiences.",
+    ],
+  },
+];
+
+const works = [
+  {
+    title: "Medsync EHR",
+    slug: "medsync-ehr",
+    description: "A patient-centred health records experience built for Nigerian healthcare: one place for hospitals, doctors, lab staff, and patients to share context rather than lose it between visits and facilities.",
+    content: `<h2>Why this existed is easy to state and hard to fix in real life.</h2>
+<p>In my region, many health providers still maintain records that live on paper or in isolated EMR systems that do not talk to each other, so when someone moves hospitals or arrives in an emergency at an unfamiliar health facility, the story of their care is incomplete. MedSync was imagined as a calmer, connected layer: one trusted view of the patient across all health facilities, with room for the messy human parts like appointments, labs, conversations, and (carefully bounded) help from an AI assistant.</p>
+<p>The build sits alongside academic work on what a centralised EHR would need to mean in Nigeria. This not only includes software, but adoption, policy, and day-to-day operations. The prototype is the attempt to ground that research in something you can click through.</p>
+<h2>What it actually delivers</h2>
+<p>You can see the shape of the product in this walkthrough; different roles see only what they need: hospital setup and oversight, clinical depth for doctors, lab workflows, and a patient-facing slice for longitudinal records and messaging. Chat is there because care is coordinated, not only documented. The assistant is there as a support act for doctors, as one of the major challenges for them is data entry. The assistant context is anchored on unified patient records rather than generic advice.</p>
+<h2>Next steps</h2>
+<p>A system like this only matters if it can stay online, audited, and aligned with regulation and clinical safety, especially anywhere AI touches decisions. Long term, the boring wins would be FHIR standards for interoperability, clear consent, and more role-centric workflows. These would be the next lift if or when I move it beyond prototype.</p>
+<p>Credit to Emmanuel Tanimowo for documentation and engineering support on the journey.</p>`,
+    image: null,
+    videoUrl: null,
+    tools: ["Python", "TypeScript", "Django", "React", "Gemini"],
+    githubLink: null,
+    liveUrl: null,
+    featured: true,
+    category: "Healthcare",
+  },
+  {
+    title: "Topmart Store",
+    slug: "topmart-store",
+    description: "Product listing storefront with Paystack checkout, backed by a separate Next.js admin app.",
+    content: `<h2>Topmart</h2>
+<p>Topmart is an everyday e-commerce product listing site: a public storefront and a separate administrator app. The storefront is Next.js with TypeScript on the App Router. A big reason for that choice was SEO and performance; server-rendered product and billboard pages, sensible metadata, and predictable data loading from the API the admin exposes.</p>
+<p>The admin app lives in another repository and behaves like a headless CMS plus API: the storefront consumes catalogue data from it, similar in spirit to pairing a shop front with Strapi.</p>
+<h2>Process</h2>
+<p>SEO work is mostly Next.js metadata and rendering choices. As is the norm, rendering is a mix of what fits each route: static generation where the catalogue can be resolved up front, and dynamic server rendering where IDs need a request-time fetch, so crawlers and first visits still get full HTML for product and billboard pages. A route-level <code>sitemap.ts</code> pregenerates <code>/sitemap.xml</code> from the live product and billboard IDs the API returns, alongside fixed URLs like home and cart.</p>
+<p>Visitors browse and filter by category, size, and colour, open product detail routes, and pay through Paystack. There is no customer auth on the shop side.</p>
+<h2>Next Steps</h2>
+<p>The repos are already open source, and I am happy to take contributions, issues, and PRs are welcome.</p>
+<p>Whenever I'm less stressed with work, I plan to build richer analytics so store owners can see more than surface-level traffic. I also want deeper page customisation, closer to what Shopify and similar platforms make easy out of the box; the trade-off I care about is that Topmart stays open source, so teams can fork and adapt without a closed ecosystem.</p>
+<p>Including a multivendor storefront is the major milestone on the roadmap. Single-store storefronts would remain a first-class path for anyone who only needs one shop.</p>`,
+    image: null,
+    videoUrl: null,
+    tools: ["Next.js", "TypeScript", "shadcn/ui", "Paystack", "Prisma"],
+    githubLink: "https://github.com/Topman-14/topmart-client",
+    liveUrl: null,
+    featured: true,
+    category: "E-commerce",
+  },
+];
+
+const articles = [
+  {
+    title: "Building Agentic UI that adapts to your user's needs — AG-UI",
+    slug: "building-agentic-ui-ag-ui",
+    excerpt: "AG-UI in plain language: capabilities vs static UI, tradeoffs, and where to start.",
+    content: `<p>If you've used MCPs and CLIs, or you've read about the A2A protocol, you'll eventually bump into AG-UI. I had to read their repo readme and docs quite a few times before it stuck, but the concept is nice. If you've built chat interfaces, especially agentic ones, you've definitely had to build around this already, whether or not you had a name for it.</p>
+<p>Traditionally, we build static UIs. We predict every possible user path and hard-code a button or some other component for it. If a user wants to do something we didn't build for, or wants to tweak their UI in ways we didn't plan for that would actually help them, they're stuck.</p>
+<p>AG-UI flips this. Instead of a library of fixed pages, you build a library of capabilities. When a user expresses an intent, an agent figures out which capability is needed and "renders" the specific UI components for that moment.</p>
+<p>Notice how I said you might have done something like this before? You've probably tweaked the UI based on the response from an agent more times than you can count. I know I did a lot at CompasAI.</p>
+<h2>Brief History</h2>
+<p>In early 2024, "AI in the UI" mostly meant a small chat bubble in the corner of a screen. It was disconnected from the rest of the application.</p>
+<p>By late 2025, the chat box was a bottleneck. Users wanted to get things done rather than just chat all the time. We started seeing generative UI, but it was fragmented. Every team was building its own custom "streaming component" logic.</p>
+<p>The AG-UI protocol came out of that mess. The docs line it up next to MCP: MCP standardized how agents talk to data; AG-UI is the push to standardize how agents talk to humans through interfaces (MCP, A2A, and AG-UI).</p>
+<p>If a traditional UI is a fast food menu, AG-UI is closer to a private chef.</p>
+<p>You say: "I'm hosting a Chinese dinner for four." The chef won't hand you the same laminated list every time like a waiter. They lay out the ingredients, tools, and plates for that meal.</p>
+<p>In AG-UI, the "ingredients" are your React / Shadcn components (or whatever you register), and the "chef" is the AI agent. The UI is generated just-in-time from what the agent is allowed to ask for.</p>
+<h2>Core pieces</h2>
+<ul>
+  <li><strong>Intent parser:</strong> figures out what the user is trying to do (voice, text, behavior).</li>
+  <li><strong>Orchestrator:</strong> the brain (LLM) that picks which capability fires.</li>
+  <li><strong>The registry:</strong> your catalog of headless UI pieces the agent can actually request.</li>
+  <li><strong>The transport:</strong> streaming, usually SSE or WebSockets, carrying UI instructions to the client.</li>
+</ul>
+<p>Long sentence out of the way: you still own the design system.</p>
+<h2>Ecosystem</h2>
+<p>The <code>ag-ui-protocol/ag-ui</code> repo is the obvious home base. It's a wire protocol that's being standardised.</p>
+<p>Quick start if you're ready to touch code: Build applications. If you want demos with previews, there's the AG-UI Dojo.</p>
+<h2>Tradeoffs</h2>
+<p>Switching from traditional, deterministic UIs to AGUI is a significant architectural decision that unlocks a lot of flexibility. It, however, introduces new challenges to address.</p>
+<p>In a traditional UI, you know exactly what a user sees. In AGUI, the agent can literally "hallucinate" the interface, where the agent might request a component in a sequence that makes no sense to a human user (e.g., showing a "Confirm Purchase" button before showing the "Price Breakdown").</p>
+<p>People rely on habits (sidebar on the left, checkout steps in order) to move without thinking. When the shell shifts every turn, those mental models crack. The user is not lost because they're stupid; the app UI just keeps moving.</p>
+<p>Agents often stream tool outputs straight into generative components, so backend over-fetching is a real risk. You have to be strict about what leaves the server: PII and internal IDs should not hit the AG-UI layer unfiltered.</p>
+<p>The layout can change run to run. Your tests can't live on one happy-path snapshot anymore. Someone on the team has to own state machines, interrupts, and what happens when the stream stops mid-card. Nondeterministic UI, deterministic QA: same tension as always, just louder.</p>
+<p>Guardrails mitigate some of these issues, like what the agent can request, enforce order for money flows, human-in-the-loop before irreversible actions, and validate payloads before rendering.</p>
+<h2>Conclusion</h2>
+<p>I might have oversold the chef metaphor btw. AG-UI probably increases the number of ways you can cook beans. Still, if you're tired of bespoke streaming message types and you're building a new agentic application with standardized tooling, AG-UI is worth the random readme pass I did at 1 am last Sunday.</p>`,
+    readTime: 5,
+    tags: ["AG-UI", "MCP", "generative UI", "CopilotKit", "AI"],
+    status: ArticleStatus.PUBLISHED,
+    publishedAt: new Date("2025-05-15T00:00:00.000Z"),
+  },
+  {
+    title: "Remote PostgreSQL DB on Ubuntu (EC2) not connecting",
+    slug: "remote-postgresql-db-on-ubuntu-ec2-not-connecting",
+    excerpt: "Fix PostgreSQL on Ubuntu when remote connections fail: open the port in AWS Security Group and UFW, set listen_addresses and pg_hba.conf, then verify with nc.",
+    content: `<p>You've just installed PostgreSQL on an EC2 instance. You open the port in the security group. You connect from your local machine and get... nothing. A timeout. Or "connection refused." Or your app on the server connects fine but everything remote refuses. It probably isn't a password problem; you're smarter than that. Not a port problem. Definitely not a Postgres bug.</p>
+<p>It's a layering issue. Five independent systems all need to say yes before a remote connection reaches your database. Miss any one of them like you've done and you'll be stuck guessing, convinced the gods are against you when the server was never listening where you thought it was.</p>
+<p>A few years ago I had this issue and I literally couldn't crack this for quite sometime until some godsend StackOverflow answer. The last time someone asked me why their Postgres wasn't reachable, I had an answer. This is that answer.</p>
+<p>These are the five layers, in the order you'll hit them when debugging:</p>
+<ol>
+  <li>AWS Security Group: cloud firewall, inbound rules</li>
+  <li>Ubuntu UFW: OS firewall on the box itself</li>
+  <li>postgresql.conf: where Postgres listens</li>
+  <li>pg_hba.conf: who's allowed to connect</li>
+  <li>App connection string: what your code actually reads</li>
+</ol>
+<p>The Security Group step is AWS-specific. Everything else (UFW, the Postgres config files, the SQL grants) applies the same way on DigitalOcean, Hetzner, a homelab, or any VPS.</p>
+<p>Ofc I know database services like RDS exist. Managed backups, automatic patching, Multi-AZ, the whole thing. For real production work I'd weigh that seriously. But sometimes you just like pain and stress or your use case requires a box you can SSH into. Or you just want to understand what's happening underneath. This is for those times.</p>
+<h2>1. Network layer (AWS Security Group)</h2>
+<p>Postgres runs on TCP port 5432 by default. Your laptop is not talking to Postgres yet. It's talking to the Security Group attached to the EC2 instance, which decides whether the packet even reaches the box.</p>
+<p>In the AWS console, find the Security Group for your instance and add an inbound rule:</p>
+<table>
+  <thead>
+    <tr><th>Field</th><th>Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Type</td><td>PostgreSQL (or Custom TCP)</td></tr>
+    <tr><td>Protocol</td><td>TCP</td></tr>
+    <tr><td>Port</td><td>5432</td></tr>
+    <tr><td>Source</td><td>Your public IP with /32 for everyday work. 0.0.0.0/0 only if you're explicitly testing open access, and don't leave it that way.</td></tr>
+  </tbody>
+</table>
+<p>On other clouds this is "firewall rules" or "network ACLs."</p>
+<h2>2. OS layer (Ubuntu UFW)</h2>
+<p>Ubuntu ships with UFW enabled. A wide-open Security Group plus a closed UFW still means the packet dies on arrival. Two firewalls running in sequence is normal, and both of them need to agree.</p>
+<pre><code>sudo ufw allow 5432/tcp
+sudo ufw status</code></pre>
+<p>If your instance uses iptables or firewalld instead, open 5432/tcp there. The tool doesn't matter; the port does.</p>
+<h2>3. Database config layer</h2>
+<p>Check your Postgres version first — the version number maps directly to the config directory:</p>
+<pre><code>pg_lscluster</code></pre>
+<p>The output looks like <code>16 main 5432 online</code>. That first number is your version. Config lives at <code>/etc/postgresql/&lt;version&gt;/main/</code>. Two files are responsible for "why won't anything outside localhost connect?"</p>
+<h3>postgresql.conf</h3>
+<p>Find <code>listen_addresses</code> and set it to:</p>
+<pre><code>listen_addresses = '*'</code></pre>
+<p>By default this is <code>localhost</code>. That means Postgres is only listening on the loopback interface. <code>psql</code> from inside the server works fine, but nothing from outside ever reaches it. The <code>*</code> tells it to listen on every interface the OS exposes.</p>
+<h3>pg_hba.conf</h3>
+<p>This file controls client authentication: who is allowed to connect, from where, and how. Add a line at the bottom (rules are evaluated in order, top to bottom):</p>
+<pre><code>host    all    all    0.0.0.0/0    md5</code></pre>
+<p>Depending on your Postgres version and the <code>password_encryption</code> setting, you may need <code>scram-sha-256</code> instead of <code>md5</code>. Use whatever your server expects. Once you're done experimenting, tighten <code>0.0.0.0/0</code> down to your actual IP or office CIDR. Wide-open host-based auth is fine for learning; it's not fine past that.</p>
+<h3>One-liner to update both files and restart</h3>
+<p>If you want to skip the manual edits and do everything at once:</p>
+<pre><code>PG_VER=$(pg_lscluster | awk '{print $1}') && \\
+  sudo sed -i "s/^#*listen_addresses = .*/listen_addresses = '*'/" /etc/postgresql/$PG_VER/main/postgresql.conf && \\
+  echo "host all all 0.0.0.0/0 md5" | sudo tee -a /etc/postgresql/$PG_VER/main/pg_hba.conf && \\
+  sudo systemctl restart postgresql</code></pre>
+<p>This sets <code>listen_addresses</code>, appends the <code>pg_hba.conf</code> rule, and restarts Postgres in one shot. If you need <code>scram-sha-256</code> instead of <code>md5</code>, swap it before running.</p>
+<p>Or restart manually after editing both files yourself:</p>
+<pre><code>sudo systemctl restart postgresql</code></pre>
+<p>These two files are not AWS-specific at all. Every manual Postgres install on Linux hits this wall. Every time.</p>
+<h2>4. Permissions layer (SQL grants)</h2>
+<p>Network works. Auth works. You're still seeing "permission denied for schema public."</p>
+<p>This one is the most annoying to debug because the connection actually succeeds, the auth succeeds, and then Postgres denies you anyway. It started happening more with Postgres 15, which tightened the default permissions on the public schema. Networking and authentication are completely separate from what a role is allowed to do once it gets in.</p>
+<p>Connect as the superuser:</p>
+<pre><code>sudo -u postgres psql -d postgres</code></pre>
+<p>Then run your grants, replacing <code>your_user</code> and <code>your_db</code> with what your app actually uses:</p>
+<pre><code>GRANT ALL ON SCHEMA public TO your_user;
+GRANT ALL PRIVILEGES ON DATABASE your_db TO your_user;
+ALTER SCHEMA public OWNER TO your_user;</code></pre>
+<p>One trap I hit personally: running these grants on the <code>postgres</code> default database while my app was connecting to <code>portfolio_db</code>. Guess what? The grants don't carry over. Run them on the database your app actually uses.</p>
+<h2>5. Application layer (.env)</h2>
+<p>Point your client at the public IP the Security Group opened, with the user and database you configured:</p>
+<pre><code>DATABASE_URL="postgresql://your_user:PASSWORD@EC2_PUBLIC_IP:5432/your_db?schema=public"</code></pre>
+<p>If your app connects to a different database than the one you granted on, swap it here.</p>
+<h2>Verify the network pipe before anything else</h2>
+<p>Before you touch a single Postgres config file, run this from your local machine:</p>
+<pre><code>nc -zv EC2_PUBLIC_IP 5432</code></pre>
+<p>If that succeeds, the network path is open and the problem is in layers 3 through 5. If it times out or refuses, the problem is in layers 1 or 2. Fix Security Group and UFW first. Do not touch SQL until <code>nc</code> passes.</p>
+<p>I wasted 30 minutes once going deep into <code>pg_hba.conf</code> only to find the Security Group rule had the wrong IP. <code>nc</code> would have told me in 5 seconds.</p>
+<p>Debugging order when something's broken: Security Group, UFW, <code>listen_addresses</code>, <code>pg_hba.conf</code>, user grants, connection string. Work down the list in order.</p>`,
+    readTime: 7,
+    tags: ["cloud", "aws", "PostgreSQL", "Ubuntu", "EC2", "database"],
+    status: ArticleStatus.PUBLISHED,
+    publishedAt: new Date("2025-04-10T00:00:00.000Z"),
+  },
+];
 
 async function seed() {
   console.log('🌱 Starting database seeding...');
 
   try {
+    // Clear existing data
+    await prisma.comment.deleteMany();
+    await prisma.article.deleteMany();
+    await prisma.work.deleteMany();
+    await prisma.experience.deleteMany();
+    await prisma.category.deleteMany();
+    await prisma.user.deleteMany();
+
+    console.log('🗑️  Cleared existing data');
+
     const hashedPassword = await bcrypt.hash('password123', 10);
 
-    const user = await prisma.user.upsert({
-      where: { email: 'topeakinkuade78@gmail.com' },
-      update: {},
-      create: {
-        email: 'topeakinkuade78+user2@gmail.com',
-        name: 'Topman',
+    const user = await prisma.user.create({
+      data: {
+        email: 'topeakinkuade78@gmail.com',
+        name: 'Tope Akinkuade',
         password: hashedPassword,
         role: UserRole.ADMIN,
-      }
+        bio: 'Results-driven Product Engineer with years of hands-on experience building and scaling web applications across fintech and logistics B2B platforms',
+        twitterUrl: 'https://twitter.com/therealtope_',
+        linkedinUrl: 'https://www.linkedin.com/in/tope-akinkuade/',
+        githubUrl: 'https://github.com/Topman-14',
+        websiteUrl: 'https://findtope.dev/',
+      },
     });
 
-    // console.log('✅ User created:', user.email);
+    console.log('✅ User created:', user.email);
 
-    // const createdCategories = [];
-    // for (const category of categories) {
-    //   const created = await prisma.category.upsert({
-    //     where: { name: category.name },
-    //     update: {},
-    //     create: {
-    //       name: category.name,
-    //       description: category.description,
-    //       slug: generateSlug(category.name),
-    //       userId: user.id
-    //     }
-    //   });
-    //   createdCategories.push(created);
-    // }
-
-    // console.log('✅ Categories created:', createdCategories.length);
-
-    // for (const experience of experiences) {
-    //   await prisma.experience.create({
-    //     data: {
-    //       jobTitle: experience.jobTitle,
-    //       company: experience.company,
-    //       location: experience.location,
-    //       description: experience.description,
-    //       startDate: new Date(experience.startDate),
-    //       endDate: experience.endDate ? new Date(experience.endDate) : null,
-    //       isCurrentRole: experience.isCurrentRole,
-    //       skills: experience.skills,
-    //       achievements: experience.achievements,
-    //       userId: user.id
-    //     }
-    //   });
-    // }
+    for (const exp of experiences) {
+      await prisma.experience.create({
+        data: {
+          jobTitle: exp.jobTitle,
+          company: exp.company,
+          location: exp.location,
+          description: exp.description,
+          startDate: new Date(exp.startDate),
+          endDate: exp.endDate ? new Date(exp.endDate) : null,
+          isCurrentRole: exp.isCurrentRole,
+          skills: exp.skills,
+          achievements: exp.achievements,
+          userId: user.id,
+        },
+      });
+    }
 
     console.log('✅ Experiences created:', experiences.length);
 
-    // for (const work of works) {
-    //   await prisma.work.create({
-    //     data: {
-    //       title: work.title,
-    //       description: work.description,
-    //       image: work.image,
-    //       videoUrl: work.videoUrl,
-    //       tools: work.tools,
-    //       githubLink: work.githubLink,
-    //       liveUrl: work.liveUrl,
-    //       featured: work.featured,
-    //       category: work.category,
-    //       userId: user.id
-    //     }
-    //   });
-    // }
-
-    for (const article of articles) {
-      await prisma.article.create({
+    for (const work of works) {
+      await prisma.work.create({
         data: {
-          ...article,
-          slug: generateSlug(article.title),
+          title: work.title,
+          slug: work.slug,
+          description: work.description,
+          content: work.content,
+          image: work.image,
+          videoUrl: work.videoUrl,
+          tools: work.tools,
+          githubLink: work.githubLink,
+          liveUrl: work.liveUrl,
+          featured: work.featured,
+          category: work.category,
           userId: user.id,
-          tags: article.tags,
         },
       });
     }
 
     console.log('✅ Works created:', works.length);
 
-    console.log('🎉 Database seeding completed successfully!'); 
+    for (const article of articles) {
+      await prisma.article.create({
+        data: {
+          title: article.title,
+          slug: article.slug,
+          excerpt: article.excerpt,
+          content: article.content,
+          readTime: article.readTime,
+          tags: article.tags,
+          status: article.status,
+          publishedAt: article.publishedAt,
+          userId: user.id,
+        },
+      });
+    }
+
+    console.log('✅ Articles created:', articles.length);
+
+    console.log('\n🎉 Database seeding completed successfully!');
     console.log('\n📊 Summary:');
     console.log('- Users: 1');
-    // console.log('- Categories:', createdCategories.length);
     console.log('- Experiences:', experiences.length);
     console.log('- Works:', works.length);
+    console.log('- Articles:', articles.length);
     console.log('\n🔑 Admin credentials:');
     console.log('- Email: topeakinkuade78@gmail.com');
     console.log('- Password: password123');
@@ -246,45 +354,7 @@ async function seed() {
   }
 }
 
-seed()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
-
-
-
-const articles = [
-  {
-    title: "Building Scalable Real-Time Systems with WebSockets and Redis",
-    excerpt: "A deep dive into architecting real-time features that can handle thousands of concurrent connections without falling apart.",
-    content: `<h2>Why Real-Time Matters</h2><p>The modern web is built on the expectation of immediacy. Users no longer accept stale data or manual refresh cycles. Whether it's a live chat feature, collaborative editing, stock tickers, or multiplayer game state, the demand for real-time communication between client and server has become a baseline requirement rather than a luxury. In this article, I want to walk through the architecture I've used to build scalable real-time systems, the trade-offs involved, and the lessons learned from production deployments.</p><h2>The WebSocket Foundation</h2><p>HTTP was designed as a request-response protocol. The client asks, the server answers, and the connection closes. WebSockets fundamentally change this dynamic by establishing a persistent, full-duplex connection between client and server. Once the initial HTTP handshake upgrades the connection, both sides can send messages freely without the overhead of new TCP connections or HTTP headers on every exchange.</p><p>In Node.js, libraries like <code>ws</code> or frameworks like Socket.IO abstract much of the low-level WebSocket management. Socket.IO in particular adds automatic reconnection, room-based broadcasting, and fallback to long-polling when WebSockets aren't available. For most applications, Socket.IO is the pragmatic choice because it handles the edge cases that raw WebSockets leave to the developer.</p><h2>The Scaling Problem</h2><p>A single Node.js process can comfortably handle a few thousand concurrent WebSocket connections. But what happens when you need to scale horizontally across multiple server instances? This is where things get interesting. If User A is connected to Server 1 and User B is connected to Server 2, a message from A needs to somehow reach B even though they're on different processes.</p><p>The standard solution is a pub/sub broker, and Redis is the most common choice for this role. When a message arrives at Server 1, it publishes the message to a Redis channel. Server 2, subscribed to that channel, receives the message and forwards it to the appropriate connected clients. This pattern decouples the WebSocket layer from the routing logic and allows you to add or remove server instances without breaking message delivery.</p><h2>Implementing the Redis Adapter</h2><p>Socket.IO provides an official Redis adapter that makes this integration straightforward. You configure each server instance to use the adapter, and Socket.IO handles the pub/sub mechanics transparently. Room joins, leaves, and broadcasts all work across instances as if they were a single server. The configuration is minimal but the impact is significant.</p><p>However, Redis pub/sub has a limitation: messages are fire-and-forget. If a server instance goes down and comes back up, it misses any messages published during the downtime. For chat applications or notification systems where message durability matters, you need a persistence layer alongside the pub/sub mechanism. I typically store messages in PostgreSQL and use Redis pub/sub purely for real-time delivery, with the client fetching missed messages on reconnection.</p><h2>Connection Management and Heartbeats</h2><p>In production, WebSocket connections are surprisingly fragile. Mobile users switch between WiFi and cellular, laptops go to sleep, and network infrastructure between client and server can silently drop connections. Without active connection management, you end up with ghost connections that consume server resources and skew your metrics.</p><p>Heartbeat mechanisms solve this by having the server periodically ping each client. If a client doesn't respond within a timeout window, the server cleans up the connection. Socket.IO handles this automatically with configurable ping intervals and timeouts, but understanding the mechanism is important for tuning performance. Too aggressive and you'll disconnect users on slow networks. Too lenient and you'll accumulate dead connections.</p><h2>Authentication and Security</h2><p>WebSocket connections bypass traditional HTTP middleware, so authentication requires special handling. The cleanest approach is to authenticate during the initial handshake by passing a JWT or session token as a query parameter or in the auth payload. The server validates the token before allowing the connection to upgrade. Once authenticated, you can attach user metadata to the socket instance for use throughout the connection lifecycle.</p><p>Rate limiting is another consideration that's often overlooked. A malicious or buggy client can flood the server with messages, consuming resources and potentially affecting other users. Implementing per-socket rate limiting with a sliding window algorithm prevents abuse while allowing legitimate burst traffic.</p><h2>Lessons from Production</h2><p>After deploying real-time systems serving tens of thousands of concurrent users, a few patterns have consistently proven their value. First, always design for reconnection. Clients will disconnect and reconnect constantly, and your system should handle this gracefully without data loss. Second, separate your real-time transport from your business logic. The WebSocket layer should be a thin delivery mechanism, not a place for complex application logic. Third, monitor connection counts, message throughput, and latency as first-class metrics. Real-time systems fail in ways that traditional request-response applications don't, and visibility into these metrics is essential for diagnosing issues before they become outages.</p>`,
-    readTime: 12,
-    tags: ["WebSockets", "Redis", "Node.js", "Real-Time", "Architecture"],
-    status: ArticleStatus.PUBLISHED,
-  },
-  {
-    title: "Practical TypeScript Patterns for Large React Codebases",
-    excerpt: "How to leverage TypeScript beyond basic type annotations to create maintainable, self-documenting React applications at scale.",
-    content: `<h2>Beyond Basic Types</h2><p>Most React developers start with TypeScript by adding type annotations to props and state. That's a solid beginning, but TypeScript's type system is far more expressive than simple interface definitions. In large codebases with dozens of contributors, the patterns you choose for typing directly impact developer velocity, refactoring confidence, and the quality of error messages. This article explores the patterns I've found most valuable in production React applications.</p><h2>Discriminated Unions for Component States</h2><p>One of the most powerful TypeScript patterns for React is using discriminated unions to model component states. Instead of a flat interface with optional fields and boolean flags, you define each possible state as a distinct type with a shared discriminant property. Consider a data fetching component: rather than having <code>isLoading</code>, <code>isError</code>, <code>data</code>, and <code>error</code> as independent fields where invalid combinations are possible, you define a union of <code>{ status: 'loading' }</code>, <code>{ status: 'error'; error: Error }</code>, and <code>{ status: 'success'; data: T }</code>. TypeScript's narrowing then guarantees that when you check <code>status === 'success'</code>, the <code>data</code> field is available and correctly typed.</p><p>This pattern eliminates an entire class of bugs where components render in impossible states. It also makes the code self-documenting because the type definition explicitly enumerates every possible state the component can be in.</p><h2>Generic Components with Constraints</h2><p>When building reusable components like tables, lists, or form builders, generics allow you to create components that work with any data shape while maintaining full type safety. A generic <code>DataTable&lt;T&gt;</code> component can accept column definitions typed against <code>T</code>, ensuring that accessor functions and cell renderers always reference valid fields. The key is using constraints (<code>extends</code>) to require minimum shapes when needed without being overly restrictive.</p><p>I've found that the sweet spot is constraining generics to structural requirements rather than specific interfaces. For example, a sortable table only needs <code>T extends Record&lt;string, unknown&gt;</code> rather than requiring items to implement a specific <code>Sortable</code> interface. This keeps components flexible while still catching errors at compile time.</p><h2>Template Literal Types for API Contracts</h2><p>TypeScript's template literal types are underused in React applications. They're particularly valuable for defining API route patterns, event names, or any string that follows a predictable structure. You can define types like <code>type ApiRoute = \`/api/\${Resource}/\${string}\`</code> and get compile-time validation that route strings match the expected format. Combined with mapped types, you can generate typed API client functions directly from your route definitions.</p><h2>The <code>satisfies</code> Operator</h2><p>The <code>satisfies</code> operator, introduced in TypeScript 4.9, solved a long-standing tension between type widening and type checking. Previously, if you wanted to validate that a configuration object matched a specific type, you had to use a type annotation, which would widen the inferred type and lose literal type information. With <code>satisfies</code>, you can validate the shape while preserving the narrow inferred type. This is invaluable for configuration objects, theme definitions, and route maps where you want both validation and literal types.</p><h2>Branded Types for Domain Safety</h2><p>In applications that deal with multiple ID types, currencies, or units, it's easy to accidentally pass a <code>UserId</code> where an <code>OrderId</code> is expected because both are just strings. Branded types solve this by creating nominally distinct types from the same underlying primitive. The pattern uses intersection types with a phantom property that only exists at the type level. Functions that accept a <code>UserId</code> will reject a plain string or an <code>OrderId</code> at compile time, catching bugs that would otherwise only surface at runtime.</p><h2>Strict Prop Typing with Component Composition</h2><p>React's composition model introduces interesting typing challenges. When building compound components like a <code>Tabs</code> component with <code>Tabs.List</code>, <code>Tabs.Trigger</code>, and <code>Tabs.Content</code> sub-components, you need to ensure that the value types flow correctly through the component tree. Using a shared generic context type and constraining child components against it creates a seamless developer experience where type errors surface at the composition site rather than deep inside component internals.</p><p>The investment in these patterns pays off exponentially as a codebase grows. When a team of ten developers can refactor a shared data model and TypeScript immediately highlights every component that needs updating, that's not just type safety, it's architectural confidence.</p>`,
-    readTime: 10,
-    tags: ["TypeScript", "React", "Patterns", "Architecture", "Frontend"],
-    status: ArticleStatus.PUBLISHED,
-  },
-  {
-    title: "Designing a Headless CMS Schema That Won't Haunt You Later",
-    excerpt: "Lessons learned from building and evolving CMS schemas for content-heavy applications that need to scale with the business.",
-    content: `<h2>The Schema Is the Product</h2><p>When building content-driven applications, the CMS schema is arguably more important than the frontend that renders it. A well-designed schema empowers content teams to work independently, supports SEO requirements, enables content reuse, and adapts to changing business needs without engineering intervention. A poorly designed schema creates constant friction, technical debt, and an ever-growing backlog of "just add this one field" requests. Having built and maintained schemas for several production CMS implementations, I want to share the principles that have served me well.</p><h2>Start with Content Modeling, Not Data Modeling</h2><p>The most common mistake is approaching CMS schema design like database schema design. Engineers instinctively normalize data, create foreign key relationships, and optimize for storage efficiency. But CMS schemas should be modeled around how content is created, edited, and consumed, not how it's stored. This means sitting with content creators and understanding their mental model of the content.</p><p>For a blog platform, the obvious model is an Article with a title, body, author, and category. But content teams think in terms of editorial workflows: drafts need reviewer assignments, published articles need scheduled unpublishing, and archived content needs to remain accessible but hidden from public feeds. Each of these requirements shapes the schema in ways that pure data modeling wouldn't anticipate.</p><h2>Flexible Content with Structured Blocks</h2><p>Rich text editors like TipTap or ProseMirror store content as structured documents, but the real power comes from defining custom block types within the editor. Instead of a single monolithic content field, consider defining blocks for different content purposes: text blocks, code blocks, image galleries, callout boxes, embedded videos, and comparison tables. Each block type has its own schema with typed fields.</p><p>This approach gives content creators the flexibility to compose varied layouts while maintaining structural consistency. It also makes the content portable: you can render the same content differently for web, mobile, email newsletters, or RSS feeds because the structure is semantic rather than presentational.</p><h2>Handling Media and Assets</h2><p>Media management is where many CMS implementations fall short. Storing image URLs as plain strings in content fields creates orphaned assets, makes bulk operations impossible, and loses valuable metadata. Instead, treat media as a first-class entity with its own schema: original URL, optimized variants, alt text, dimensions, file size, upload date, and usage references.</p><p>When an image is used in an article, the relationship should be explicit so you can answer questions like "where is this image used?" and "what happens if I delete it?" This becomes critical when migrating between storage providers or implementing CDN purging strategies.</p><h2>Versioning and Content History</h2><p>Content versioning seems like a nice-to-have until someone accidentally overwrites a carefully crafted article or a stakeholder asks to see what the homepage looked like last month. Implementing content versioning at the schema level means storing each save as an immutable version with metadata about who made the change and when. The current published version is just a pointer to a specific version record.</p><p>This pattern also enables features like scheduled publishing, A/B testing different content versions, and regulatory compliance where content change history must be auditable. The storage overhead is minimal compared to the operational value it provides.</p><h2>Localization from Day One</h2><p>Adding localization to an existing CMS schema is painful. Adding it from the start is straightforward. Even if your application currently serves a single language, structuring content fields as locale-indexed objects rather than flat strings makes future localization a content task rather than an engineering task. The schema change is minimal: instead of <code>title: string</code>, you have <code>title: Record&lt;Locale, string&gt;</code> with a default locale fallback.</p><h2>Schema Evolution and Migration</h2><p>No schema survives first contact with production unchanged. The business will evolve, content needs will shift, and new features will require schema modifications. The key is designing for evolution: use optional fields with sensible defaults for new additions, avoid breaking changes by keeping deprecated fields readable, and implement migration scripts that can transform existing content to match updated schemas.</p><p>Document every schema change, its rationale, and its migration path. Future developers, including future you, will thank you when trying to understand why a field exists or how historical content should be interpreted.</p>`,
-    readTime: 11,
-    tags: ["CMS", "Schema Design", "Content Modeling", "Architecture"],
-    status: ArticleStatus.PUBLISHED,
-  },
-  {
-    title: "Server Components Changed How I Think About Data Fetching",
-    excerpt: "Moving from client-side fetching to server components wasn't just a code change — it was a fundamental shift in application architecture.",
-    content: `<h2>The Client-Side Fetching Era</h2><p>For years, the standard React pattern was clear: render a loading skeleton, fire off a fetch request in a useEffect, update state with the response, and handle errors. Libraries like React Query and SWR added caching, deduplication, background refetching, and optimistic updates on top of this pattern, making it remarkably robust. I built entire applications on this foundation and it worked well. But there was always an inherent tension: the browser had to download JavaScript, parse it, execute it, make a network request to the API, wait for the response, and then render the actual content. That's a lot of sequential steps before the user sees meaningful data.</p><h2>What Server Components Actually Change</h2><p>React Server Components eliminate the client-side fetch waterfall by moving data fetching to the server, where the component renders. The component can directly access the database, call internal services, or read from the filesystem without exposing API endpoints or shipping data-fetching code to the client. The result is sent to the browser as a rendered component tree, not as JavaScript that needs to execute.</p><p>The first time I converted a data-heavy page from client-side fetching to a server component, the difference was striking. The page loaded noticeably faster because there was no loading state, no skeleton, and no flash of empty content. The data was simply there when the page arrived. More importantly, the component code became dramatically simpler. No useState, no useEffect, no loading and error states, just an async function that fetches data and returns JSX.</p><h2>Rethinking Component Boundaries</h2><p>Server components forced me to reconsider where I draw component boundaries. In the client-side model, I often co-located data fetching with the component that consumed it because React Query made this easy and efficient. With server components, the boundary between server and client becomes a deliberate architectural decision. Interactive elements like buttons, form inputs, and animations need the <code>'use client'</code> directive, while data display can remain on the server.</p><p>The pattern I've settled on is keeping page-level components and data containers as server components, passing fetched data as props to client components that handle interactivity. This creates a clean separation where the server handles data and the client handles interaction, with a well-defined interface between them.</p><h2>Streaming and Suspense</h2><p>The combination of server components with streaming and Suspense boundaries unlocked a pattern I didn't know I needed. Instead of waiting for all data to be ready before sending anything to the browser, you can stream the page shell immediately and progress`,
-    readTime: 11,
-    tags: ["CMS", "Schema Design", "Content Modeling", "Architecture"],
-    status: ArticleStatus.PUBLISHED,
-  }
-]
+seed().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, extractFileName, extractPublicId, isImage, uploadToS3 } from "@/lib/utils";
+import { cn, extractFileName, extractPublicId, isImage, uploadToCloudinary } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Upload, X, File, Loader2, RefreshCw, Plus } from "lucide-react";
 import { toast } from "sonner";
@@ -63,7 +63,7 @@ export function FileUpload({
     setIsUploading(true);
 
     try {
-      const uploadPromises = fileArray.map(uploadToS3);
+      const uploadPromises = fileArray.map(uploadToCloudinary);
       const newFiles = await Promise.all(uploadPromises);
 
       if (multiple) {

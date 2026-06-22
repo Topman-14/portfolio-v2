@@ -3,7 +3,9 @@
     "allow": [
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\takinkuade\\\\Dev\\\\private\\\\portfolio-v2\" -Recurse -Directory)",
       "Bash(Select-Object -ExpandProperty FullName)",
-      "Bash(Sort-Object)"
+      "Bash(Sort-Object)",
+      "Bash(node *)",
+      "PowerShell(Get-ChildItem app -Recurse -Directory | Select-Object -ExpandProperty FullName | Where-Object { $_ -notmatch \"node_modules|\\\\.next\" })"
     ]
   }
 }
