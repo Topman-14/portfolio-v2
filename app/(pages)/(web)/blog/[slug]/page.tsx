@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/cloudinary-image';
 import Link from 'next/link';
 import { ArrowLeft, Globe } from 'lucide-react';
 import {
@@ -228,7 +228,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
             <div className='relative min-h-[300px] md:min-h-[380px] rounded-2xl overflow-hidden bg-white/5 border border-white/10'>
               {article.coverImg ? (
-                <Image
+                <CloudinaryImage
                   src={article.coverImg}
                   alt={article.title}
                   fill

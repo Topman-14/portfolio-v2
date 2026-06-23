@@ -39,9 +39,29 @@ export default function SplinePlayer({
   const [isLoaded, setIsLoaded] = useState(false);
   const [nearViewport, setNearViewport] = useState(true);
 
-  const mountSpline = !hideOffScreen || nearViewport;
+  const isLowEnd =
+    typeof window !== 'undefined' &&
+    (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      (navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 2));
 
+  const mountSpline = !isLowEnd && (!hideOffScreen || nearViewport);
+
+  // Pause render loop when tab is hidden, resume when visible
   useEffect(() => {
+    const handleVisibility = () => {
+      const app = splineRef.current;
+      if (!app) return;
+      if (document.hidden) {
+        app.stop?.();
+      } else {
+        app.play?.();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
+
+useEffect(() => {
     if (!hideOffScreen) {
       setNearViewport(true);
       return;
@@ -195,6 +215,11 @@ export default function SplinePlayer({
 
     if (interactive && app.setInteractive) {
       app.setInteractive(true);
+    }
+
+    // Limit to 30fps — sufficient for ambient hero animations, halves GPU load
+    if (app.setFrameRate) {
+      app.setFrameRate(30);
     }
 
     setIsLoaded(true);

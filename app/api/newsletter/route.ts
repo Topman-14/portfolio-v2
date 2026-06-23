@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import prismadb from '@/lib/prismadb';
+import { sendEmail, isEmailConfigured, getAppBaseUrl } from '@/lib/email';
+import { newsletterWelcomeTemplate } from '@/lib/email/templates/newsletter-welcome';
 
 const newsletterSchema = z.object({
   email: z.string().email(),
@@ -27,17 +29,33 @@ export async function POST(request: Request) {
 
     if (existing) {
       return NextResponse.json(
-        { message: 'You are already subscribed.' },
-        { status: 200 }
+        { message: 'This email is already subscribed.' },
+        { status: 409 }
       );
     }
 
     await prismadb.newsletterSubscription.create({
-      data: {
-        email,
-        source,
-      },
+      data: { email, source },
     });
+
+    if (isEmailConfigured()) {
+      const baseUrl = getAppBaseUrl();
+      const { subject, previewText, html } = newsletterWelcomeTemplate({
+        blogUrl: `${baseUrl}/blog`,
+        unsubscribeUrl: `${baseUrl}/unsubscribe?email=${encodeURIComponent(email)}`,
+      });
+      sendEmail({
+        to: { email },
+        subject,
+        html,
+        previewText,
+        unsubscribeUrl: `${baseUrl}/unsubscribe?email=${encodeURIComponent(email)}`,
+      })
+        .then(() => console.log('[newsletter] welcome email sent to', email))
+        .catch((err) => console.error('[newsletter] welcome email error:', err));
+    } else {
+      console.warn('[newsletter] email not sent — BREVO_API_KEY or GMAIL_USER not set');
+    }
 
     return NextResponse.json(
       { message: 'Thanks for subscribing!' },
@@ -51,5 +69,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-

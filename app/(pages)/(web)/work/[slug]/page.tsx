@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/cloudinary-image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
@@ -111,7 +111,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
         <div className='relative aspect-[16/10] w-full min-h-[220px] overflow-hidden md:rounded-3xl md:aspect-[2.6/1] md:min-h-[300px]'>
           {work.image ? (
-            <Image
+            <CloudinaryImage
               src={work.image}
               alt=''
               fill

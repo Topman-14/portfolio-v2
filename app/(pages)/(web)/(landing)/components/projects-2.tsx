@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/cloudinary-image';
 import { RevealHeader } from '@/components/custom/reveal-header';
 import { GButton } from '@/components/ui/gbutton';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
@@ -32,7 +32,7 @@ export function Projects2({ works }: Projects2Props) {
                 >
                   <div className='relative aspect-[16/10] w-full shrink-0 overflow-hidden md:aspect-auto md:h-auto md:w-[min(42%,320px)] lg:w-[min(40%,380px)]'>
                     {work.image ? (
-                      <Image
+                      <CloudinaryImage
                         src={work.image}
                         alt={work.title}
                         fill

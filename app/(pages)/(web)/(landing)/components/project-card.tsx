@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/cloudinary-image';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight } from 'lucide-react';
 import type { Work } from '@prisma/client';
@@ -19,10 +19,10 @@ export const ProjectCard = ({ work }: ProjectCardProps) => {
       >
         <div className='absolute inset-0'>
           {work.image ? (
-            <Image
-            src={work.image}
-            alt={work.title}
-            fill
+            <CloudinaryImage
+              src={work.image}
+              alt={work.title}
+              fill
               className='object-cover transition-transform duration-700 group-hover:scale-105'
               sizes='(max-width: 1024px) 100vw, 80vw'
             />

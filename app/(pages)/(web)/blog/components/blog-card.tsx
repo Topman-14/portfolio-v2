@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/cloudinary-image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import type { Article, Category } from '@prisma/client';
@@ -22,7 +22,7 @@ export const BlogCard = ({ article, priority = false }: BlogCardProps) => {
     >
       <div className='relative aspect-[16/10] overflow-hidden rounded-2xl bg-white/5'>
         {article.coverImg ? (
-          <Image
+          <CloudinaryImage
             src={article.coverImg}
             alt={article.title}
             fill
