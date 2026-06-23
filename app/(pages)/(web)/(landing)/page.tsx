@@ -37,7 +37,7 @@ export default function Home() {
             <p
               className='text-white font-semibold max-w-xl font-sans text-lg md:text-xl'
             >
-              I build production systems and the documentation that makes them usable.
+              I build production systems and the documentation that makes them maintainable.
             </p>
           </div>
           <div className='md:absolute mx-auto xl:bottom-32 bottom-20 right-12 size-[300px] md:max-h-none lg:size-[400px] z-[20] pointer-events-none'>
