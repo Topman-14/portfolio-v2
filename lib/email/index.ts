@@ -4,16 +4,17 @@ import { passwordResetTemplate } from './templates/password-reset';
 import { BASE_URL } from '@/config';
 
 export const EMAIL_COLORS = {
-  bg: '#020202',
-  surface: '#141414',
+  bg: '#eaeaea',
+  surface: '#fafafa',
+  border: '#1e1e1e',
   surface2: '#1a1a1a',
-  border: '#1f1f1f',
   malachite: '#14cc5e',
   amber: '#f4b915',
   bittersweet: '#ff715b',
   white: '#ffffff',
-  textMuted: 'rgba(255,255,255,0.65)',
-  textDim: 'rgba(255,255,255,0.4)',
+  textMuted: '#222',
+  textDim: '#1e1e1e',
+  black: '#000',
 } as const;
 
 export type EmailRecipient = {
@@ -28,9 +29,10 @@ export type SendEmailOptions = {
   previewText?: string;
   from?: EmailRecipient;
   replyTo?: EmailRecipient;
+  unsubscribeUrl?: string;
 };
 
-const DEFAULT_SENDER_NAME = 'Tope Akinkuade';
+const DEFAULT_SENDER_NAME = 'Tops';
 
 function getClient(): BrevoClient {
   const apiKey = process.env.BREVO_API_KEY?.trim();
@@ -38,7 +40,7 @@ function getClient(): BrevoClient {
   return new BrevoClient({ apiKey });
 }
 
-function getAppBaseUrl(): string {
+export function getAppBaseUrl(): string {
   if (process.env.NODE_ENV === 'development') return 'http://localhost:8080';
   const explicit = process.env.NEXT_PUBLIC_APP_URL?.trim();
   if (explicit) return explicit.replace(/\/$/, '');
@@ -52,8 +54,8 @@ export function isEmailConfigured(): boolean {
 }
 
 export async function sendEmail(options: SendEmailOptions) {
-  const senderEmail = process.env.GMAIL_USER?.trim();
-  if (!senderEmail) throw new Error('Sender email (GMAIL_USER) is not configured');
+  const senderEmail = process.env.MAIL_USER?.trim();
+  if (!senderEmail) throw new Error('Sender email (MAIL_USER) is not configured');
 
   const {
     to,
@@ -62,10 +64,11 @@ export async function sendEmail(options: SendEmailOptions) {
     previewText,
     from = { email: senderEmail, name: DEFAULT_SENDER_NAME },
     replyTo,
+    unsubscribeUrl,
   } = options;
 
   const recipients = Array.isArray(to) ? to : [to];
-  const fullHtml = emailLayout(html, previewText);
+  const fullHtml = emailLayout(html, previewText, unsubscribeUrl);
   const client = getClient();
 
   return client.transactionalEmails.sendTransacEmail({

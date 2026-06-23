@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/cloudinary-image';
 import Link from 'next/link';
 import type { BlogListArticle } from '@/app/(pages)/(web)/blog/components/blog-card';
 import { Badge } from '@/components/ui/badge';
@@ -44,7 +44,7 @@ export function RecentBlogCard({
       >
         <div className='relative z-0 aspect-[16/10] w-full'>
           {article.coverImg ? (
-            <Image
+            <CloudinaryImage
               src={article.coverImg}
               alt={article.title}
               fill

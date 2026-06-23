@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/cloudinary-image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Article, Category } from '@prisma/client';
@@ -46,7 +46,7 @@ export const BlogHero = ({ articles, title, reverse = false, className }: BlogHe
               className='absolute inset-0'
             >
               {active.coverImg ? (
-                <Image
+                <CloudinaryImage
                   src={active.coverImg}
                   alt={active.title}
                   fill

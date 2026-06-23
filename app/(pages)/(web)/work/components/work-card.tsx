@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/cloudinary-image';
 import { Badge } from '@/components/ui/badge';
 import { Work } from '@prisma/client';
 import { ArrowRight } from 'lucide-react';
@@ -13,7 +13,7 @@ export function WorkCard({ work }: { work: Work }) {
     >
       <div className='relative min-h-[200px] w-full shrink-0 overflow-hidden'>
         {work.image ? (
-          <Image
+          <CloudinaryImage
             src={work.image}
             alt={work.title}
             fill
