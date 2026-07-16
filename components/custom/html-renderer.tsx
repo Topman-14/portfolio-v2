@@ -1,4 +1,7 @@
+'use client';
+
 import { cn } from '@/lib/utils';
+import type { MouseEvent } from 'react';
 
 export type TocItem = {
   id: string;
@@ -17,11 +20,21 @@ const slugify = (value: string) =>
     .trim()
     .replaceAll(/\s+/g, '-');
 
+const COPY_ICON = '<svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+const CHECK_ICON = '<svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+const addCodeCopyButtons = (content: string) =>
+  content.replaceAll(
+    /<pre([^>]*)>([\s\S]*?)<\/pre>/gi,
+    (match, attrs, body) =>
+      `<div class="code-block relative group/code"><pre${attrs}>${body}</pre><button type="button" data-copy-btn class="copy-code-btn absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md border border-white/15 bg-white/5 text-white/70 opacity-0 group-hover/code:opacity-100 hover:text-malachite hover:border-malachite/40 transition-colors" aria-label="Copy code">${COPY_ICON}${CHECK_ICON}</button></div>`
+  );
+
 export const createHtmlRenderData = (content: string) => {
   const seen = new Map<string, number>();
   const toc: TocItem[] = [];
 
-  const html = content.replaceAll(
+  const html = addCodeCopyButtons(content).replaceAll(
     /<(h2|h3)([^>]*)>([\s\S]*?)<\/\1>/gi,
     (match, tag, attrs, body) => {
       const label = stripHtml(body);
@@ -62,10 +75,27 @@ type HtmlRendererProps = {
   className?: string;
 };
 
+const handleCopyClick = (e: MouseEvent<HTMLElement>) => {
+  const button = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-btn]');
+  if (!button) return;
+
+  const code = button.previousElementSibling?.textContent ?? '';
+  navigator.clipboard.writeText(code).then(() => {
+    button.setAttribute('data-copied', 'true');
+    window.setTimeout(() => button.removeAttribute('data-copied'), 2000);
+  });
+};
+
 export const HtmlRenderer = ({ html, className }: HtmlRendererProps) => {
   return (
     <article
+      onClick={handleCopyClick}
       className={cn(
+        '[&_.code-block]:relative',
+        '[&_.copy-code-btn_.icon-check]:hidden',
+        '[&_.copy-code-btn[data-copied]_.icon-copy]:hidden',
+        '[&_.copy-code-btn[data-copied]_.icon-check]:block',
+        '[&_.copy-code-btn[data-copied]]:text-malachite [&_.copy-code-btn[data-copied]]:border-malachite/40 [&_.copy-code-btn[data-copied]]:opacity-100',
         'md:rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 md:p-10 text-white/85 font-sans leading-relaxed',
         '[&_h1]:text-3xl [&_h1]:md:text-4xl [&_h1]:font-display [&_h1]:font-bold [&_h1]:text-white [&_h1]:mt-8 [&_h1]:mb-4',
         '[&_h2]:text-2xl [&_h2]:md:text-3xl [&_h2]:font-display [&_h2]:font-bold [&_h2]:text-white [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:scroll-mt-24',

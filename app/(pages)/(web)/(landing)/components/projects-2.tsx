@@ -4,10 +4,20 @@ import { RevealHeader } from '@/components/custom/reveal-header';
 import { GButton } from '@/components/ui/gbutton';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Work } from '@prisma/client';
+import { Category } from '@prisma/client';
+
+export type Projects2Work = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  image: string | null;
+  tools: string[];
+  category: Category | null;
+};
 
 type Projects2Props = {
-  works: Work[];
+  works: Projects2Work[];
 };
 
 export function Projects2({ works }: Projects2Props) {
@@ -53,7 +63,7 @@ export function Projects2({ works }: Projects2Props) {
                             variant='white'
                             className='text-[10px] uppercase tracking-wide'
                           >
-                            {work.category}
+                            {work.category.name}
                           </Badge>
                         ) : null}
                       </div>

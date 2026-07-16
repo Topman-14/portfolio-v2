@@ -3,13 +3,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@/hooks/use-query';
 import {WorkCard} from './work-card';
-import type { Work } from '@prisma/client';
+import type { Work, Category } from '@prisma/client';
 import { RevealHeader } from '@/components/custom/reveal-header';
 import { SearchField } from '@/components/ui/search-field';
 import { LoadingFallback } from '@/components/ui/suspense';
 
+type WorkWithCategory = Work & { category: Category | null };
+
 type OtherWorksSectionProps = {
-  initialWorks: Work[];
+  initialWorks: WorkWithCategory[];
 };
 
 const OtherWorksSection = ({ initialWorks }: OtherWorksSectionProps) => {
@@ -24,7 +26,7 @@ const OtherWorksSection = ({ initialWorks }: OtherWorksSectionProps) => {
   const trimmed = debounced.trim();
   const hasActiveSearch = trimmed.length > 0;
 
-  const { data, isFetching } = useQuery<Work[]>('/works', {
+  const { data, isFetching } = useQuery<WorkWithCategory[]>('/works', {
     params: hasActiveSearch
       ? { featured: 'false', q: trimmed, limit: 48 }
       : undefined,

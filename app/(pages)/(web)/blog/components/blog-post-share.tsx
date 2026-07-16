@@ -2,12 +2,12 @@
 
 import { Check, Copy } from 'lucide-react';
 import Link from 'next/link';
-import { useCallback, useState } from 'react';
 import {
   FaLinkedinIn,
   FaWhatsapp,
   FaXTwitter,
 } from 'react-icons/fa6';
+import { useCopy } from '@/hooks/use-copy';
 
 type BlogPostShareProps = {
   articleUrl: string;
@@ -15,7 +15,7 @@ type BlogPostShareProps = {
 };
 
 export function BlogPostShare({ articleUrl, title }: BlogPostShareProps) {
-  const [copied, setCopied] = useState(false);
+  const { isCopied: copied, copy } = useCopy();
 
   const encodedUrl = encodeURIComponent(articleUrl);
   const encodedTitle = encodeURIComponent(title);
@@ -38,16 +38,6 @@ export function BlogPostShare({ articleUrl, title }: BlogPostShareProps) {
       Icon: FaWhatsapp,
     },
   ];
-
-  const copyLink = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(articleUrl);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* clipboard unavailable */
-    }
-  }, [articleUrl]);
 
   const btnClass =
     'inline-flex size-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-white/80 hover:text-malachite hover:border-malachite/40 transition-colors';
@@ -72,7 +62,7 @@ export function BlogPostShare({ articleUrl, title }: BlogPostShareProps) {
         ))}
         <button
           type='button'
-          onClick={() => void copyLink()}
+          onClick={() => void copy(articleUrl)}
           className={btnClass}
           aria-label={copied ? 'Link copied' : 'Copy link'}
         >

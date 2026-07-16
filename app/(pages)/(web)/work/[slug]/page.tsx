@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const work = await prismadb.work.findUnique({
     where: { slug },
+    include: { category: true },
   });
 
   if (!work) {
@@ -60,7 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     keywords: [
       work.title,
       ...work.tools,
-      work.category || '',
+      work.category?.name || '',
       'Tope Akinkuade',
       'Portfolio',
       'Project',
@@ -89,6 +90,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const work = await prismadb.work.findUnique({
     where: { slug },
+    include: { category: true },
   });
 
   if (!work) {
@@ -135,7 +137,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               <div className='flex flex-wrap items-center gap-3'>
                 {work.category ? (
                   <Badge variant='malachite' className='uppercase tracking-wide'>
-                    {work.category}
+                    {work.category.name}
                   </Badge>
                 ) : null}
                 {work.featured ? (

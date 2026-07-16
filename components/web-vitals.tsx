@@ -1,9 +1,12 @@
 'use client';
 
 import { useReportWebVitals } from 'next/web-vitals';
+import { isDev } from '@/lib/utils';
 
 export function WebVitals() {
   useReportWebVitals((metric) => {
+    if (isDev) return;
+
     const body = JSON.stringify({
       name: metric.name,
       value: metric.value,

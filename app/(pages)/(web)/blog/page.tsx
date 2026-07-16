@@ -16,19 +16,19 @@ export default async function Blog({ searchParams }: PageProps) {
   const { q, category } = await searchParams;
   const hasFilter = Boolean(q?.trim() || category?.trim());
 
-  const [heroArticles, popularArticles, categories, browseArticles] = await Promise.all([
+  const [heroArticles, categories, browseArticles] = await Promise.all([
     prismadb.article.findMany({
       where: { status: 'PUBLISHED' },
       orderBy: { publishedAt: 'desc' },
       include: { category: true },
       take: 4,
     }),
-    prismadb.article.findMany({
-      where: { status: 'PUBLISHED' },
-      orderBy: [{ reads: 'desc' }, { publishedAt: 'desc' }],
-      include: { category: true },
-      take: 4,
-    }),
+    // prismadb.article.findMany({
+    //   where: { status: 'PUBLISHED' },
+    //   orderBy: [{ reads: 'desc' }, { publishedAt: 'desc' }],
+    //   include: { category: true },
+    //   take: 4,
+    // }),
     prismadb.category.findMany({
       orderBy: { name: 'asc' },
       take: 6,
@@ -54,10 +54,10 @@ export default async function Blog({ searchParams }: PageProps) {
     }),
   ]);
 
-  const fallbackPopular = heroArticles.filter(
-    (article) => !popularArticles.some((popular) => popular.id === article.id)
-  );
-  const mergedPopular = [...popularArticles, ...fallbackPopular].slice(0, 4);
+  // const fallbackPopular = heroArticles.filter(
+  //   (article) => !popularArticles.some((popular) => popular.id === article.id)
+  // );
+  // const mergedPopular = [...popularArticles, ...fallbackPopular].slice(0, 4);
 
   const categoryChips = categories.map((c) => ({ id: c.id, name: c.name }));
 
@@ -85,11 +85,11 @@ export default async function Blog({ searchParams }: PageProps) {
             )}
           </section>
 
-          {mergedPopular.length > 0 ? (
+          {/*{mergedPopular.length > 0 ? (
             <section className='md:py-20'>
               <BlogHero articles={mergedPopular} title='Popular' reverse />
             </section>
-          ) : null}
+          ) : null}*/}
 
           <section className='rounded-2xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.04),rgba(114,255,168,0.07),rgba(255,177,87,0.06))] p-6 md:p-8 lg:p-10'>
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center'>

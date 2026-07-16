@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import CloudinaryImage from '@/components/ui/cloudinary-image';
 import { Badge } from '@/components/ui/badge';
-import { Work } from '@prisma/client';
+import { Work, Category } from '@prisma/client';
 import { ArrowRight } from 'lucide-react';
 import CircleButton from '@/components/ui/circle-button';
 
-export function WorkCard({ work }: { work: Work }) {
+type WorkWithCategory = Work & { category: Category | null };
+
+export function WorkCard({ work }: { work: WorkWithCategory }) {
   return (
     <Link
       href={`/work/${work.slug}`}
@@ -37,7 +39,7 @@ export function WorkCard({ work }: { work: Work }) {
         <div className='min-w-0 flex-1 space-y-2'>
           {work.category ? (
             <Badge variant='white' className='text-[10px] uppercase tracking-wide'>
-              {work.category}
+              {work.category.name}
             </Badge>
           ) : null}
           <h3 className='font-display text-xl font-bold text-white transition-colors duration-300 group-hover:text-malachite md:text-2xl'>

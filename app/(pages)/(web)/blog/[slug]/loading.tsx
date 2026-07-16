@@ -2,7 +2,7 @@ export default function BlogDetailLoading() {
   return (
     <main className='bg2 min-h-screen pb-24 pt-10 md:pb-28 animate-pulse'>
       <div className='max-w-[1500px] mx-auto space-y-14 md:px-8 lg:px-12'>
-        <div className='h-5 w-32 rounded bg-white/10 ml-4 md:ml-0' />
+        <div className='h-5 w-32 rounded bg-white/10 ml-4 md:ml-0 mt-[70px]' />
 
         <section className='md:rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8 lg:p-10'>
           <div className='grid grid-cols-1 xl:grid-cols-[1fr_620px] gap-8 xl:gap-12 items-stretch'>

@@ -25,6 +25,7 @@ export function BlogBrowseSection({
     paramsString,
     apiQueryParams,
     replace,
+    isPending,
   } = useBlogSearchParams();
 
   const [input, setInput] = useState(q);
@@ -53,7 +54,7 @@ export function BlogBrowseSection({
 
   const list = hasFilter ? (data ?? []) : initialBrowseArticles;
 
-  const showSpinner = hasFilter && isFetching;
+  const showSpinner = hasFilter && (isFetching || isPending);
   const showGrid = !showSpinner && list.length > 0;
   const showEmpty = !showSpinner && list.length === 0;
 

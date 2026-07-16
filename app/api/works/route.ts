@@ -30,7 +30,7 @@ export async function GET(request: Request) {
                 { title: { contains: q, mode: 'insensitive' } },
                 { slug: { contains: q, mode: 'insensitive' } },
                 { description: { contains: q, mode: 'insensitive' } },
-                { category: { contains: q, mode: 'insensitive' } },
+                { category: { name: { contains: q, mode: 'insensitive' } } },
                 { tools: { has: q } },
               ],
             }
@@ -40,6 +40,7 @@ export async function GET(request: Request) {
         createdAt: 'desc',
       },
       take,
+      include: { category: true },
     });
 
     return NextResponse.json(works);

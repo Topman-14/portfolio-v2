@@ -310,7 +310,6 @@ async function seed() {
           githubLink: work.githubLink,
           liveUrl: work.liveUrl,
           featured: work.featured,
-          category: work.category,
           userId: user.id,
         },
       });

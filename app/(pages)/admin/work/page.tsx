@@ -11,6 +11,7 @@ export default async function WorkPage() {
     orderBy: {
       createdAt: 'desc',
     },
+    include: { category: true },
   });
 
   return (

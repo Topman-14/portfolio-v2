@@ -1,6 +1,6 @@
 'use client'
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 interface Category {
   name: string;
@@ -29,8 +29,6 @@ export function CategoryDistribution({ categories }: CategoryDistributionProps) 
             data={data}
             cx="50%"
             cy="50%"
-            labelLine={false}
-            label={({ name, percent }) => `${name} ${(percent as number * 100).toFixed(0)}%`}
             outerRadius={80}
             fill="#8884d8"
             dataKey="value"
@@ -40,6 +38,21 @@ export function CategoryDistribution({ categories }: CategoryDistributionProps) 
             ))}
           </Pie>
           <Tooltip />
+          <Legend
+            content={({ payload }) => (
+              <ul className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mt-2">
+                {payload?.map((entry) => (
+                  <li key={entry.value} className="flex items-center gap-1.5">
+                    <span
+                      className="size-2.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: entry.color }}
+                    />
+                    <span className="text-sm font-semibold">{entry.value}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>

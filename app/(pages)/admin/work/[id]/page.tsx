@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import prismadb from '@/lib/prismadb';
 import { GenericForm } from '@/components/ui/generic-form';
-import { Work } from '@prisma/client';
+import { Work, Category } from '@prisma/client';
 import { cleanErrorMsg, generateSlug } from '@/lib/utils';
 import { auth } from '@/auth';
 import { workFields } from '../data';
@@ -14,7 +14,7 @@ interface PageProps {
 export default async function WorkPage({ params }: PageProps) {
   const { id } = await params;
   const isNew = id === 'new';
-  let work: Work | undefined = undefined;
+  let work: (Work & { category: Category | null }) | undefined = undefined;
 
   if (!isNew) {
     try {
@@ -23,6 +23,7 @@ export default async function WorkPage({ params }: PageProps) {
           where: {
             id,
           },
+          include: { category: true },
         })) || undefined;
       if (!work) {
         throw new Error('work not found');
@@ -32,6 +33,8 @@ export default async function WorkPage({ params }: PageProps) {
       notFound();
     }
   }
+
+  const categories = await prismadb.category.findMany();
 
   const wasFeaturedBefore = !isNew && work ? work.featured : false;
   const previousPublicSlug = !isNew && work ? work.slug : null;
@@ -109,10 +112,16 @@ export default async function WorkPage({ params }: PageProps) {
       </div>
 
       <GenericForm
-        fields={workFields}
+        fields={workFields(categories)}
         onSubmit={handleSubmit}
         defaultValues={{
-          ...(work ? work : {}),
+          ...(work
+            ? (() => {
+                const { category, ...rest } = work;
+                void category;
+                return rest;
+              })()
+            : {}),
           tools: work?.tools.join(',') ?? '',
           content: work?.content ?? '',
           slug: work?.slug ?? '',

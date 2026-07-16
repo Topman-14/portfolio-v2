@@ -2,10 +2,11 @@ import { Suspense } from 'react';
 import { Expertise } from './components/expertise';
 import { FeaturedProjectsSection } from './components/featured-projects-section';
 import { RecentBlogsSection } from './components/recent-blogs-section';
-import Image, { type StaticImageData } from 'next/image';
+import { type StaticImageData } from 'next/image';
 import { RevealHeader } from '@/components/custom/reveal-header';
 import { LoadingFallback } from '@/components/ui/suspense';
 import HeroScene from './components/hero-scene';
+import { AboutGallery } from './components/about-gallery';
 import aboutEmma from '@/public/me/emma.jpg';
 import aboutMe1 from '@/public/me/me1.webp';
 import aboutMe11 from '@/public/me/me11.png';
@@ -80,26 +81,7 @@ export default function Home() {
             </GButton> */}
           </div>
 
-          <div
-            className='relative flex-1 md:flex-none grid mt-12 grid-cols-3 md:grid-cols-6 grid-rows-2 ml-auto my-auto gap-4 w-full'
-          >
-            {imageData.map((image, index) => (
-              <div
-                key={`about-gallery-${index}`}
-                className={`${image.colSpan} lg:max-w-[600px] relative h-[200px] overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  placeholder='blur'
-                  className='object-cover'
-                  priority={true}
-                  sizes='(max-width: 768px) 50vw, 33vw'
-                />
-              </div>
-            ))}
-          </div>
+          <AboutGallery images={imageData} />
         </div>
       </section>
 

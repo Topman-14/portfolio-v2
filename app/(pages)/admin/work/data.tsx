@@ -5,10 +5,12 @@ import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
-import { Work } from "@prisma/client"
+import { Work, Category } from "@prisma/client"
 import { FieldConfig } from "@/components/ui/generic-form"
 
-export const workColumns: ColumnDef<Work>[] = [
+type WorkWithCategory = Work & { category: Category | null }
+
+export const workColumns: ColumnDef<WorkWithCategory>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -34,11 +36,11 @@ export const workColumns: ColumnDef<Work>[] = [
     accessorKey: "category",
     header: "Category",
     cell: ({ row }) => {
-      const category = row.getValue("category") as string | null
+      const category = row.original.category
       return (
         <div>
           {category ? (
-            <Badge>{category}</Badge>
+            <Badge>{category.name}</Badge>
           ) : (
             <span className="text-muted-foreground">No category</span>
           )}
@@ -103,7 +105,7 @@ export const workColumns: ColumnDef<Work>[] = [
   },
 ]
 
-export const workFields: FieldConfig[] = [
+export const workFields = (categories: Category[]): FieldConfig[] => [
   {
     name: 'image',
     label: 'Project Image',
@@ -129,11 +131,15 @@ export const workFields: FieldConfig[] = [
     description: 'Leave empty when creating to generate from the title.',
   },
   {
-    name: 'category',
+    name: 'categoryId',
     label: 'Category',
-    type: 'text',
-    placeholder: 'Web Development',
+    type: 'async-select',
+    placeholder: 'Select or search category',
     colSpan: 1,
+    fetchOptions: categories.map((cat) => ({
+      label: cat.name,
+      value: cat.id,
+    })),
   },
   {
     name: 'featured',
