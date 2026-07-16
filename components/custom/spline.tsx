@@ -1,8 +1,10 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from '@/lib/utils';
-import Spline from '@splinetool/react-spline';
+import dynamic from 'next/dynamic';
 import { useRef, useEffect, useState, useCallback } from 'react';
+
+const Spline = dynamic(() => import('@splinetool/react-spline'), { ssr: false });
 
 interface SplinePlayerProps {
   scene: string;
@@ -42,7 +44,11 @@ export default function SplinePlayer({
   const isLowEnd =
     typeof window !== 'undefined' &&
     (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      (navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 2));
+      (navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 2) ||
+      // deviceMemory is Chromium-only; many mid-range Android phones report
+      // 4+ cores but still choke on WebGL, so check RAM too where available.
+      ((navigator as Navigator & { deviceMemory?: number }).deviceMemory !== undefined &&
+        (navigator as Navigator & { deviceMemory?: number }).deviceMemory! <= 4));
 
   const mountSpline = !isLowEnd && (!hideOffScreen || nearViewport);
 

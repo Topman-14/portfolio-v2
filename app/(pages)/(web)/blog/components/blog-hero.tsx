@@ -68,11 +68,11 @@ export const BlogHero = ({ articles, title, reverse = false, className }: BlogHe
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className='space-y-3'
             >
-              <h3 className='text-2xl font-display font-bold text-white leading-tight line-clamp-2 max-w-xl'>
+              <h3 className='text-2xl font-display font-bold text-white leading-tight line-clamp-2 max-w-xl min-h-[50px]'>
                 {active.title}
               </h3>
               {active.excerpt ? (
-                <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans line-clamp-4'>
+                <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans line-clamp-4 min-h-[50px]'>
                   {active.excerpt}
                 </p>
               ) : null}

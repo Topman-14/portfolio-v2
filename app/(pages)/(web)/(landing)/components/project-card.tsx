@@ -2,10 +2,12 @@ import Link from 'next/link';
 import CloudinaryImage from '@/components/ui/cloudinary-image';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight } from 'lucide-react';
-import type { Work } from '@prisma/client';
+import type { Work, Category } from '@prisma/client';
+
+type WorkWithCategory = Work & { category: Category | null };
 
 type ProjectCardProps = {
-  work: Work;
+  work: WorkWithCategory;
 };
 
 export const ProjectCard = ({ work }: ProjectCardProps) => {
@@ -36,7 +38,7 @@ export const ProjectCard = ({ work }: ProjectCardProps) => {
         <div className='relative flex h-full flex-col justify-end p-6 md:p-10 lg:p-12'>
           {work.category && (
             <Badge variant='white' className='mb-5 w-fit text-xs md:text-sm'>
-              {work.category}
+              {work.category.name}
             </Badge>
           )}
 

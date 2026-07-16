@@ -25,6 +25,7 @@ export function BlogBrowseSection({
     paramsString,
     apiQueryParams,
     replace,
+    isPending,
   } = useBlogSearchParams();
 
   const [input, setInput] = useState(q);
@@ -40,14 +41,20 @@ export function BlogBrowseSection({
     replace({ q: next || null });
   }, [debounced, paramsString, q, replace]);
 
+  // SSR already ran this exact filtered query (see blog/page.tsx) when the
+  // page loaded, so seed React Query's cache with it — avoids an immediate
+  // duplicate client-side fetch + spinner flash on first render. Once the
+  // user changes q/category, apiQueryParams changes and this initialData no
+  // longer matches the new queryKey, so a real fetch happens as normal.
   const { data, isFetching } = useQuery<BlogListArticle[]>('/articles', {
     params: apiQueryParams,
     enabled: hasFilter,
+    initialData: hasFilter ? initialBrowseArticles : undefined,
   });
 
   const list = hasFilter ? (data ?? []) : initialBrowseArticles;
 
-  const showSpinner = hasFilter && isFetching;
+  const showSpinner = hasFilter && (isFetching || isPending);
   const showGrid = !showSpinner && list.length > 0;
   const showEmpty = !showSpinner && list.length === 0;
 

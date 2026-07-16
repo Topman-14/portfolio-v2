@@ -12,6 +12,7 @@ import DomAnimate from '../../../../components/animations/dom-animate';
 import CircleButton from '../../../../components/ui/circle-button';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { usePathname, useRouter } from 'next/navigation';
+import { useThrottledCallback } from '@/hooks/use-throttled-callback';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,16 +27,20 @@ export default function Navbar() {
   }, [router]);
 
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
-    };
+  const handleScroll = useThrottledCallback(() => {
+    setIsScrolled((prev) => {
+      if (window.scrollY > 100) return true;
+      if (window.scrollY < 80) return false;
+      return prev;
+    });
+  }, 100);
 
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   const showFullNavbar = !isScrolled && !isMobile;
 

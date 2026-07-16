@@ -16,9 +16,9 @@ export async function RecentBlogsSection() {
 
   return (
     <section className='px-4 md:px-8 lg:px-16'>
-      <div className='mx-auto max-w-7xl py-28'>
+      <div className='mx-auto max-w-7xl md:py-28'>
         <RevealHeader
-          title='Some Thoughts'
+          title='My Blog'
           className='mb-12 md:mb-16'
         />
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-10'>

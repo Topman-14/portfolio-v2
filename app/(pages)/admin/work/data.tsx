@@ -5,10 +5,11 @@ import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
-import { Work } from "@prisma/client"
-import { FieldConfig } from "@/components/ui/generic-form"
+import { Work, Category } from "@prisma/client"
 
-export const workColumns: ColumnDef<Work>[] = [
+type WorkWithCategory = Work & { category: Category | null }
+
+export const workColumns: ColumnDef<WorkWithCategory>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -34,11 +35,11 @@ export const workColumns: ColumnDef<Work>[] = [
     accessorKey: "category",
     header: "Category",
     cell: ({ row }) => {
-      const category = row.getValue("category") as string | null
+      const category = row.original.category
       return (
         <div>
           {category ? (
-            <Badge>{category}</Badge>
+            <Badge>{category.name}</Badge>
           ) : (
             <span className="text-muted-foreground">No category</span>
           )}
@@ -102,90 +103,3 @@ export const workColumns: ColumnDef<Work>[] = [
     },
   },
 ]
-
-export const workFields: FieldConfig[] = [
-  {
-    name: 'image',
-    label: 'Project Image',
-    type: 'file',
-    accept: 'image/*',
-    maxSize: 5,
-    colSpan: 3,
-  },
-  {
-    name: 'title',
-    label: 'Project Title',
-    type: 'text',
-    placeholder: 'E-commerce Platform',
-    required: true,
-    colSpan: 1,
-  },
-  {
-    name: 'slug',
-    label: 'URL slug',
-    type: 'text',
-    placeholder: 'my-project',
-    colSpan: 1,
-    description: 'Leave empty when creating to generate from the title.',
-  },
-  {
-    name: 'category',
-    label: 'Category',
-    type: 'text',
-    placeholder: 'Web Development',
-    colSpan: 1,
-  },
-  {
-    name: 'featured',
-    label: 'Featured Project',
-    type: 'boolean',
-    colSpan: 1,
-  },
-  {
-    name: 'tools',
-    label: 'Tools & Technologies',
-    type: 'text',
-    placeholder: 'React, TypeScript, Node.js',
-    colSpan: 2,
-  },
-  {
-    name: 'githubLink',
-    label: 'GitHub Link',
-    type: 'url',
-    placeholder: 'https://github.com/username/project',
-    colSpan: 1,
-  },
-  {
-    name: 'liveUrl',
-    label: 'Live URL',
-    type: 'url',
-    placeholder: 'https://project.com',
-    colSpan: 1,
-  },
-  {
-    name: 'videoUrl',
-    label: 'Demo Video URL',
-    type: 'url',
-    placeholder: 'https://youtube.com/watch?v=...',
-    colSpan: 1,
-    required: false,
-  },
-  {
-    name: 'description',
-    label: 'Description',
-    type: 'textarea',
-    placeholder: 'Short summary for cards and meta (plain text)...',
-    required: true,
-    colSpan: 3,
-    minHeight: 120,
-  },
-  {
-    name: 'content',
-    label: 'Project content',
-    type: 'rich-text',
-    placeholder: 'Full case study, features, screenshots, etc...',
-    required: true,
-    colSpan: 3,
-    minHeight: 400,
-  },
-];

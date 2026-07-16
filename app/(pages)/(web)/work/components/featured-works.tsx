@@ -1,15 +1,17 @@
 'use client';
 
 import { useRef } from 'react';
-import type { Work } from '@prisma/client';
+import type { Work, Category } from '@prisma/client';
 import { RevealHeader } from '@/components/custom/reveal-header';
 import { WorkCard } from './work-card';
 import OtherWorksSection from './others';
 import { cn } from '@/lib/utils';
 
+type WorkWithCategory = Work & { category: Category | null };
+
 type WorksBentoGridProps = {
-  works: Work[];
-  otherWorks: Work[];
+  works: WorkWithCategory[];
+  otherWorks: WorkWithCategory[];
 };
 
 export const WorksBentoGrid = ({ works, otherWorks }: WorksBentoGridProps) => {

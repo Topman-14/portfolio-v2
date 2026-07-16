@@ -1,8 +1,21 @@
 import type { NextConfig } from "next";
 import withPWA from "next-pwa";
+import withBundleAnalyzer from "@next/bundle-analyzer";
 import type { RuntimeCaching } from "workbox-build";
 
 const isDev = process.env.NODE_ENV === 'development';
+
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://res.cloudinary.com https://*.s3.*.amazonaws.com",
+  "media-src 'self'",
+  "connect-src 'self' https://res.cloudinary.com",
+  "worker-src 'self'",
+  "frame-ancestors 'none'",
+].join('; ');
 
 const assetHeaders = [
   {
@@ -38,6 +51,15 @@ const assetHeaders = [
       {
         key: 'Cache-Control',
         value: 'public, max-age=31536000, immutable',
+      },
+    ],
+  },
+  {
+    source: '/:path*',
+    headers: [
+      {
+        key: 'Content-Security-Policy',
+        value: csp,
       },
     ],
   },
@@ -138,5 +160,9 @@ const pwaConfig = withPWA({
   runtimeCaching: isDev ? [] : runtimeCaching,
 });
 
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 // @ts-expect-error - next-pwa has incompatible Next.js types
-export default isDev ? nextConfig : pwaConfig(nextConfig);
+export default bundleAnalyzer(isDev ? nextConfig : pwaConfig(nextConfig));

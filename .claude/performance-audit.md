@@ -1,8 +1,59 @@
 # Portfolio v2 — Loading & Performance Audit
 
-> Audit date: 2026-05-09  
+> Audit date: 2026-05-09 (original) — updated 2026-07-16  
 > Branch: feat/ui-fixes  
 > Scope: `app/(pages)/(web)` — Home, Blog, Blog Detail, Work, Work Detail
+
+---
+
+## 0. 2026-07-16 session — what shipped, what's left to verify
+
+Plan file this session worked from: `C:\Users\takinkuade\.claude\plans\clever-orbiting-quill.md` (still on disk, full detail there). Everything below is implemented and typecheck/lint-clean unless flagged otherwise. **Next session's job is verification with the MCPs, not more implementation**, unless verification surfaces a regression.
+
+### MCP servers available for verification (`.claude/mcp.json`)
+- `next-devtools-mcp` — Next.js-aware DevTools MCP. Use it to inspect the App Router route tree, RSC payloads, and confirm server/client boundary changes (item 4 below) didn't accidentally pull server-only code into a client bundle.
+- `mobius-mcp` — browser automation/performance capture. Use it to load pages on `localhost:8080` (run `npm run dev` first) and capture real traces — this session could not do this because neither server was live in-session; **reconnect the MCP client at the start of the next session** if they still don't show up as available tools.
+
+### What shipped this session (all files under the portfolio-v2 repo root)
+
+1. **Navbar reorder bug** — root cause was an unthrottled scroll listener + `DomAnimate` unmounting the nav DOM node every time `isScrolled` flipped near the 100px threshold, racing multiple `SplitType` instances. Fixed in `app/(pages)/(web)/components/navbar.tsx` (throttled scroll handler + hysteresis via `useThrottledCallback`) and `components/animations/dom-animate.tsx` (no longer unmounts, animates opacity/visibility only via `autoAlpha`).
+   - **Verify with Mobius**: scroll slowly up/down through 80-100px scrollY on `/` and `/work` at both desktop and mobile viewport emulation — nav items (Home/Blog/Work) should never visually flicker, reorder, or double-render.
+
+2. **PWA double-refresh bug** — `next.config.ts` had `skipWaiting: true` with no client listener, so a new service worker could activate under a tab still running old JS, requiring 1-2 manual refreshes to recover. Added `components/pwa-update-listener.tsx` (listens for `navigator.serviceWorker.oncontrollerchange`, reloads once, guarded by a sessionStorage flag so it can't loop), mounted in `app/layout.tsx`.
+   - **Verify**: needs a production build (`npm run build && npm run start`) — service worker only registers in prod (`disable: isDev` in `next.config.ts`). Load the site, deploy a trivial change, rebuild, and confirm the already-open tab self-reloads exactly once instead of needing a manual double-refresh. Hard to verify via MCP tooling alone; likely needs a real deploy cycle.
+
+3. **Spline hero video-bake (mobile/low-end)** — done and live, not just planned:
+   - `scripts/bake-spline-video.mjs` (`npm run bake:spline`) drives the locally installed Chrome via `playwright-core` (no browser download) to render `.splinecode` scenes headlessly with a transparent canvas, captures 90 PNG frames at 30fps, and encodes via the bundled `ffmpeg-static` binary (no system ffmpeg needed) to alpha-channel WebM (`libvpx-vp9`, `yuva420p`).
+   - Ran successfully this session. Outputs already in `public/3d/`: `hero-mobile.webm` (684KB), `hero-mobile-poster.png`, `sparkles-mobile.webm` (108KB), `sparkles-mobile-poster.png`. Visually confirmed transparent (checked `hero-mobile-poster.png` directly — no matte/box behind the geometry).
+   - `components/custom/spline-video.tsx` — new lightweight `<video>` player component, autoplay/muted/loop/playsInline, poster = the baked transparent PNG.
+   - Wired into both hero call sites: `app/(pages)/(web)/(landing)/components/hero-scene.tsx` (found this component was **dead code** — the landing hero was actually inline in `(landing)/page.tsx` using `SplinePlayer` directly; fixed by wiring `HeroScene` in properly and deleting the inline duplicate) and `app/(pages)/(web)/work/components/works-hero.tsx`. Both now branch on `useViewport().isMobile`: mobile gets `<SplineVideo>`, desktop keeps the interactive WebGL `SplinePlayer` unchanged.
+   - **Known gap**: no `-alpha.mov` (HEVC w/ alpha) exists yet — that encode requires Apple's videotoolbox, only available on macOS ffmpeg builds, not producible on this Windows machine. Until it exists, Safari/iOS silently falls back to the static (but still transparent) poster PNG — correct visually, just not animated on iOS specifically. If a Mac becomes available: rerun `KEEP_FRAMES=1 npm run bake:spline` to keep the PNG sequence in `scripts/.bake-tmp/<scene>/`, then `ffmpeg -framerate 30 -i frame_%04d.png -c:v hevc_videotoolbox -alpha_quality 0.9 -tag:v hvc1 <name>-alpha.mov` and drop the result into `public/3d/`.
+   - Also: `components/custom/spline.tsx` — Spline import now `next/dynamic(..., { ssr: false })`, low-end detection widened to also check `navigator.deviceMemory <= 4`.
+   - **Verify with Mobius**: load `/` and `/work` with a mobile viewport/UA, confirm the `<video>` element (not a WebGL canvas) is what's rendering, confirm no visible background box/matte over the page's SVG background pattern, and capture a JS main-thread/TBT trace to compare against the WebGL path on desktop — this is the actual perf claim this whole change was for and hasn't been measured yet, only implemented.
+
+4. **Server/Client boundary cleanup** — removed unneeded `'use client'` from `app/(pages)/(web)/layout.tsx` (was pure composition, no hooks/state).
+   - **Verify with next-devtools-mcp**: confirm this layout now renders as a Server Component in the route tree and that `Navbar`/`Footer` (which still have their own `'use client'`) are the actual boundary, not the layout itself.
+
+5. **Per-segment loading states** — added `app/(pages)/(web)/blog/[slug]/loading.tsx` and `app/(pages)/(web)/work/[slug]/loading.tsx` (previously only one generic group-level `loading.tsx` existed).
+   - **Verify**: hard-load (not client nav) a blog/work detail URL with network throttled and confirm the segment-specific skeleton shows, not the generic pulsing-logo one.
+
+6. **Web Vitals pipeline** — new `WebVitalMetric` Prisma model (`prisma/schema.prisma`), `POST /api/web-vitals` route, `components/web-vitals.tsx` (`useReportWebVitals` + `sendBeacon`) mounted in `app/layout.tsx`, and `app/(pages)/admin/components/web-vitals-section.tsx` (p75 LCP/CLS/INP over the last 7 days via raw `percentile_cont` SQL) rendered on the admin dashboard (`app/(pages)/admin/page.tsx`).
+   - **Note on DB**: user ran `prisma migrate dev` then switched to `prisma db push` as their preferred workflow going forward — schema changes for this feature are already applied to the DB (confirmed by user). Don't reintroduce a `migrate dev` step; use `npx prisma db push` for any future schema changes here.
+   - **Verify**: browse the live site for a bit (generates real CWV beacons), then check `/admin` for populated LCP/CLS/INP cards instead of "No data". Can also verify via `npx prisma studio` → `web_vital_metrics` table.
+
+7. **Blog search SSR waterfall fix** — `app/(pages)/(web)/blog/page.tsx` now reads `searchParams` and runs the *filtered* Prisma query server-side when `q`/`category` are present (previously always SSR'd the generic unfiltered list, then a client `useQuery` refetch discarded it and showed a spinner). `app/(pages)/(web)/blog/components/browse-blogs.tsx` seeds React Query's cache with `initialData` so a matching first render doesn't refetch. `BlogSearch` now wrapped in its own `<Suspense>` (was previously the only `useSearchParams()` consumer not wrapped).
+   - **Verify with Mobius**: hard-navigate directly to `/blog?q=<term>` and confirm the correct filtered results paint immediately with no spinner flash, then type further in either search box and confirm live results still update.
+
+8. **Misc checklist items** — `app/global-error.tsx` added, related-article Prisma queries in blog detail parallelized via `Promise.all`, `@next/bundle-analyzer` installed and wired behind `ANALYZE=true` in `next.config.ts` (run `ANALYZE=true npm run build` to inspect chunks — not run yet this session, worth doing to confirm the Spline dynamic-import actually split the chunk), CSP header added to `next.config.ts`'s `assetHeaders`.
+
+9. **New scripts** — `scripts/backup-db.ts` (`npm run db:backup`, shells out to `pg_dump`, requires PostgreSQL client tools on PATH — not installed on this machine as of this session, user needs to install before first use) and `scripts/bake-spline-video.mjs` (`npm run bake:spline`, see item 3).
+
+### Suggested next-session verification order
+1. Reconnect MCP client, confirm `next-devtools-mcp` and `mobius-mcp` tools are actually callable.
+2. `npm run dev` on :8080, use Mobius to load `/` and `/work` on a throttled mobile profile, confirm video renders (not WebGL) and capture a trace — this validates the core performance claim.
+3. Use Mobius to re-check the navbar scroll fix and the blog search direct-link fix (both above).
+4. `ANALYZE=true npm run build` to confirm bundle splitting; check output for Spline/GSAP chunk sizes now vs. what's in this doc's original section 8 concerns.
+5. For the PWA double-refresh fix and Safari/iOS alpha-video gap, both need real-device/production testing that MCP browser automation likely can't fully substitute for — flag to the user rather than declaring them verified from MCP output alone.
 
 ---
 

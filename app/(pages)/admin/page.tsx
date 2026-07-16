@@ -13,58 +13,43 @@ import { TopArticles } from './components/top-articles';
 import { CategoryDistribution } from './components/category-distribution';
 import { RecentActivity } from './components/recent-activity';
 import { MetricCard, ChartCard } from './components/metric-card';
+import { WebVitalsSection } from './components/web-vitals-section';
 import { routes } from '@/config';
 
 export default async function AdminDashboard() {
-  const [
-    totalArticles,
-    totalReads,
-    totalComments,
-    publishedArticles,
-    draftArticles,
-    archivedArticles,
-    totalWorks,
-    featuredWorks,
-    totalExperiences,
-    totalCategories,
-    topArticles,
-    articlesByMonth,
-    categoryStats,
-    recentArticles
-  ] = await Promise.all([
-    prismadb.article.count(),
-    prismadb.article.aggregate({ _sum: { reads: true } }),
-    prismadb.comment.count(),
-    prismadb.article.count({ where: { status: 'PUBLISHED' } }),
-    prismadb.article.count({ where: { status: 'DRAFT' } }),
-    prismadb.article.count({ where: { status: 'ARCHIVED' } }),
-    prismadb.work.count(),
-    prismadb.work.count({ where: { featured: true } }),
-    prismadb.experience.count(),
-    prismadb.category.count(),
-    prismadb.article.findMany({
-      take: 5,
-      orderBy: { reads: 'desc' },
-      select: { title: true, reads: true, status: true, id: true }
-    }),
-    prismadb.article.findMany({
-      where: { publishedAt: { not: null } },
-      select: { publishedAt: true },
-      orderBy: { publishedAt: 'asc' }
-    }),
-    prismadb.category.findMany({
-      include: { _count: { select: { articles: true } } }
-    }),
-    prismadb.article.findMany({
-      take: 5,
-      orderBy: { createdAt: 'desc' },
-      select: { title: true, status: true, createdAt: true, id: true }
-    })
-  ]);
+  const [articles, totalComments, works, totalExperiences, categoryStats] =
+    await Promise.all([
+      prismadb.article.findMany({
+        select: { id: true, title: true, status: true, reads: true, publishedAt: true, createdAt: true }
+      }),
+      prismadb.comment.count(),
+      prismadb.work.findMany({ select: { featured: true } }),
+      prismadb.experience.count(),
+      prismadb.category.findMany({
+        include: { _count: { select: { articles: true } } }
+      })
+    ]);
 
-  const totalReadsCount = totalReads._sum.reads || 0;
+  const totalArticles = articles.length;
+  const totalReadsCount = articles.reduce((sum, a) => sum + a.reads, 0);
+  const publishedArticles = articles.filter((a) => a.status === 'PUBLISHED').length;
+  const draftArticles = articles.filter((a) => a.status === 'DRAFT').length;
+  const archivedArticles = articles.filter((a) => a.status === 'ARCHIVED').length;
 
-  const monthlyData = articlesByMonth.reduce((acc, article) => {
+  const topArticles = [...articles]
+    .sort((a, b) => b.reads - a.reads)
+    .slice(0, 5);
+
+  const recentArticles = [...articles]
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, 5);
+
+  const totalWorks = works.length;
+  const featuredWorks = works.filter((w) => w.featured).length;
+
+  const totalCategories = categoryStats.length;
+
+  const monthlyData = articles.reduce((acc, article) => {
     if (article.publishedAt) {
       const month = article.publishedAt.toISOString().slice(0, 7);
       acc[month] = (acc[month] || 0) + 1;
@@ -168,6 +153,8 @@ export default async function AdminDashboard() {
           <MetricCard key={metric.title} {...metric} />
         ))}
       </div>
+
+      <WebVitalsSection />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {chartCards.slice(0, 2).map((chart) => (

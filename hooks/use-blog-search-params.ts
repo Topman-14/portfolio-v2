@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export type BlogSearchParamPatch = {
@@ -37,6 +37,7 @@ export function useBlogSearchParams() {
   const searchParams = useSearchParams();
   const paramsRef = useRef(searchParams);
   paramsRef.current = searchParams;
+  const [isPending, startTransition] = useTransition();
 
   const paramsString = searchParams.toString();
 
@@ -64,12 +65,14 @@ export function useBlogSearchParams() {
 
   const replace = useCallback(
     (patch: BlogSearchParamPatch) => {
-      replaceBlogSearchParams(
-        pathname,
-        new URLSearchParams(paramsRef.current.toString()),
-        patch,
-        router.replace
-      );
+      startTransition(() => {
+        replaceBlogSearchParams(
+          pathname,
+          new URLSearchParams(paramsRef.current.toString()),
+          patch,
+          router.replace
+        );
+      });
     },
     [pathname, router]
   );
@@ -105,5 +108,6 @@ export function useBlogSearchParams() {
     replace,
     toggleCategory,
     commitQToUrlAndScrollToBrowse,
+    isPending,
   };
 }

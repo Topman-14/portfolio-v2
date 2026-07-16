@@ -3,6 +3,8 @@ import './globals.css';
 import { BASE_URL } from '@/config';
 import Providers from '@/context';
 import { bricolageGrotesque, kronaOne, syne } from '@/assets/fonts';
+import { PwaUpdateListener } from '@/components/pwa-update-listener';
+import { WebVitals } from '@/components/web-vitals';
 
 export default function RootLayout({
   children,
@@ -14,6 +16,8 @@ export default function RootLayout({
       <body
         className={`${bricolageGrotesque.variable} ${kronaOne.variable} ${syne.variable} antialiased h-full`}
       >
+        <PwaUpdateListener />
+        <WebVitals />
         <Providers>
           {children}
         </Providers>

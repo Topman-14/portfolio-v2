@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import SplitType from 'split-type';
 import SplinePlayer from '@/components/custom/spline';
+import SplineVideo from '@/components/custom/spline-video';
 import { getFontsReady } from '@/lib/fonts-ready';
 import { useViewport } from '@/hooks/use-viewport';
 
@@ -67,15 +68,19 @@ export const WorksHero = () => {
       <div ref={containerRef} className='relative z-10 max-w-7xl mx-auto px-4'>
         <div className='flex flex-col-reverse md:flex-col items-center justify-center text-center'>
           <div className='w-full max-w-[800px] max-h-[800px] md:h-[500px] lg:h-[700px] -mb-6 h-[500px]'>
-            <SplinePlayer
-              scene='/3d/sparkles.splinecode'
-              draggable={true}
-              className='w-full h-full'
-              cameraPosition={{ x: 50, y: -90, z: 380 }}
-              cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
-              disableZoom={true}
-              interactive={!isMobile}
-            />
+            {isMobile ? (
+              <SplineVideo src='/3d/sparkles-mobile' className='w-full h-full' />
+            ) : (
+              <SplinePlayer
+                scene='/3d/sparkles.splinecode'
+                draggable={true}
+                className='w-full h-full'
+                cameraPosition={{ x: 50, y: -90, z: 380 }}
+                cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
+                disableZoom={true}
+                interactive={!isMobile}
+              />
+            )}
           </div>
           
           <div className='space-y-6 max-w-4xl'>

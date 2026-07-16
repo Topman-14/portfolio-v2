@@ -1,5 +1,3 @@
-'use client';
-
 import Navbar from '@/app/(pages)/(web)/components/navbar';
 import Footer from '@/app/(pages)/(web)/components/footer';
 

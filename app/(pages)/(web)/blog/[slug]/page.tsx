@@ -124,34 +124,32 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
   const { html: contentWithIds, toc } = createHtmlRenderData(article.content);
 
-  const categoryRelated = article.categoryId
-    ? await prismadb.article.findMany({
-      where: {
-        status: 'PUBLISHED',
-        categoryId: article.categoryId,
-        id: { not: article.id },
-      },
-      orderBy: { publishedAt: 'desc' },
-      include: { category: true },
-      take: 3,
-    })
-    : [];
-
-  const relatedIds = new Set(categoryRelated.map((item) => item.id));
-  const fallbackNeeded = 3 - categoryRelated.length;
-
-  const fallbackRelated =
-    fallbackNeeded > 0
-      ? await prismadb.article.findMany({
+  const [categoryRelated, fallbackRelated] = await Promise.all([
+    article.categoryId
+      ? prismadb.article.findMany({
         where: {
           status: 'PUBLISHED',
+          categoryId: article.categoryId,
           id: { not: article.id },
         },
         orderBy: { publishedAt: 'desc' },
         include: { category: true },
-        take: 6,
+        take: 3,
       })
-      : [];
+      : Promise.resolve([]),
+    prismadb.article.findMany({
+      where: {
+        status: 'PUBLISHED',
+        id: { not: article.id },
+      },
+      orderBy: { publishedAt: 'desc' },
+      include: { category: true },
+      take: 6,
+    }),
+  ]);
+
+  const relatedIds = new Set(categoryRelated.map((item) => item.id));
+  const fallbackNeeded = 3 - categoryRelated.length;
 
   const relatedArticles = [
     ...categoryRelated,
@@ -176,10 +174,10 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
   return (
     <main className='bg2 min-h-screen pb-24 pt-10 md:pb-28'>
-      <div className='max-w-[1500px] mx-auto space-y-14  md:px-8 lg:px-12'>
+      <div className='max-w-[1500px] mx-auto space-y-14  md:px-8 lg:px-12 md:pt-[70px]'>
         <Link
           href='/blog'
-          className='inline-flex items-center gap-2 text-white/70 hover:text-malachite transition-colors font-sans ml-4 md:ml-0'
+          className='inline-flex items-center gap-2 text-white/70 hover:text-malachite transition-colors font-sans ml-4 md:ml-0 mb-5'
         >
           <ArrowLeft className='w-4 h-4' />
           Back to Blog

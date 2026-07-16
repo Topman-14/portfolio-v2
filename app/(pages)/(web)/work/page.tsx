@@ -61,6 +61,7 @@ export default async function WorkPage() {
       orderBy: {
         createdAt: 'desc',
       },
+      include: { category: true },
     }),
     prismadb.work.findMany({
       where: {
@@ -70,6 +71,7 @@ export default async function WorkPage() {
         createdAt: 'desc',
       },
       take: 48,
+      include: { category: true },
     }),
     prismadb.experience.findMany({
       orderBy: [{ isCurrentRole: 'desc' }, { startDate: 'desc' }],
