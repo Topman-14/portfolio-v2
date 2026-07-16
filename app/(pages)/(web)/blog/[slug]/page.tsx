@@ -124,34 +124,32 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
   const { html: contentWithIds, toc } = createHtmlRenderData(article.content);
 
-  const categoryRelated = article.categoryId
-    ? await prismadb.article.findMany({
-      where: {
-        status: 'PUBLISHED',
-        categoryId: article.categoryId,
-        id: { not: article.id },
-      },
-      orderBy: { publishedAt: 'desc' },
-      include: { category: true },
-      take: 3,
-    })
-    : [];
-
-  const relatedIds = new Set(categoryRelated.map((item) => item.id));
-  const fallbackNeeded = 3 - categoryRelated.length;
-
-  const fallbackRelated =
-    fallbackNeeded > 0
-      ? await prismadb.article.findMany({
+  const [categoryRelated, fallbackRelated] = await Promise.all([
+    article.categoryId
+      ? prismadb.article.findMany({
         where: {
           status: 'PUBLISHED',
+          categoryId: article.categoryId,
           id: { not: article.id },
         },
         orderBy: { publishedAt: 'desc' },
         include: { category: true },
-        take: 6,
+        take: 3,
       })
-      : [];
+      : Promise.resolve([]),
+    prismadb.article.findMany({
+      where: {
+        status: 'PUBLISHED',
+        id: { not: article.id },
+      },
+      orderBy: { publishedAt: 'desc' },
+      include: { category: true },
+      take: 6,
+    }),
+  ]);
+
+  const relatedIds = new Set(categoryRelated.map((item) => item.id));
+  const fallbackNeeded = 3 - categoryRelated.length;
 
   const relatedArticles = [
     ...categoryRelated,

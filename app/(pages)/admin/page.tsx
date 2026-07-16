@@ -13,6 +13,7 @@ import { TopArticles } from './components/top-articles';
 import { CategoryDistribution } from './components/category-distribution';
 import { RecentActivity } from './components/recent-activity';
 import { MetricCard, ChartCard } from './components/metric-card';
+import { WebVitalsSection } from './components/web-vitals-section';
 import { routes } from '@/config';
 
 export default async function AdminDashboard() {
@@ -168,6 +169,8 @@ export default async function AdminDashboard() {
           <MetricCard key={metric.title} {...metric} />
         ))}
       </div>
+
+      <WebVitalsSection />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {chartCards.slice(0, 2).map((chart) => (

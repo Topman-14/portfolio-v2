@@ -183,6 +183,19 @@ model NewsletterSubscription {
   @@map("newsletter_subscriptions")
 }
 
+model WebVitalMetric {
+  id             String   @id @default(cuid())
+  name           String
+  value          Float
+  rating         String
+  path           String
+  navigationType String?
+  createdAt      DateTime @default(now())
+
+  @@index([name, createdAt])
+  @@map("web_vital_metrics")
+}
+
 model PasswordResetToken {
   id        String   @id @default(cuid())
   token     String   @unique

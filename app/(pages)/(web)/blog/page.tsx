@@ -8,8 +8,15 @@ import { BlogHero } from './components/blog-hero';
 import { BlogBrowseSection } from './components/browse-blogs';
 import { BlogSearch } from './components/blog-search';
 
-export default async function Blog() {
-  const [heroArticles, popularArticles, categories, allArticles] = await Promise.all([
+type PageProps = {
+  searchParams: Promise<{ q?: string; category?: string }>;
+};
+
+export default async function Blog({ searchParams }: PageProps) {
+  const { q, category } = await searchParams;
+  const hasFilter = Boolean(q?.trim() || category?.trim());
+
+  const [heroArticles, popularArticles, categories, browseArticles] = await Promise.all([
     prismadb.article.findMany({
       where: { status: 'PUBLISHED' },
       orderBy: { publishedAt: 'desc' },
@@ -27,10 +34,23 @@ export default async function Blog() {
       take: 6,
     }),
     prismadb.article.findMany({
-      where: { status: 'PUBLISHED' },
+      where: {
+        status: 'PUBLISHED',
+        ...(category?.trim() ? { categoryId: category.trim() } : {}),
+        ...(q?.trim()
+          ? {
+              OR: [
+                { title: { contains: q.trim(), mode: 'insensitive' } },
+                { excerpt: { contains: q.trim(), mode: 'insensitive' } },
+                { tags: { has: q.trim() } },
+                { category: { is: { name: { contains: q.trim(), mode: 'insensitive' } } } },
+              ],
+            }
+          : {}),
+      },
       orderBy: { publishedAt: 'desc' },
       include: { category: true },
-      take: 16,
+      take: hasFilter ? 48 : 16,
     }),
   ]);
 
@@ -52,7 +72,9 @@ export default async function Blog() {
               subtitleClassName='mt-5'
             />
 
-            <BlogSearch categories={categoryChips} />
+            <Suspense fallback={null}>
+              <BlogSearch categories={categoryChips} />
+            </Suspense>
 
             {heroArticles.length > 0 ? (
               <BlogHero articles={heroArticles} title='Latest articles' className='md:mt-16'/>
@@ -85,7 +107,7 @@ export default async function Blog() {
 
           <Suspense fallback={null}>
             <BlogBrowseSection
-              initialBrowseArticles={allArticles}
+              initialBrowseArticles={browseArticles}
               categories={categoryChips}
             />
           </Suspense>

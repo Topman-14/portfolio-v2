@@ -5,15 +5,15 @@ import { RecentBlogsSection } from './components/recent-blogs-section';
 import Image, { type StaticImageData } from 'next/image';
 import { RevealHeader } from '@/components/custom/reveal-header';
 import { LoadingFallback } from '@/components/ui/suspense';
+import HeroScene from './components/hero-scene';
 import aboutEmma from '@/public/me/emma.jpg';
 import aboutMe1 from '@/public/me/me1.webp';
-import aboutMe10 from '@/public/me/me10.jpg';
+import aboutMe11 from '@/public/me/me11.png';
 import aboutMe2 from '@/public/me/me2.jpg';
 import aboutMe5 from '@/public/me/me5.jpg';
 import aboutMe4 from '@/public/me/me4.jpg';
 import aboutSodiq from '@/public/me/sodiq.webp';
 import aboutMe6 from '@/public/me/me6.jpg';
-import SplinePlayer from '@/components/custom/spline';
 
 export default function Home() {
   return (
@@ -28,34 +28,33 @@ export default function Home() {
             </p>
 
             <h1
-              className='text-7xl lg:text-8xl xl:text-9xl font-display font-bold text-white leading-[1.1] mb-8 text-left max-w-4xl xl:max-w-none'
+              className='text-7xl lg:text-8xl xl:text-9xl font-display font-bold text-malachite leading-[1.1] mb-8 text-left max-w-4xl xl:max-w-none'
             >
               Product Engineer, <br />
-              <span className='text-malachite'>Technical Writer.</span>
+              <span className='text-white'>Technical Writer.</span>
             </h1>
 
             <p
               className='text-white font-semibold max-w-xl font-sans text-lg md:text-xl'
             >
-              I build production systems and the documentation that makes them maintainable.
+              I build systems and the documentation that makes them maintainable.
             </p>
           </div>
-          <div className='md:absolute mx-auto xl:bottom-32 bottom-20 right-12 size-[300px] md:max-h-none lg:size-[400px] z-[20] pointer-events-none'>
-            <SplinePlayer
-              scene='/3d/hero.splinecode'
-              draggable={true}
-              className='w-full h-full'
-              cameraPosition={{ x: 50, y: -90, z: 380 }}
-              cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
-              disableZoom={true}
-              interactive={true}
-              hideOffScreen
-            />
-          </div>
+          <HeroScene />
         </div>
       </section>
 
-      <section className='relative  min-h-screen py-32 px-4 md:px-8 lg:px-16'>
+      <Suspense fallback={<LoadingFallback className='min-h-[320px] md:py-28' />}>
+        <FeaturedProjectsSection />
+      </Suspense>
+
+      <Suspense fallback={<LoadingFallback className='min-h-[280px] md:py-28' />}>
+        <RecentBlogsSection />
+      </Suspense>
+
+      <Expertise />
+
+      <section className='relative  min-h-screen md:py-32 px-4 md:px-8 lg:px-16'>
         <div className='max-w-7xl mx-auto h-full flex gap-7 flex-col'>
           <div className='space-y-8 flex-1 md:flex-none max-w-4xl'>
             <RevealHeader title="About" />
@@ -104,15 +103,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Expertise />
 
-      <Suspense fallback={<LoadingFallback className='min-h-[280px] py-28' />}>
-        <RecentBlogsSection />
-      </Suspense>
-
-      <Suspense fallback={<LoadingFallback className='min-h-[320px] py-28' />}>
-        <FeaturedProjectsSection />
-      </Suspense>
     </main>
   );
 }
@@ -125,7 +116,7 @@ const imageData: {
 }[] = [
     { src: aboutEmma, alt: 'Tope Akinkuade', colSpan: 'col-span-2 max-md:order-1' },
     { src: aboutMe1, alt: 'Tope Akinkuade', colSpan: 'col-span-1 max-md:order-2' },
-    { src: aboutMe10, alt: 'Tope Akinkuade', colSpan: 'col-span-2 max-md:order-4' },
+    { src: aboutMe11, alt: 'Tope Akinkuade', colSpan: 'col-span-2 max-md:order-4' },
     { src: aboutMe2, alt: 'Tope Akinkuade', colSpan: 'col-span-1 max-md:order-3' },
     { src: aboutMe5, alt: 'Tope Akinkuade', colSpan: 'col-span-1 hidden md:block' },
     { src: aboutMe4, alt: 'Tope Akinkuade', colSpan: 'col-span-2 hidden md:block' },
