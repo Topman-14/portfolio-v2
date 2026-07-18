@@ -12,7 +12,7 @@ const csp = [
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: blob: https://images.unsplash.com https://res.cloudinary.com https://*.s3.*.amazonaws.com",
   "media-src 'self'",
-  "connect-src 'self' https://res.cloudinary.com",
+  "connect-src 'self' https://res.cloudinary.com https://unpkg.com",
   "worker-src 'self'",
   "frame-ancestors 'none'",
 ].join('; ');
