@@ -15,7 +15,8 @@ import { Avatar } from '@/components/ui/avatar';
 import { BlogPostShare } from '../components/blog-post-share';
 import { BlogCard } from '../components/blog-card';
 import { formatPublishedDate } from '@/lib/utils';
-import { createHtmlRenderData, HtmlRenderer } from '@/components/custom/html-renderer';
+import { createHtmlRenderData } from '@/lib/html-render';
+import { HtmlRenderer } from '@/components/custom/html-renderer';
 import { BlogPostEngagement } from '../components/blog-post-engagement';
 
 type PageProps = {
