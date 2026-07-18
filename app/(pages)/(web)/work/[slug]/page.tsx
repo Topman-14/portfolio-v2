@@ -7,7 +7,8 @@ import { FaGithub, FaUpRightFromSquare } from 'react-icons/fa6';
 import prismadb from '@/lib/prismadb';
 import { BASE_URL } from '@/config';
 import { Badge } from '@/components/ui/badge';
-import { createHtmlRenderData, HtmlRenderer } from '@/components/custom/html-renderer';
+import { createHtmlRenderData } from '@/lib/html-render';
+import { HtmlRenderer } from '@/components/custom/html-renderer';
 import { cn } from '@/lib/utils';
 
 type PageProps = {

@@ -5,7 +5,8 @@
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(Sort-Object)",
       "Bash(node *)",
-      "PowerShell(Get-ChildItem app -Recurse -Directory | Select-Object -ExpandProperty FullName | Where-Object { $_ -notmatch \"node_modules|\\\\.next\" })"
+      "PowerShell(Get-ChildItem app -Recurse -Directory | Select-Object -ExpandProperty FullName | Where-Object { $_ -notmatch \"node_modules|\\\\.next\" })",
+      "Bash(npm run *)"
     ]
   }
 }
