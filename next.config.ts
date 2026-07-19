@@ -13,6 +13,7 @@ const csp = [
   "img-src 'self' data: blob: https://images.unsplash.com https://res.cloudinary.com https://*.s3.*.amazonaws.com",
   "media-src 'self'",
   "connect-src 'self' https://res.cloudinary.com https://api.cloudinary.com https://unpkg.com",
+  "frame-src https://www.youtube.com https://player.vimeo.com https://www.loom.com",
   "worker-src 'self'",
   "frame-ancestors 'none'",
 ].join('; ');
