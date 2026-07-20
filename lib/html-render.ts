@@ -22,7 +22,7 @@ const addCodeCopyButtons = (content: string) =>
   content.replaceAll(
     /<pre([^>]*)>([\s\S]*?)<\/pre>/gi,
     (match, attrs, body) =>
-      `<div class="code-block relative group/code"><pre${attrs}>${body}</pre><button type="button" data-copy-btn class="copy-code-btn absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md border border-white/15 bg-white/5 text-white/70 opacity-0 group-hover/code:opacity-100 hover:text-malachite hover:border-malachite/40 transition-colors" aria-label="Copy code">${COPY_ICON}${CHECK_ICON}</button></div>`
+      `<div class="code-block max-w-[calc(100vw-50px)] relative group/code"><pre${attrs}>${body}</pre><button type="button" data-copy-btn class="copy-code-btn absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md border border-white/15 bg-white/5 text-white/70 opacity-0 group-hover/code:opacity-100 hover:text-malachite hover:border-malachite/40 transition-colors" aria-label="Copy code">${COPY_ICON}${CHECK_ICON}</button></div>`
   );
 
 export const createHtmlRenderData = (content: string) => {
