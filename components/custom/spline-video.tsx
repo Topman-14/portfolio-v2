@@ -15,9 +15,10 @@ interface SplineVideoProps {
  *
  * `${src}-alpha.mov` (HEVC w/ alpha) is the only format Safari/iOS honors
  * for video alpha, and can only be encoded via Apple's videotoolbox (Mac
- * only — see the bake script's KEEP_FRAMES=1 note). Until that file exists,
- * Safari/iOS falls back to the static transparent poster frame, which is
- * still correct visually, just not animated.
+ * only — see the bake script's KEEP_FRAMES=1 note). Without it, Safari/iOS
+ * has no playable `<source>` at all (it rejects the alpha-WebM), so the
+ * `<video>` element renders an opaque black box instead of falling back to
+ * the poster image.
  */
 export default function SplineVideo({ src, className }: SplineVideoProps) {
   return (
