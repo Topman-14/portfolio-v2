@@ -14,6 +14,12 @@ type WorksBentoGridProps = {
   otherWorks: WorkWithCategory[];
 };
 
+const BENTO_FEATURED_PATTERN = [true, false, false, false, false, true];
+
+function isFeaturedIndex(index: number) {
+  return BENTO_FEATURED_PATTERN[index % BENTO_FEATURED_PATTERN.length];
+}
+
 export const WorksBentoGrid = ({ works, otherWorks }: WorksBentoGridProps) => {
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -49,18 +55,18 @@ export const WorksBentoGrid = ({ works, otherWorks }: WorksBentoGridProps) => {
               className='mb-12 md:mb-14'
             />
 
-            <ul className='grid list-none grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 xl:grid-cols-3 xl:gap-8'>
-              {works.map((work, index) => (
-                <li
-                  key={work.id}
-                  className={cn(
-                    'min-w-0',
-                    index === 0 && 'md:col-span-2'
-                  )}
-                >
-                  <WorkCard work={work} />
-                </li>
-              ))}
+            <ul className='grid list-none grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3'>
+              {works.map((work, index) => {
+                const featured = isFeaturedIndex(index);
+                return (
+                  <li
+                    key={work.id}
+                    className={cn(featured && 'lg:col-span-2')}
+                  >
+                    <WorkCard work={work} featured={featured} />
+                  </li>
+                );
+              })}
             </ul>
           </>
         ) : (

@@ -1,10 +1,10 @@
 import prismadb from '@/lib/prismadb';
-import { 
-  FileText, 
-  Eye, 
-  MessageSquare, 
-  Users, 
-  Briefcase,
+import {
+  FileText,
+  Eye,
+  MessageSquare,
+  Users,
+  Mail,
   Award,
   Calendar
 } from 'lucide-react';
@@ -17,13 +17,13 @@ import { WebVitalsSection } from './components/web-vitals-section';
 import { routes } from '@/config';
 
 export default async function AdminDashboard() {
-  const [articles, totalComments, works, totalExperiences, categoryStats] =
+  const [articles, totalComments, totalNewsletterSignups, totalExperiences, categoryStats] =
     await Promise.all([
       prismadb.article.findMany({
         select: { id: true, title: true, status: true, reads: true, publishedAt: true, createdAt: true }
       }),
       prismadb.comment.count(),
-      prismadb.work.findMany({ select: { featured: true } }),
+      prismadb.newsletterSubscription.count(),
       prismadb.experience.count(),
       prismadb.category.findMany({
         include: { _count: { select: { articles: true } } }
@@ -43,9 +43,6 @@ export default async function AdminDashboard() {
   const recentArticles = [...articles]
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     .slice(0, 5);
-
-  const totalWorks = works.length;
-  const featuredWorks = works.filter((w) => w.featured).length;
 
   const totalCategories = categoryStats.length;
 
@@ -90,10 +87,10 @@ export default async function AdminDashboard() {
       description: 'Total engagement'
     },
     {
-      title: 'Portfolio',
-      value: totalWorks,
-      icon: Briefcase,
-      description: `${featuredWorks} featured projects`
+      title: 'Newsletter Signups',
+      value: totalNewsletterSignups,
+      icon: Mail,
+      description: 'Total subscribers'
     }
   ];
 

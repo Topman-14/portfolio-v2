@@ -204,7 +204,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
                 ) : null}
               </div>
 
-              <h1 className='text-4xl md:text-5xl xl:text-6xl font-display font-bold text-white leading-tight'>
+              <h1 className='text-3xl md:text-4xl xl:text-5xl font-display font-bold text-white leading-tight'>
                 {article.title}
               </h1>
 
@@ -216,11 +216,16 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
               {article.tags.length > 0 ? (
                 <div className='flex flex-wrap gap-2'>
-                  {article.tags.map((tag) => (
+                  {article.tags.slice(0, 6).map((tag) => (
                     <Badge key={tag} variant='white' className='text-xs'>
                       {tag}
                     </Badge>
                   ))}
+                  {article.tags.length > 6 ? (
+                    <Badge variant='default' className='text-xs'>
+                      +{article.tags.length - 6}
+                    </Badge>
+                  ) : null}
                 </div>
               ) : null}
             </div>

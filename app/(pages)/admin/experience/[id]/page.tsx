@@ -35,7 +35,7 @@ export default async function ExperiencePage({ params }: PageProps) {
     }
   }
 
-  async function handleSubmit(data: Experience & { skills: string; achievements: string }) {
+  async function handleSubmit(data: Experience & { skills: string }) {
     'use server';
 
     try {
@@ -47,7 +47,6 @@ export default async function ExperiencePage({ params }: PageProps) {
       const processedData = {
         ...data,
         skills: data.skills?.split(',').map((skill: string) => skill.trim()).filter(Boolean) || [],
-        achievements: data.achievements?.split(',').map((achievement: string) => achievement.trim()).filter(Boolean) || [],
       };
 
       if (!isNew) {
@@ -91,7 +90,6 @@ export default async function ExperiencePage({ params }: PageProps) {
         defaultValues={{
           ...experience,
           skills: experience?.skills.join(','),
-          achievements: experience?.achievements.join(','),
         }}
         submitText={isNew ? 'Create' : 'Update'}
         itemName='Experience'

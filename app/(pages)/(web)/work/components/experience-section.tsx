@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { MAIN_EMAIL } from '@/config';
 import { gsap, ScrollTrigger } from '@/lib/gsap-config';
 import { useGSAP } from '@gsap/react';
@@ -17,7 +17,6 @@ export type ExperienceListItem = {
   endDate?: string | null;
   isCurrentRole: boolean;
   skills: string[];
-  achievements: string[];
 };
 
 function isPresentRole(exp: ExperienceListItem) {
@@ -165,35 +164,6 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                   <p className='mt-5 font-sans text-base leading-relaxed text-white/95 md:text-lg whitespace-pre-line'>
                     {splitOnEmDash(exp.description)}
                   </p>
-
-                  {exp.achievements.length > 0 ? (
-                    <div className='mt-6 border-t border-white/10 pt-6'>
-                      <h4 className='mb-3 font-display text-sm font-semibold uppercase tracking-wide text-white/80'>
-                        Highlights
-                      </h4>
-                      <ul className='space-y-2 font-sans text-white/70'>
-                        {exp.achievements.map((achievement) => (
-                          <li
-                            key={achievement}
-                            className='flex gap-3 text-sm leading-relaxed md:text-base'
-                          >
-                            <span
-                              className='mt-2 h-1 w-1 shrink-0 rounded-full bg-malachite/80'
-                              aria-hidden
-                            />
-                            <span className='line-clamp-4 min-w-0'>
-                              {splitOnEmDash(achievement).map((segment, i) => (
-                                <Fragment key={i}>
-                                  {i > 0 ? <br /> : null}
-                                  {segment}
-                                </Fragment>
-                              ))}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
 
                   {exp.skills.length > 0 ? (
                     <div className='mt-6 flex flex-wrap gap-2'>

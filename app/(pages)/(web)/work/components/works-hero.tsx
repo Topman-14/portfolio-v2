@@ -11,22 +11,19 @@ import { useViewport } from '@/hooks/use-viewport';
 
 export const WorksHero = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const descriptionRef = useRef<HTMLParagraphElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { isMobile } = useViewport();
   useGSAP(() => {
     const heading = headingRef.current;
-    const description = descriptionRef.current;
 
-    if (!heading || !description) return;
+    if (!heading) return;
 
     const splits: SplitType[] = [];
     const animations: gsap.core.Tween[] = [];
 
     getFontsReady().then(() => {
       const headingSplit = new SplitType(heading, { types: 'chars' });
-      const descriptionSplit = new SplitType(description, { types: 'words' });
-      splits.push(headingSplit, descriptionSplit);
+      splits.push(headingSplit);
 
       const headingAnim = gsap.fromTo(
         headingSplit.chars,
@@ -41,21 +38,7 @@ export const WorksHero = () => {
         }
       );
       animations.push(headingAnim);
-
-      const descAnim = gsap.fromTo(
-        descriptionSplit.words,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.04,
-          ease: 'power3.out',
-          delay: 0.5,
-        }
-      );
-      animations.push(descAnim);
-    });
+      });
 
     return () => {
       animations.forEach(anim => anim.kill());
@@ -78,11 +61,11 @@ export const WorksHero = () => {
                 cameraPosition={{ x: 50, y: -90, z: 380 }}
                 cameraRotation={{ x: -0.05, y: -0.15, z: 0 }}
                 disableZoom={true}
-                interactive={!isMobile}
+                interactive={false}
               />
             )}
           </div>
-          
+
           <div className='space-y-6 max-w-4xl'>
             <h1
               ref={headingRef}
@@ -91,7 +74,6 @@ export const WorksHero = () => {
               My Work
             </h1>
             <p
-              ref={descriptionRef}
               className='text-white/80 text-lg md:text-xl lg:text-2xl leading-relaxed font-sans'
             >
               A collection of projects I&apos;ve built — from internal dashboards to

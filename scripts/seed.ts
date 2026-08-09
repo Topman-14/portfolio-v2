@@ -22,12 +22,6 @@ const experiences = [
     endDate: null,
     isCurrentRole: true,
     skills: ["AWS", "NestJS", "React Native", "GH Actions", "TypeScript", "PostgreSQL", "LangChain"],
-    achievements: [
-      "Took ownership of key AWS cloud and delivery infra, enabling the team to scale faster with minimal operational overhead via CloudFormation stacks.",
-      "Engineered and shipped a RAG platform leveraging a proprietary knowledge base to onboard new immigrants, with low-latency token streaming via SSE using LangChain, PGVector, and NestJS.",
-      "Launched the company website in 3 weeks, including SEO-optimized blog, webinar hub, and careers section with a custom CMS and admin panel.",
-      "Elevated user engagement by embedding a gamified learning platform into the React Native mobile app to educate users on credit fundamentals.",
-    ],
   },
   {
     jobTitle: "Software Engineer",
@@ -38,11 +32,6 @@ const experiences = [
     endDate: "2025-12-31T00:00:00.000Z",
     isCurrentRole: false,
     skills: ["React", "TypeScript", "ExpressJS", "AWS", "GH Actions"],
-    achievements: [
-      "Took over and delivered a talent management system that was behind schedule, end-to-end.",
-      "Provisioned AWS infrastructure and launched two Node-based backend services with a React client.",
-      "Delivered seamless third-party integrations enabling reliable service delivery at scale.",
-    ],
   },
   {
     jobTitle: "Frontend Engineer | Contract",
@@ -53,10 +42,6 @@ const experiences = [
     endDate: "2025-07-31T00:00:00.000Z",
     isCurrentRole: false,
     skills: ["TypeScript", "React", "ShadCN"],
-    achievements: [
-      "Delivered the flagship React client for an AI-powered, Django-based LMS enabling real-time audio transcription.",
-      "Set a new UX standard by implementing a bespoke UI system from scratch with dynamic module calendars, integrated AI assistants, and immersive course views.",
-    ],
   },
   {
     jobTitle: "Frontend Engineer",
@@ -67,10 +52,6 @@ const experiences = [
     endDate: "2025-06-30T00:00:00.000Z",
     isCurrentRole: false,
     skills: ["NextJS", "TypeScript", "React", "LiveKit"],
-    achievements: [
-      "Played a major role in developing a modern e-learning platform using NextJS.",
-      "Shipped real-time features powered by LiveKit for engaging learning experiences.",
-    ],
   },
 ];
 
@@ -289,7 +270,6 @@ async function seed() {
           endDate: exp.endDate ? new Date(exp.endDate) : null,
           isCurrentRole: exp.isCurrentRole,
           skills: exp.skills,
-          achievements: exp.achievements,
           userId: user.id,
         },
       });
