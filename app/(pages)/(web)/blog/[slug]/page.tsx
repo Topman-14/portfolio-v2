@@ -18,6 +18,7 @@ import { formatPublishedDate } from '@/lib/utils';
 import { createHtmlRenderData } from '@/lib/html-render';
 import { HtmlRenderer } from '@/components/custom/html-renderer';
 import { BlogPostEngagement } from '../components/blog-post-engagement';
+import NewsletterForm from '@/app/(pages)/(web)/components/newsletter-form';
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -322,6 +323,21 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
           <div className='min-w-0 space-y-12 lg:space-y-14'>
             <HtmlRenderer html={contentWithIds} />
+
+            <section className='rounded-2xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.04),rgba(114,255,168,0.07),rgba(255,177,87,0.06))] p-6 md:p-8'>
+              <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center'>
+                <div>
+                  <h3 className='text-xl md:text-2xl font-display font-bold text-white'>
+                    Stay in the loop.
+                  </h3>
+                  <p className='text-white/70 font-sans mt-2'>
+                    Bi-monthly-ish drops of new posts and recent work.
+                  </p>
+                </div>
+                <NewsletterForm source='blog-detail' />
+              </div>
+            </section>
+
             <BlogPostEngagement
               articleSlug={article.slug}
               articleId={article.id}

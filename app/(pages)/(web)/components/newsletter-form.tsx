@@ -1,7 +1,7 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { Send } from 'lucide-react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { PartyPopper, Send } from 'lucide-react';
 import GInput from '@/components/ui/ginput';
 import { GButton } from '@/components/ui/gbutton';
 import { toast } from 'sonner';
@@ -11,10 +11,12 @@ type NewsletterResponse = {
   message: string;
 };
 
-
+const SUBSCRIBED_DURATION_MS = 4000;
 
 export default function NewsletterForm({ source = 'footer' }: { source?: string }) {
   const [email, setEmail] = useState('');
+  const [justSubscribed, setJustSubscribed] = useState(false);
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { mutate: subscribe, isPending: isSubmitting } = useMutate<
     NewsletterResponse
@@ -23,6 +25,12 @@ export default function NewsletterForm({ source = 'footer' }: { source?: string 
       const message = data?.message || 'You are subscribed!';
       toast.success(message);
       setEmail('');
+      setJustSubscribed(true);
+
+      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+      resetTimeoutRef.current = setTimeout(() => {
+        setJustSubscribed(false);
+      }, SUBSCRIBED_DURATION_MS);
     },
     onError: (error) => {
       toast.error(
@@ -30,6 +38,12 @@ export default function NewsletterForm({ source = 'footer' }: { source?: string 
       );
     },
   });
+
+  useEffect(() => {
+    return () => {
+      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+    };
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,11 +72,15 @@ export default function NewsletterForm({ source = 'footer' }: { source?: string 
       />
       <GButton
         type='submit'
-        disabled={isSubmitting}
+        disabled={isSubmitting || justSubscribed}
         className='w-full sm:w-auto'
       >
-        {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-        <Send className='w-4 h-4' />
+        {justSubscribed ? 'Subscribed' : isSubmitting ? 'Subscribing...' : 'Subscribe'}
+        {justSubscribed ? (
+          <PartyPopper className='w-4 h-4' />
+        ) : (
+          <Send className='w-4 h-4' />
+        )}
       </GButton>
     </form>
   );
