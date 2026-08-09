@@ -129,7 +129,6 @@ model Experience {
   endDate       DateTime?
   isCurrentRole Boolean   @default(false)
   skills        String[]
-  achievements  String[]
   userId        String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

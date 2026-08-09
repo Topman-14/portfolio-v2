@@ -4,64 +4,96 @@ import { Badge } from '@/components/ui/badge';
 import { Work, Category } from '@prisma/client';
 import { ArrowRight } from 'lucide-react';
 import CircleButton from '@/components/ui/circle-button';
+import { cn } from '@/lib/utils';
 
 type WorkWithCategory = Work & { category: Category | null };
 
-export function WorkCard({ work }: { work: WorkWithCategory }) {
+type WorkCardProps = {
+  work: WorkWithCategory;
+  featured?: boolean;
+};
+
+export function WorkCard({ work, featured = false }: WorkCardProps) {
+  const toolLimit = featured ? 5 : 3;
+
   return (
     <Link
       href={`/work/${work.slug}`}
-      className='group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm transition-[border-color,box-shadow] duration-300 hover:border-white/20 hover:shadow-[0_20px_60px_rgba(0,0,0,0.35)]'
+      className={cn(
+        'group relative block w-full overflow-hidden rounded-2xl border border-white/10 bg-coal transition-[border-color,box-shadow] duration-300 hover:border-white/20 hover:shadow-[0_20px_60px_rgba(0,0,0,0.35)]',
+        featured ? 'aspect-[4/5] sm:aspect-[16/10] lg:aspect-[16/9]' : 'aspect-[4/3]'
+      )}
     >
-      <div className='relative min-h-[200px] w-full shrink-0 overflow-hidden'>
-        {work.image ? (
-          <CloudinaryImage
-            src={work.image}
-            alt={work.title}
-            fill
-            className='object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]'
-            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-          />
-        ) : (
-          <div className='absolute inset-0 bg-gradient-to-br from-malachite/25 via-coal to-amber/20' />
-        )}
-        <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-coal/70 via-coal/20 to-transparent' />
-        
-        <CircleButton
-          href={`/work/${work.slug}`}
-          className='absolute bottom-4 right-4 z-10'
+      {work.image ? (
+        <CloudinaryImage
+          src={work.image}
+          alt={work.title}
+          fill
+          className='object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
+          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+        />
+      ) : (
+        <div className='absolute inset-0 bg-gradient-to-br from-malachite/25 via-coal to-amber/20' />
+      )}
+
+      <div className='pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-coal/80 to-transparent' />
+      <div className='pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-coal via-coal/75 to-transparent' />
+
+      {work.category ? (
+        <Badge
+          variant='white'
+          className='absolute left-5 top-5 z-10 text-[10px] uppercase tracking-wide md:left-6 md:top-6'
         >
-          <ArrowRight className='size-4 stroke-white text-transparent' />
-        </CircleButton>
-      </div>
+          {work.category.name}
+        </Badge>
+      ) : null}
 
-      <div className='flex flex-1 flex-col gap-4 p-5 md:p-6'>
-        <div className='min-w-0 flex-1 space-y-2'>
-          {work.category ? (
-            <Badge variant='white' className='text-[10px] uppercase tracking-wide'>
-              {work.category.name}
-            </Badge>
-          ) : null}
-          <h3 className='font-display text-xl font-bold text-white transition-colors duration-300 group-hover:text-malachite md:text-2xl'>
-            {work.title}
-          </h3>
-          <p className='line-clamp-2 font-sans text-sm leading-relaxed text-white/65 md:text-base'>
-            {work.description}
-          </p>
-        </div>
+      <CircleButton
+        href={`/work/${work.slug}`}
+        className='absolute right-5 top-5 z-10 md:right-6 md:top-6'
+      >
+        <ArrowRight className='size-4 stroke-white text-transparent' />
+      </CircleButton>
 
-        <div className='flex flex-wrap gap-2 border-t border-white/10 pt-4'>
-          {work.tools.slice(0, 3).map((tool) => (
-            <Badge key={tool} variant='white' className='text-[10px] md:text-xs'>
-              {tool}
-            </Badge>
-          ))}
-          {work.tools.length > 4 ? (
-            <Badge variant='default' className='text-[10px] md:text-xs'>
-              +{work.tools.length - 3}
-            </Badge>
-          ) : null}
-        </div>
+      <div
+        className={cn(
+          'absolute inset-x-0 bottom-0 z-10 flex flex-col gap-3 p-5 md:p-6',
+          featured && 'gap-3 p-5 md:gap-4 md:p-8'
+        )}
+      >
+        <h3
+          className={cn(
+            'font-display font-bold text-white transition-colors duration-300 group-hover:text-malachite',
+            featured ? 'text-2xl md:text-4xl' : 'text-lg md:text-2xl'
+          )}
+        >
+          {work.title}
+        </h3>
+        <p
+          className={cn(
+            'font-sans leading-relaxed text-white/80',
+            featured
+              ? 'max-w-2xl text-sm line-clamp-2 md:line-clamp-3 md:text-lg'
+              : 'text-sm line-clamp-2 md:text-base'
+          )}
+        >
+          {work.description}
+        </p>
+
+        {work.tools.length > 0 ? (
+          <div className='flex flex-wrap gap-2'>
+            {work.tools.slice(0, toolLimit).map((tool) => (
+              <Badge key={tool} variant='white' className='text-[10px] md:text-xs'>
+                {tool}
+              </Badge>
+            ))}
+            {work.tools.length > toolLimit ? (
+              <Badge variant='default' className='text-[10px] md:text-xs'>
+                +{work.tools.length - toolLimit}
+              </Badge>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     </Link>
   );

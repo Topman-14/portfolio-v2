@@ -153,13 +153,6 @@ export const experienceFields: FieldConfig[] = [
     colSpan: 2,
   },
   {
-    name: 'achievements',
-    label: 'Achievements',
-    type: 'text',
-    placeholder: 'Led team of 5 developers, Increased performance by 40%',
-    colSpan: 1,
-  },
-  {
     name: 'description',
     label: 'Description',
     type: 'textarea',

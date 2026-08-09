@@ -180,7 +180,7 @@ export function cleanErrorMsg(error: Error): string {
     : 'An unexpected error occurred';
 }
 
-export const isDev = process.env.NEXT_PUBLIC_NODE_ENV === 'development';
+export const isDev = process.env.NODE_ENV === 'development';
 
 export const formatPublishedDate = (
   date: Date | string | null | undefined,

@@ -48,7 +48,6 @@ function serializeExperiences(rows: Experience[]): ExperienceListItem[] {
     endDate: e.endDate?.toISOString() ?? null,
     isCurrentRole: e.isCurrentRole,
     skills: e.skills,
-    achievements: e.achievements,
   }));
 }
 
