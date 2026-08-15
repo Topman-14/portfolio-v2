@@ -250,7 +250,7 @@ async function seed() {
         password: hashedPassword,
         role: UserRole.ADMIN,
         bio: 'Results-driven Product Engineer with years of hands-on experience building and scaling web applications across fintech and logistics B2B platforms',
-        twitterUrl: 'https://twitter.com/therealtope_',
+        twitterUrl: 'https://x.com/findtope',
         linkedinUrl: 'https://www.linkedin.com/in/tope-akinkuade/',
         githubUrl: 'https://github.com/Topman-14',
         websiteUrl: 'https://findtope.dev/',
