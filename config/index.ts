@@ -68,7 +68,7 @@ export const socials = [
   },
   {
     name: "Twitter",
-    href: "https://www.twitter.com/therealtope_"
+    href: "https://x.com/findtope"
   },
   {
     name: "GitHub",
