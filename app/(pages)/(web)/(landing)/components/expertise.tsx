@@ -104,7 +104,7 @@ export const Expertise = () => {
             </h2>
 
             <div className='space-y-4'>
-              <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans'>
+              <p className='text-coal/70 dark:text-white/70 text-base md:text-lg leading-relaxed font-sans'>
                 Contract work has taken me through Binta Financial, Compass AI, and
                 Husridge. I do full-stack product and platform
                 engineering, zero-to-one MVPs with small teams; mostly remote, with an uncharacteristic bias for speed.
@@ -122,10 +122,10 @@ export const Expertise = () => {
             <div className='flex flex-col gap-10 lg:gap-16'>
               {specializations.map((spec) => (
                 <div key={spec.title} className='specialization-item space-y-3'>
-                  <h4 className='text-xl md:text-2xl font-display font-bold text-white'>
+                  <h4 className='text-xl md:text-2xl font-display font-bold text-coal dark:text-white'>
                     {spec.title}
                   </h4>
-                  <p className='text-white/70 text-sm md:text-base leading-relaxed font-sans'>
+                  <p className='text-coal/70 dark:text-white/70 text-sm md:text-base leading-relaxed font-sans'>
                     {spec.description}
                   </p>
                   <div className='flex flex-wrap gap-2 pt-2'>

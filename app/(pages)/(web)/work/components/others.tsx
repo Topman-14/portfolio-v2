@@ -48,7 +48,7 @@ const OtherWorksSection = ({ initialWorks }: OtherWorksSectionProps) => {
       className='relative  pt-20 md:pt-24 px-4 md:px-8 lg:px-16'
     >
       <div className='mx-auto max-w-wide'>
-        <div className='mb-10 flex flex-col gap-6 border-b border-white/10 pb-6 md:mb-12 md:flex-row md:items-end md:justify-between md:gap-8 lg:gap-10'>
+        <div className='mb-10 flex flex-col gap-6 border-b border-coal/10 dark:border-white/10 pb-6 md:mb-12 md:flex-row md:items-end md:justify-between md:gap-8 lg:gap-10'>
           <RevealHeader
             title='More work'
             subtitle='Additional projects not highlighted in featured — search by title, stack, or category.'
@@ -82,7 +82,7 @@ const OtherWorksSection = ({ initialWorks }: OtherWorksSectionProps) => {
         ) : null}
 
         {showEmpty ? (
-          <p className='text-center font-sans text-white/55'>
+          <p className='text-center font-sans text-coal/55 dark:text-white/55'>
             {hasActiveSearch
               ? `No projects match "${trimmed}".`
               : 'No other projects in the archive yet.'}

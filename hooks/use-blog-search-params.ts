@@ -1,93 +1,56 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useTransition } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useTransition } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 export type BlogSearchParamPatch = {
   q?: string | null;
   category?: string | null;
 };
 
-function replaceBlogSearchParams(
+function buildBlogSearchHref(
   pathname: string,
-  current: URLSearchParams,
-  patch: BlogSearchParamPatch,
-  replace: (href: string, options?: { scroll?: boolean }) => void
+  current: { q: string; category: string },
+  patch: BlogSearchParamPatch
 ) {
-  const p = new URLSearchParams(current.toString());
-  if (patch.q !== undefined) {
-    const v = patch.q?.trim() ?? '';
-    if (v) p.set('q', v);
-    else p.delete('q');
-  }
-  if (patch.category !== undefined) {
-    const v = patch.category?.trim() ?? '';
-    if (v) p.set('category', v);
-    else p.delete('category');
-  }
+  const p = new URLSearchParams();
+  const q = patch.q !== undefined ? patch.q?.trim() ?? '' : current.q;
+  const category =
+    patch.category !== undefined ? patch.category?.trim() ?? '' : current.category;
+
+  if (q) p.set('q', q);
+  if (category) p.set('category', category);
+
   const qs = p.toString();
-  replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  return qs ? `${pathname}?${qs}` : pathname;
 }
 
 const BROWSE_SECTION_ID = 'browse-all';
 
-export function useBlogSearchParams() {
+export function useBlogSearchParams(current: { q: string; category: string }) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const paramsRef = useRef(searchParams);
-  paramsRef.current = searchParams;
   const [isPending, startTransition] = useTransition();
-
-  const paramsString = searchParams.toString();
-
-  const q = useMemo(() => {
-    return new URLSearchParams(paramsString).get('q')?.trim() ?? '';
-  }, [paramsString]);
-
-  const category = useMemo(() => {
-    return new URLSearchParams(paramsString).get('category')?.trim() ?? '';
-  }, [paramsString]);
-
-  const hasFilter = q.length > 0 || category.length > 0;
-
-  const apiQueryParams = useMemo(
-    () =>
-      hasFilter
-        ? {
-            ...(q ? { q } : {}),
-            ...(category ? { category } : {}),
-            limit: 48,
-          }
-        : undefined,
-    [hasFilter, q, category]
-  );
 
   const replace = useCallback(
     (patch: BlogSearchParamPatch) => {
       startTransition(() => {
-        replaceBlogSearchParams(
-          pathname,
-          new URLSearchParams(paramsRef.current.toString()),
-          patch,
-          router.replace
-        );
+        router.replace(buildBlogSearchHref(pathname, current, patch), { scroll: false });
       });
     },
-    [pathname, router]
+    [pathname, router, current]
   );
 
   const toggleCategory = useCallback(
     (id: string) => {
-      const current = paramsRef.current.get('category')?.trim() ?? '';
-      replace({ category: current === id ? null : id });
+      replace({ category: current.category === id ? null : id });
     },
-    [replace]
+    [replace, current.category]
   );
 
   const commitQToUrlAndScrollToBrowse = useCallback(
     (raw?: string) => {
-      if (raw) {
+      if (raw !== undefined) {
         replace({ q: raw.trim() || null });
       }
       queueMicrotask(() => {
@@ -100,11 +63,6 @@ export function useBlogSearchParams() {
   );
 
   return {
-    q,
-    category,
-    hasFilter,
-    paramsString,
-    apiQueryParams,
     replace,
     toggleCategory,
     commitQToUrlAndScrollToBrowse,

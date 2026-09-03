@@ -2,8 +2,10 @@
 
 import { cn, ROUNDED_PILL_STROKE_WIDTH, roundedPillPathD } from '@/lib/utils';
 import { useElementDimensions } from '@/hooks/use-element-dimensions';
+import { useTheme } from 'next-themes';
 import {
   forwardRef,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -20,6 +22,11 @@ const GInput = forwardRef<HTMLInputElement, GInputProps>(
     const dimensions = useElementDimensions(containerRef);
     const [dashLen, setDashLen] = useState(0);
     const [focused, setFocused] = useState(false);
+    const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+    const trackStroke =
+      mounted && resolvedTheme === 'light' ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.2)';
 
     const strokeWidth = ROUNDED_PILL_STROKE_WIDTH;
     const pathData = roundedPillPathD(
@@ -45,7 +52,7 @@ const GInput = forwardRef<HTMLInputElement, GInputProps>(
               <path
                 d={pathData}
                 fill='none'
-                stroke='rgba(255,255,255,0.2)'
+                stroke={trackStroke}
                 strokeWidth={strokeWidth}
               />
               <path
@@ -64,7 +71,7 @@ const GInput = forwardRef<HTMLInputElement, GInputProps>(
         <input
           ref={ref}
           className={cn(
-            'relative z-10 h-12 w-full rounded-full border-0 bg-white/5 px-5 text-white  placeholder:text-white/40 font-sans focus-visible:outline-none focus-visible:ring-0',
+            'relative z-10 h-12 w-full rounded-full border-0 bg-coal/5 dark:bg-white/5 px-5 text-coal dark:text-white placeholder:text-coal/40 dark:placeholder:text-white/40 font-sans focus-visible:outline-none focus-visible:ring-0',
             className
           )}
           onFocus={(e) => {

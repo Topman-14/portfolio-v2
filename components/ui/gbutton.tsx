@@ -82,7 +82,7 @@ export const GButton = ({
     'relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full backdrop-blur-md font-sans font-medium transition-all duration-300 overflow-hidden cursor-pointer';
 
   const variantClasses = {
-    primary: 'bg-white/10 text-white',
+    primary: 'bg-coal/10 text-coal dark:bg-white/10 dark:text-white',
     secondary: 'bg-coal/10 text-coal',
     green: 'bg-malachite/20 border border-malachite/30 text-malachite hover:bg-malachite/30',
   };

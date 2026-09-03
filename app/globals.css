@@ -5,6 +5,7 @@
 @import '../styles/_keyframe-animations.scss';
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
 
 @theme inline {
   --container-wide: 1440px;
@@ -12,7 +13,7 @@
   --color-foreground: var(--foreground);
   --font-display: var(--font-bricolage-grotesque);
   --font-heading: var(--font-krona-one);
-  --font-sans: var(--font-syne);
+  --font-sans: var(--font-jost);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -99,6 +100,35 @@
   --white: #ffffff; */
 }
 
+.light {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -146,11 +176,20 @@
     @apply bg-background text-foreground;
   }
   .generic-h2 {
-    @apply text-6xl lg:text-7xl font-display font-bold text-white;
+    @apply font-display font-bold text-coal dark:text-white;
+    font-size: clamp(2.25rem, 5.5vw + 1rem, 4.5rem);
+  }
+
+  .fluid-h1 {
+    font-size: clamp(2.5rem, 8vw + 0.5rem, 8rem);
+  }
+
+  .fluid-h1-hero {
+    font-size: clamp(2.5rem, 9vw + 0.5rem, 9rem);
   }
 
   .generic-subtitle {
-    @apply text-white/70 text-base md:text-lg leading-relaxed font-sans max-w-3xl;
+    @apply text-coal/70 dark:text-white/70 text-base md:text-lg leading-relaxed font-sans max-w-3xl;
   }
 }
 
@@ -187,23 +226,9 @@
   position: relative;
 }
 
-/* Light mode backgrounds */
-.bg1-light {
+.light .bg1,
+.light .bg2 {
   background-color: white;
-  background-image: url('/img/svg/bg1.svg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  position: relative;
-}
-
-.bg2-light {
-  background-color: white;
-  background-image: url('/img/svg/bg3.svg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  position: relative;
 }
 
 

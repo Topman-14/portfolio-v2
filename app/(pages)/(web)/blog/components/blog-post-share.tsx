@@ -40,11 +40,11 @@ export function BlogPostShare({ articleUrl, title }: BlogPostShareProps) {
   ];
 
   const btnClass =
-    'inline-flex size-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-white/80 hover:text-malachite hover:border-malachite/40 transition-colors';
+    'inline-flex size-9 items-center justify-center rounded-lg border border-coal/15 bg-coal/5 text-coal/80 dark:border-white/15 dark:bg-white/5 dark:text-white/80 hover:text-malachite hover:border-malachite/40 transition-colors';
 
   return (
-    <div className='rounded-2xl border border-white/10 bg-white/5 p-4'>
-      <p className='text-xs uppercase tracking-wide text-white/55 font-sans'>
+    <div className='rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5 p-4'>
+      <p className='text-xs uppercase tracking-wide text-coal/55 dark:text-white/55 font-sans'>
         Share Via
       </p>
       <div className='flex flex-wrap gap-2 mt-3'>

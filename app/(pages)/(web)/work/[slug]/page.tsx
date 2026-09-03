@@ -103,16 +103,16 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
   return (
     <main className='bg2 min-h-screen md:pb-24 pt-10 md:py-28'>
-      <div className='mx-auto max-w-[1500px] space-y-12 md:px-8 lg:px-12'>
+      <div className='mx-auto max-w-[1500px] space-y-12 px-5 md:px-8 lg:px-12'>
         <Link
           href='/work'
-          className='inline-flex items-center gap-2 font-sans text-white/70 transition-colors hover:text-malachite ml-4 md:ml-0'
+          className='inline-flex items-center gap-2 font-sans text-coal/70 dark:text-white/70 transition-colors hover:text-malachite'
         >
           <ArrowLeft className='size-4' />
-          Back to work
+          Back
         </Link>
 
-        <div className='relative aspect-[16/10] w-full min-h-[220px] overflow-hidden md:rounded-3xl md:aspect-[2.6/1] md:min-h-[300px]'>
+        <div className='relative aspect-[16/10] w-full min-h-[220px] overflow-hidden rounded-2xl md:rounded-3xl md:aspect-[2.6/1] md:min-h-[300px]'>
           {work.image ? (
             <CloudinaryImage
               src={work.image}
@@ -154,9 +154,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        <section className='overflow-hidden md:rounded-3xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))]'>
-          <div className='space-y-6 p-6 md:p-8 lg:p-10'>
-            <p className='font-sans text-lg leading-relaxed text-white/80 md:text-xl'>
+        <section className='overflow-hidden border-0 bg-transparent md:rounded-3xl md:border md:border-coal/10 dark:md:border-white/10 md:bg-[linear-gradient(120deg,rgba(0,0,0,0.03),rgba(114,255,168,0.08),rgba(255,177,87,0.07))] dark:md:bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))]'>
+          <div className='space-y-6 py-2 md:p-8 lg:p-10'>
+            <p className='font-sans text-lg leading-relaxed text-coal/80 dark:text-white/80 md:text-xl'>
               {work.description}
             </p>
 
@@ -192,7 +192,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   rel='noopener noreferrer'
                   className={cn(
                     ctaBase,
-                    'border border-white/15 bg-white/10 text-white hover:border-white/25 hover:bg-white/[0.14]'
+                    'border border-coal/15 bg-coal/10 text-coal hover:border-coal/25 hover:bg-coal/[0.14] dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:border-white/25 dark:hover:bg-white/[0.14]'
                   )}
                 >
                   <span>View code</span>
@@ -213,8 +213,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {toc.length > 0 ? (
               <aside className='hidden lg:block'>
                 <div className='sticky top-28 space-y-6'>
-                  <div className='rounded-2xl border border-white/10 bg-white/5 p-4'>
-                    <p className='mb-3 font-sans text-xs uppercase tracking-wide text-white/55'>
+                  <div className='rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5 p-4'>
+                    <p className='mb-3 font-sans text-xs uppercase tracking-wide text-coal/55 dark:text-white/55'>
                       On this page
                     </p>
                     <nav className='space-y-2'>
@@ -223,7 +223,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                           key={item.id}
                           href={`#${item.id}`}
                           className={cn(
-                            'block font-sans text-sm text-white/70 transition-colors hover:text-malachite',
+                            'block font-sans text-sm text-coal/70 dark:text-white/70 transition-colors hover:text-malachite',
                             item.level === 3 && 'pl-3'
                           )}
                         >
@@ -243,10 +243,10 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
         {work.videoUrl ? (
           <section className='space-y-6'>
-            <h2 className='font-display text-3xl font-bold text-white md:text-4xl'>
+            <h2 className='font-display text-3xl font-bold text-coal dark:text-white md:text-4xl'>
               Demo video
             </h2>
-            <div className='relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-white/5'>
+            <div className='relative aspect-video overflow-hidden rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5'>
               <iframe
                 src={work.videoUrl}
                 className='absolute inset-0 size-full'

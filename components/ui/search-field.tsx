@@ -35,7 +35,7 @@ export function SearchField({
         onChange={(e) => onValueChange(e.target.value)}
         placeholder={placeholder}
         className={cn(
-          'h-10 bg-transparent backdrop-blur-none text-white placeholder:text-white/45 focus-visible:ring-0 px-5',
+          'h-10 bg-transparent backdrop-blur-none text-coal dark:text-white placeholder:text-coal/45 dark:placeholder:text-white/45 focus-visible:ring-0 px-5',
           inputClassName
         )}
         onKeyDown={(e) => {
@@ -48,7 +48,7 @@ export function SearchField({
         variant='link'
         size='icon'
         aria-label={ariaLabel}
-        className='shrink-0 text-white/75 hover:text-malachite'
+        className='shrink-0 text-coal/75 dark:text-white/75 hover:text-malachite'
         type='button'
         onClick={variant === 'hero' ? onAction : undefined}
       >

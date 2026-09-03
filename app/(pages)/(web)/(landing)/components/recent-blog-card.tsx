@@ -37,9 +37,9 @@ export function RecentBlogCard({
     >
       <article
         className={cn(
-          'relative isolate overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 transition-[transform,box-shadow] duration-300',
-          'shadow-[0_20px_80px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.05)]',
-          ' group-hover:shadow-[0_28px_100px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.08)] '
+          'relative isolate overflow-hidden rounded-3xl border border-coal/10 bg-zinc-100 dark:border-white/10 dark:bg-zinc-900 transition-[transform,box-shadow] duration-300',
+          'shadow-[0_20px_80px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_80px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.05)]',
+          'group-hover:shadow-[0_28px_100px_rgba(0,0,0,0.18),0_0_0_1px_rgba(0,0,0,0.05)] dark:group-hover:shadow-[0_28px_100px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.08)]'
         )}
       >
         <div className='relative z-0 aspect-[16/10] w-full'>
@@ -60,7 +60,7 @@ export function RecentBlogCard({
         <div className='relative z-10 -mt-[4.5rem]'>
           <div className='relative'>
             <svg
-              className='relative z-[1] block h-[5rem] w-full fill-zinc-900'
+              className='relative z-[1] block h-[5rem] w-full fill-zinc-100 dark:fill-zinc-900'
               viewBox={`0 0 400 ${NOTCH_VIEW_H}`}
               preserveAspectRatio='none'
               aria-hidden
@@ -77,10 +77,10 @@ export function RecentBlogCard({
                   {article.category!.name}
                 </Badge>
               ) : null}
-            <div className='flex flex-wrap items-center gap-x-2 gap-y-1 font-sans text-xs text-white/60'>
+            <div className='flex flex-wrap items-center gap-x-2 gap-y-1 font-sans text-xs text-coal/60 dark:text-white/60'>
               {meta ? <span>{meta}</span> : null}
             </div>
-            <h3 className='mt-3 font-display text-xl font-bold leading-snug text-white transition-colors group-hover:text-malachite/90 line-clamp-2'>
+            <h3 className='mt-3 font-display text-xl font-bold leading-snug text-coal dark:text-white transition-colors group-hover:text-malachite/90 line-clamp-2'>
               {article.title}
             </h3>
           </div>

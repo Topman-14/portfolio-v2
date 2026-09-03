@@ -1,21 +1,8 @@
 import { BrevoClient } from '@getbrevo/brevo';
-import { emailLayout } from './layout';
-import { passwordResetTemplate } from './templates/password-reset';
+import { render } from '@react-email/render';
 import { BASE_URL } from '@/config';
-
-export const EMAIL_COLORS = {
-  bg: '#eaeaea',
-  surface: '#fafafa',
-  border: '#1e1e1e',
-  surface2: '#1a1a1a',
-  malachite: '#14cc5e',
-  amber: '#f4b915',
-  bittersweet: '#ff715b',
-  white: '#ffffff',
-  textMuted: '#222',
-  textDim: '#1e1e1e',
-  black: '#000',
-} as const;
+import { PasswordResetEmail } from './templates/password-reset';
+import { NewsletterWelcomeEmail } from './templates/newsletter-welcome';
 
 export type EmailRecipient = {
   email: string;
@@ -26,10 +13,8 @@ export type SendEmailOptions = {
   to: EmailRecipient | EmailRecipient[];
   subject: string;
   html: string;
-  previewText?: string;
   from?: EmailRecipient;
   replyTo?: EmailRecipient;
-  unsubscribeUrl?: string;
 };
 
 const DEFAULT_SENDER_NAME = 'Tops';
@@ -57,31 +42,37 @@ export async function sendEmail(options: SendEmailOptions) {
   const senderEmail = process.env.MAIL_USER?.trim();
   if (!senderEmail) throw new Error('Sender email (MAIL_USER) is not configured');
 
-  const {
-    to,
-    subject,
-    html,
-    previewText,
-    from = { email: senderEmail, name: DEFAULT_SENDER_NAME },
-    replyTo,
-    unsubscribeUrl,
-  } = options;
+  const { to, subject, html, from = { email: senderEmail, name: DEFAULT_SENDER_NAME }, replyTo } =
+    options;
 
   const recipients = Array.isArray(to) ? to : [to];
-  const fullHtml = emailLayout(html, previewText, unsubscribeUrl);
   const client = getClient();
 
   return client.transactionalEmails.sendTransacEmail({
     sender: { email: from.email, name: from.name },
     to: recipients,
     subject,
-    htmlContent: fullHtml,
+    htmlContent: html,
     ...(replyTo ? { replyTo: { email: replyTo.email, name: replyTo.name } } : {}),
   });
 }
 
 export async function sendPasswordResetEmail(email: string, resetToken: string) {
-  const resetUrl = `${getAppBaseUrl()}/auth/reset-password?token=${resetToken}`;
-  const { subject, previewText, html } = passwordResetTemplate({ resetUrl });
-  return sendEmail({ to: { email }, subject, html, previewText });
+  const appBaseUrl = getAppBaseUrl();
+  const resetUrl = `${appBaseUrl}/auth/reset-password?token=${resetToken}`;
+  const html = await render(<PasswordResetEmail resetUrl={resetUrl} appBaseUrl={appBaseUrl} />);
+  return sendEmail({ to: { email }, subject: 'Reset your password', html });
+}
+
+export async function sendNewsletterWelcomeEmail(email: string) {
+  const appBaseUrl = getAppBaseUrl();
+  const unsubscribeUrl = `${appBaseUrl}/unsubscribe?email=${encodeURIComponent(email)}`;
+  const html = await render(
+    <NewsletterWelcomeEmail
+      blogUrl={`${appBaseUrl}/blog`}
+      unsubscribeUrl={unsubscribeUrl}
+      appBaseUrl={appBaseUrl}
+    />
+  );
+  return sendEmail({ to: { email }, subject: "You're in.", html });
 }

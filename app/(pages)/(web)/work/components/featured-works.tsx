@@ -30,10 +30,10 @@ export const WorksBentoGrid = ({ works, otherWorks }: WorksBentoGridProps) => {
         className='relative bg3 px-4 py-24 md:py-28 lg:px-16'
       >
         <div className='mx-auto max-w-7xl text-center'>
-          <h2 className='mb-4 font-display text-4xl font-bold text-white md:text-5xl'>
+          <h2 className='mb-4 font-display text-4xl font-bold text-coal dark:text-white md:text-5xl'>
             No projects yet
           </h2>
-          <p className='font-sans text-lg text-white/70'>
+          <p className='font-sans text-lg text-coal/70 dark:text-white/70'>
             Check back soon for new work.
           </p>
         </div>
@@ -70,7 +70,7 @@ export const WorksBentoGrid = ({ works, otherWorks }: WorksBentoGridProps) => {
             </ul>
           </>
         ) : (
-          <p className='mb-12 text-center font-sans text-lg text-white/65'>
+          <p className='mb-12 text-center font-sans text-lg text-coal/65 dark:text-white/65'>
             No featured highlights right now — browse more work below.
           </p>
         )}

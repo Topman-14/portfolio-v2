@@ -8,12 +8,12 @@ import ScrollToTopButton from '@/app/(pages)/(web)/components/scroll-to-top-butt
 export default function Footer() {
 
   return (
-    <footer className='relative bg-coal border-t border-white/10 z-4'>
+    <footer className='relative bg-white dark:bg-coal border-t border-coal/10 dark:border-white/10 z-4'>
       <div className='max-w-7xl mx-auto px-6 md:px-8 lg:px-16 py-16 md:py-20'>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16'>
 
           <div className='col-span-1 space-y-4'>
-            <h4 className='text-lg font-display font-bold text-white mb-4'>
+            <h4 className='text-lg font-display font-bold text-coal dark:text-white mb-4'>
               Quick Links
             </h4>
             <nav className='flex flex-col gap-2'>
@@ -23,7 +23,7 @@ export default function Footer() {
                   href={item.href}
                   className='relative overflow-hidden w-fit'
                 >
-                  <RollingText className='text-white/70 hover:text-white text-sm transition-colors'>
+                  <RollingText className='text-coal/70 hover:text-coal dark:text-white/70 dark:hover:text-white text-sm transition-colors'>
                     {item.name}
                   </RollingText>
                 </Link>
@@ -32,18 +32,18 @@ export default function Footer() {
           </div>
 
           <div className='col-span-1 md:col-span-2 space-y-4'>
-            <h4 className='text-lg font-display font-bold text-white mb-4'>
+            <h4 className='text-lg font-display font-bold text-coal dark:text-white mb-4'>
               Stay Updated
             </h4>
-            <p className='text-white/70 text-sm font-sans'>
+            <p className='text-coal/70 dark:text-white/70 text-sm font-sans'>
               Get notified about new articles, projects, and updates.
             </p>
             <NewsletterForm />
           </div>
         </div>
 
-        <div className='mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4'>
-          <p className='text-white/50 text-sm font-sans'>
+        <div className='mt-12 pt-8 border-t border-coal/10 dark:border-white/10 flex flex-col md:flex-row justify-between items-center gap-4'>
+          <p className='text-coal/50 dark:text-white/50 text-sm font-sans'>
             Tope Akinkuade | {new Date().getFullYear()}
           </p>
           <div className='flex gap-6 text-sm font-sans'>
@@ -53,6 +53,7 @@ export default function Footer() {
                   key={social.href}
                   link={social.href}
                   name={social.name}
+                  className='text-coal bg-coal/10 dark:text-white dark:bg-white/10'
                 />
               ))}
             </div>

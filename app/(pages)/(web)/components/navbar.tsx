@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import Logo from '../../../../components/ui/logo';
 import { navItems, socials } from '@/config';
 import NavOverlay from './nav-overlay';
@@ -19,6 +20,10 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { isMobile } = useViewport();
   const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isLight = mounted && resolvedTheme === 'light';
 
   const router = useRouter();
 
@@ -46,48 +51,51 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className='fixed w-full top-0 z-[100] '>
+      <nav className='fixed w-full top-0 z-[100] pointer-events-none'>
         <div
-          className={`flex gap-3 items-center justify-between px-3 md:px-5 py-4 font-sans text-white ${showFullNavbar ? 'justify-between' : 'justify-end'
+          className={`flex gap-3 items-center justify-between px-3 md:px-5 py-4 font-sans text-coal dark:text-white ${showFullNavbar ? 'justify-between' : 'justify-end'
             }`}
         >
-          {showFullNavbar && <Logo link color='white' height={32} width={32} />}
+          {showFullNavbar && <Logo link color={isLight ? 'black' : 'white'} height={32} width={32} className='pointer-events-auto' />}
           {/* <Logo link color='white' variant="full" height={40} width={120} /> */}
 
           <DomAnimate show={showFullNavbar}>
-            <div className='hidden md:flex gap-8 items-center backdrop-blur-lg bg-white/10 rounded-full p-3 px-6 '>
+            <div className='hidden md:flex gap-8 items-center backdrop-blur-lg bg-coal/10 dark:bg-white/10 rounded-full p-3 px-6 pointer-events-auto'>
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className='relative overflow-hidden leading-[normal]'
                 >
-                  <RollingText className={`${pathname.replaceAll('/', '') === item.href.replaceAll('/', '') ? 'text-malachite' : 'text-white'}`}>{item.name}</RollingText>
+                  <RollingText className={`${pathname.replaceAll('/', '') === item.href.replaceAll('/', '') ? 'text-malachite' : 'text-coal dark:text-white'}`}>{item.name}</RollingText>
                 </Link>
               ))}
             </div>
           </DomAnimate>
 
           <DomAnimate show={showFullNavbar}>
-            <div className='hidden md:flex gap-3 items-center'>
+            <div className='hidden md:flex gap-3 items-center pointer-events-auto'>
               {socials.filter((social) => social.name !== 'Email').map((social) => (
                 <SocialIcons
                   key={social.href}
                   link={social.href}
                   name={social.name}
+                  className='text-coal bg-coal/10 dark:text-white dark:bg-white/10'
                 />
               ))}
             </div>
           </DomAnimate>
 
           <DomAnimate show={!showFullNavbar}>
-            <CircleButton
-              onClick={() => setIsOpen(true)}
-              size={isMobile ? 48 : 62}
-            >
-              {/* <Logo color='white' height={20} width={20} className='relative z-10' /> */}
-              <HiOutlineMenuAlt3 size={isMobile ? 20 : 24} className='relative z-10 text-malachite' />
-            </CircleButton>
+            <div className='pointer-events-auto'>
+              <CircleButton
+                onClick={() => setIsOpen(true)}
+                size={isMobile ? 48 : 62}
+              >
+                {/* <Logo color='white' height={20} width={20} className='relative z-10' /> */}
+                <HiOutlineMenuAlt3 size={isMobile ? 20 : 24} className='relative z-10 text-malachite' />
+              </CircleButton>
+            </div>
           </DomAnimate>
         </div>
       </nav>
