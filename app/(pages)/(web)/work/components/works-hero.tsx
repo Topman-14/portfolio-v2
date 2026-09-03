@@ -69,12 +69,12 @@ export const WorksHero = () => {
           <div className='space-y-6 max-w-4xl'>
             <h1
               ref={headingRef}
-              className='text-5xl md:text-6xl lg:text-8xl font-display font-bold text-white leading-tight'
+              className='fluid-h1 font-display font-bold text-coal dark:text-white leading-tight'
             >
               My Work
             </h1>
             <p
-              className='text-white/80 text-lg md:text-xl lg:text-2xl leading-relaxed font-sans'
+              className='text-coal/80 dark:text-white/80 text-lg md:text-xl lg:text-2xl leading-relaxed font-sans'
             >
               A collection of projects I&apos;ve built — from internal dashboards to
               public-facing apps, each representing a unique challenge and

@@ -20,7 +20,7 @@ export const BlogCard = ({ article, priority = false }: BlogCardProps) => {
       href={`/blog/${article.slug}`}
       className='group block'
     >
-      <div className='relative aspect-[16/10] overflow-hidden rounded-2xl bg-white/5'>
+      <div className='relative aspect-[16/10] overflow-hidden rounded-2xl bg-coal/5 dark:bg-white/5'>
         {article.coverImg ? (
           <CloudinaryImage
             src={article.coverImg}
@@ -35,25 +35,25 @@ export const BlogCard = ({ article, priority = false }: BlogCardProps) => {
       </div>
 
       <div className='pt-4 space-y-3'>
-        <div className='flex items-center gap-2 text-xs font-sans text-white/60 flex-wrap'>
+        <div className='flex items-center gap-2 text-xs font-sans text-coal/60 dark:text-white/60 flex-wrap'>
           {article.category ? (
             <Badge variant='malachite' className='uppercase tracking-wide px-2.5 py-0.5'>
               {article.category.name}
             </Badge>
           ) : (
-            <span className='text-white/50'>General</span>
+            <span className='text-coal/50 dark:text-white/50'>General</span>
           )}
           <span>
             {formatPublishedDate(article.publishedAt)}{article.readTime ? ` · ${article.readTime} min read` : ''}
           </span>
         </div>
 
-        <h3 className='text-xl font-display font-bold text-white leading-snug  transition-colors line-clamp-2'>
+        <h3 className='text-xl font-display font-bold text-coal dark:text-white leading-snug  transition-colors line-clamp-2'>
           {article.title}
         </h3>
 
         {article.excerpt ? (
-          <p className='text-white/70 text-sm md:text-base leading-relaxed font-sans line-clamp-2'>
+          <p className='text-coal/70 dark:text-white/70 text-sm md:text-base leading-relaxed font-sans line-clamp-2'>
             {article.excerpt}
           </p>
         ) : null}

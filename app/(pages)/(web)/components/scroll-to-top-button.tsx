@@ -4,12 +4,13 @@ import { ChevronUp } from 'lucide-react';
 import CircleButton from '@/components/ui/circle-button';
 import { cn } from '@/lib/utils';
 import { useScrollPosition } from '@/hooks/use-scroll-position';
+import { gsap } from '@/lib/gsap-config';
 
 export default function ScrollToTopButton() {
   const { isScrollingUp, isAtBottom } = useScrollPosition();
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    gsap.to(window, { duration: 1.2, scrollTo: 0, ease: 'power3.inOut' });
   };
 
   const showScrollButton = isScrollingUp || isAtBottom;
@@ -18,7 +19,7 @@ export default function ScrollToTopButton() {
     <CircleButton
       onClick={scrollToTop}
       className={cn(
-        'fixed bottom-8 right-8 z-50 transition-opacity duration-300',
+        'fixed bottom-8 right-8 z-50 text-coal bg-coal/10 dark:text-white dark:bg-white/10 transition-opacity duration-300',
         showScrollButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}
       size={48}

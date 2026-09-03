@@ -16,6 +16,7 @@ export const routes = {
   adminExperience: "/admin/experience",
   adminCategories: "/admin/categories",
   adminNewsletter: "/admin/newsletter",
+  adminEmailPreview: "/admin/email-preview",
   adminProfile: "/admin/profile",
   signIn: "/auth/sign-in",
   forgotPassword: "/auth/forgot-password",
@@ -46,6 +47,10 @@ export const AdminNavRoutes = [
   {
     href: `${routes.adminNewsletter}`,
     label: 'Newsletter',
+  },
+  {
+    href: `${routes.adminEmailPreview}`,
+    label: 'Email Templates',
   },
   {
     href: `${routes.adminProfile}`,

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
 import prismadb from '@/lib/prismadb';
 import { BASE_URL } from '@/config';
 import { RevealHeader } from '@/components/custom/reveal-header';
@@ -13,8 +12,10 @@ type PageProps = {
 };
 
 export default async function Blog({ searchParams }: PageProps) {
-  const { q, category } = await searchParams;
-  const hasFilter = Boolean(q?.trim() || category?.trim());
+  const { q: rawQ, category: rawCategory } = await searchParams;
+  const q = rawQ?.trim() ?? '';
+  const category = rawCategory?.trim() ?? '';
+  const hasFilter = Boolean(q || category);
 
   const [heroArticles, categories, browseArticles] = await Promise.all([
     prismadb.article.findMany({
@@ -72,14 +73,12 @@ export default async function Blog({ searchParams }: PageProps) {
               subtitleClassName='mt-5'
             />
 
-            <Suspense fallback={null}>
-              <BlogSearch categories={categoryChips} />
-            </Suspense>
+            <BlogSearch categories={categoryChips} q={q} category={category} />
 
             {heroArticles.length > 0 ? (
               <BlogHero articles={heroArticles} title='Latest articles' className='md:mt-16'/>
             ) : (
-              <div className='rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-white/60 font-sans'>
+              <div className='rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5 p-10 text-center text-coal/60 dark:text-white/60 font-sans'>
                 No published articles yet.
               </div>
             )}
@@ -91,13 +90,13 @@ export default async function Blog({ searchParams }: PageProps) {
             </section>
           ) : null}*/}
 
-          <section className='rounded-2xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.04),rgba(114,255,168,0.07),rgba(255,177,87,0.06))] p-6 md:p-8 lg:p-10'>
+          <section className='border-0 bg-transparent p-0 md:rounded-2xl md:border md:border-coal/10 dark:md:border-white/10 md:bg-[linear-gradient(120deg,rgba(0,0,0,0.03),rgba(114,255,168,0.07),rgba(255,177,87,0.06))] dark:md:bg-[linear-gradient(120deg,rgba(255,255,255,0.04),rgba(114,255,168,0.07),rgba(255,177,87,0.06))] md:p-8 lg:p-10'>
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center'>
               <div>
-                <h3 className='text-2xl md:text-3xl font-display font-bold text-white'>
+                <h3 className='text-2xl md:text-3xl font-display font-bold text-coal dark:text-white'>
                   Stay in the loop.
                 </h3>
-                <p className='text-white/70 font-sans mt-2'>
+                <p className='text-coal/70 dark:text-white/70 font-sans mt-2'>
                 Bi-monthly-ish drops of new posts and recent work.
                 </p>
               </div>
@@ -105,12 +104,12 @@ export default async function Blog({ searchParams }: PageProps) {
             </div>
           </section>
 
-          <Suspense fallback={null}>
-            <BlogBrowseSection
-              initialBrowseArticles={browseArticles}
-              categories={categoryChips}
-            />
-          </Suspense>
+          <BlogBrowseSection
+            initialBrowseArticles={browseArticles}
+            categories={categoryChips}
+            q={q}
+            category={category}
+          />
         </div>
       </main>
   );

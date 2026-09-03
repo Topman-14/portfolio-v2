@@ -33,7 +33,7 @@ export function AboutGallery({ images }: { images: GalleryImage[] }) {
       {images.map((image, index) => (
         <div
           key={`about-gallery-${index}`}
-          className={`${image.colSpan} lg:max-w-[600px] relative h-[200px] overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
+          className={`${image.colSpan} lg:max-w-[600px] relative h-[200px] overflow-hidden rounded-2xl bg-coal/5 dark:bg-white/5 backdrop-blur-sm border border-coal/10 dark:border-white/10 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.18)] dark:shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)]`}
         >
           <GalleryImage image={image} priority={index < 2} />
         </div>

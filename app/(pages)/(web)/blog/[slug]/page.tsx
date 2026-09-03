@@ -1,24 +1,20 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import CloudinaryImage from '@/components/ui/cloudinary-image';
-import Link from 'next/link';
-import { ArrowLeft, Globe } from 'lucide-react';
-import {
-  FaGithub,
-  FaLinkedinIn,
-  FaXTwitter,
-} from 'react-icons/fa6';
-import prismadb from '@/lib/prismadb';
-import { BASE_URL } from '@/config';
-import { Badge } from '@/components/ui/badge';
-import { Avatar } from '@/components/ui/avatar';
-import { BlogPostShare } from '../components/blog-post-share';
-import { BlogCard } from '../components/blog-card';
-import { formatPublishedDate } from '@/lib/utils';
-import { createHtmlRenderData } from '@/lib/html-render';
-import { HtmlRenderer } from '@/components/custom/html-renderer';
-import { BlogPostEngagement } from '../components/blog-post-engagement';
-import NewsletterForm from '@/app/(pages)/(web)/components/newsletter-form';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import CloudinaryImage from "@/components/ui/cloudinary-image";
+import Link from "next/link";
+import { ArrowLeft, Globe } from "lucide-react";
+import { FaGithub, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
+import prismadb from "@/lib/prismadb";
+import { BASE_URL } from "@/config";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
+import { BlogPostShare } from "../components/blog-post-share";
+import { BlogCard } from "../components/blog-card";
+import { formatPublishedDate } from "@/lib/utils";
+import { createHtmlRenderData } from "@/lib/html-render";
+import { HtmlRenderer } from "@/components/custom/html-renderer";
+import { BlogPostEngagement } from "../components/blog-post-engagement";
+import NewsletterForm from "@/app/(pages)/(web)/components/newsletter-form";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -28,7 +24,7 @@ export const revalidate = 120;
 
 export async function generateStaticParams() {
   const articles = await prismadb.article.findMany({
-    where: { status: 'PUBLISHED' },
+    where: { status: "PUBLISHED" },
     select: { slug: true },
   });
 
@@ -37,20 +33,23 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const article = await prismadb.article.findFirst({
-    where: { slug, status: 'PUBLISHED' },
+    where: { slug, status: "PUBLISHED" },
     include: { category: true },
   });
 
   if (!article) {
     return {
-      title: 'Article Not Found | Tope Akinkuade',
+      title: "Article Not Found | Tope Akinkuade",
     };
   }
 
-  const description = article.excerpt || `Read ${article.title} on Tope Akinkuade's blog.`;
+  const description =
+    article.excerpt || `Read ${article.title} on Tope Akinkuade's blog.`;
   const coverOg = article.coverImg
     ? {
         openGraph: {
@@ -73,22 +72,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     keywords: [
       article.title,
       ...(article.tags || []),
-      article.category?.name || '',
-      'Tope Akinkuade',
-      'Blog',
-      'Web Development',
+      article.category?.name || "",
+      "Tope Akinkuade",
+      "Blog",
+      "Web Development",
     ].filter(Boolean),
     openGraph: {
       title: `${article.title} | Tope Akinkuade`,
       description,
       url: `${BASE_URL}/blog/${article.slug}`,
-      siteName: 'Tope Akinkuade',
-      type: 'article',
+      siteName: "Tope Akinkuade",
+      type: "article",
       publishedTime: article.publishedAt?.toISOString(),
       ...coverOg.openGraph,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: `${article.title} | Tope Akinkuade`,
       description,
       ...coverOg.twitter,
@@ -99,11 +98,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function BlogDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const article = await prismadb.article.findFirst({
-    where: { slug, status: 'PUBLISHED' },
+    where: { slug, status: "PUBLISHED" },
     include: {
       category: true,
       comments: {
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: "asc" },
         select: { id: true, name: true, text: true, createdAt: true },
       },
       user: {
@@ -129,22 +128,22 @@ export default async function BlogDetailPage({ params }: PageProps) {
   const [categoryRelated, fallbackRelated] = await Promise.all([
     article.categoryId
       ? prismadb.article.findMany({
-        where: {
-          status: 'PUBLISHED',
-          categoryId: article.categoryId,
-          id: { not: article.id },
-        },
-        orderBy: { publishedAt: 'desc' },
-        include: { category: true },
-        take: 3,
-      })
+          where: {
+            status: "PUBLISHED",
+            categoryId: article.categoryId,
+            id: { not: article.id },
+          },
+          orderBy: { publishedAt: "desc" },
+          include: { category: true },
+          take: 3,
+        })
       : Promise.resolve([]),
     prismadb.article.findMany({
       where: {
-        status: 'PUBLISHED',
+        status: "PUBLISHED",
         id: { not: article.id },
       },
-      orderBy: { publishedAt: 'desc' },
+      orderBy: { publishedAt: "desc" },
       include: { category: true },
       take: 6,
     }),
@@ -155,75 +154,85 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
   const relatedArticles = [
     ...categoryRelated,
-    ...fallbackRelated.filter((item) => !relatedIds.has(item.id)).slice(0, fallbackNeeded),
+    ...fallbackRelated
+      .filter((item) => !relatedIds.has(item.id))
+      .slice(0, fallbackNeeded),
   ];
 
   const author = article.user;
-  const displayName = author?.name || 'Tope Akinkuade';
+  const displayName = author?.name || "Tope Akinkuade";
   const authorSocials = [
-    { href: author?.twitterUrl, label: 'X', Icon: FaXTwitter },
-    { href: author?.linkedinUrl, label: 'LinkedIn', Icon: FaLinkedinIn },
-    { href: author?.githubUrl, label: 'GitHub', Icon: FaGithub },
-    { href: author?.websiteUrl, label: 'Website', Icon: Globe },
+    { href: author?.twitterUrl, label: "X", Icon: FaXTwitter },
+    { href: author?.linkedinUrl, label: "LinkedIn", Icon: FaLinkedinIn },
+    { href: author?.githubUrl, label: "GitHub", Icon: FaGithub },
+    { href: author?.websiteUrl, label: "Website", Icon: Globe },
   ].filter(
     (item): item is typeof item & { href: string } =>
-      typeof item.href === 'string' && item.href.length > 0
+      typeof item.href === "string" && item.href.length > 0,
   );
 
   const articleUrl = `${BASE_URL}/blog/${article.slug}`;
   const socialBtnClass =
-    'inline-flex size-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-white/80 hover:text-malachite hover:border-malachite/40 transition-colors';
+    "inline-flex size-9 items-center justify-center rounded-lg border border-coal/15 bg-coal/5 text-coal/80 dark:border-white/15 dark:bg-white/5 dark:text-white/80 hover:text-malachite hover:border-malachite/40 transition-colors";
 
   return (
-    <main className='bg2 min-h-screen pb-24 pt-10 md:pb-28'>
-      <div className='max-w-[1500px] mx-auto space-y-14  md:px-8 lg:px-12 md:pt-[70px]'>
+    <main className="bg2 min-h-screen pb-24 pt-10 md:pb-28">
+      <div className="max-w-[1500px] mx-auto space-y-14 px-5 md:px-8 lg:px-12 md:pt-[70px]">
         <Link
-          href='/blog'
-          className='inline-flex items-center gap-2 text-white/70 hover:text-malachite transition-colors font-sans ml-4 md:ml-0 mb-5'
+          href="/blog"
+          className="inline-flex items-center gap-2 text-coal/70 dark:text-white/70 hover:text-malachite transition-colors font-sans mb-5"
         >
-          <ArrowLeft className='w-4 h-4' />
-          Back to Blog
+          <ArrowLeft className="w-4 h-4" />
+          Back
         </Link>
 
-        <section className='md:rounded-3xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))] p-6 md:p-8 lg:p-10'>
-          <div className='grid grid-cols-1 xl:grid-cols-[1fr_620px] gap-8 xl:gap-12 items-stretch'>
-            <div className='space-y-5 my-auto'>
-              <div className='flex flex-wrap items-center gap-3 text-sm font-sans'>
+        <section className="border-0 bg-transparent p-0 md:rounded-3xl md:border md:border-coal/10 dark:md:border-white/10 md:bg-[linear-gradient(120deg,rgba(0,0,0,0.03),rgba(114,255,168,0.08),rgba(255,177,87,0.07))] dark:md:bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))] md:p-8 lg:p-10">
+          <div className="grid grid-cols-1 xl:grid-cols-[1fr_620px] gap-8 xl:gap-12 items-stretch">
+            <div className="space-y-5 my-auto">
+              <div className="flex flex-wrap items-center gap-3 text-sm font-sans">
                 {article.category ? (
-                  <Badge variant='malachite' className='uppercase tracking-wide'>
+                  <Badge
+                    variant="malachite"
+                    className="uppercase tracking-wide"
+                  >
                     {article.category.name}
                   </Badge>
                 ) : null}
                 {article.publishedAt ? (
-                  <span className='text-white/70'>{formatPublishedDate(article.publishedAt, 'long')}</span>
+                  <span className="text-coal/70 dark:text-white/70">
+                    {formatPublishedDate(article.publishedAt, "long")}
+                  </span>
                 ) : null}
-                <span className='text-white/70 tabular-nums'>
-                  {article.reads.toLocaleString()} {article.reads === 1 ? 'view' : 'views'}
+                <span className="text-coal/70 dark:text-white/70 tabular-nums">
+                  {article.reads.toLocaleString()}{" "}
+                  {article.reads === 1 ? "view" : "views"}
                 </span>
                 {article.readTime ? (
-                  <span className='text-white/70'>{article.readTime} min read</span>
+                  <span className="text-coal/70 dark:text-white/70">
+                    {article.readTime} min read
+                  </span>
                 ) : null}
               </div>
 
-              <h1 className='text-3xl md:text-4xl xl:text-5xl font-display font-bold text-white leading-tight'>
+              <h1 className="text-3xl md:text-4xl xl:text-5xl font-display font-bold text-coal dark:text-white leading-tight">
                 {article.title}
               </h1>
 
               {article.excerpt ? (
-                <p className='text-white/80 text-lg md:text-xl leading-relaxed font-sans max-w-3xl'>
+                <p className="text-coal/80 dark:text-white/80 text-lg md:text-xl leading-relaxed font-sans max-w-3xl">
                   {article.excerpt}
                 </p>
               ) : null}
 
               {article.tags.length > 0 ? (
-                <div className='flex flex-wrap gap-2'>
+                <div className="flex flex-wrap gap-2">
                   {article.tags.slice(0, 6).map((tag) => (
-                    <Badge key={tag} variant='white' className='text-xs'>
+                    <Badge key={tag} variant="default" className="text-xs">
                       {tag}
                     </Badge>
                   ))}
                   {article.tags.length > 6 ? (
-                    <Badge variant='default' className='text-xs'>
+                    <Badge variant="default" className="text-xs">
                       +{article.tags.length - 6}
                     </Badge>
                   ) : null}
@@ -231,41 +240,41 @@ export default async function BlogDetailPage({ params }: PageProps) {
               ) : null}
             </div>
 
-            <div className='relative min-h-[300px] md:min-h-[380px] rounded-2xl overflow-hidden bg-white/5 border border-white/10'>
+            <div className="relative min-h-[300px] md:min-h-[380px] rounded-2xl overflow-hidden bg-coal/5 border border-coal/10 dark:bg-white/5 dark:border-white/10">
               {article.coverImg ? (
                 <CloudinaryImage
                   src={article.coverImg}
                   alt={article.title}
                   fill
                   priority
-                  className='object-cover'
+                  className="object-cover"
                 />
               ) : (
-                <div className='absolute inset-0 bg-gradient-to-br from-malachite/25 via-amber/20 to-bittersweet/25' />
+                <div className="absolute inset-0 bg-gradient-to-br from-malachite/25 via-amber/20 to-bittersweet/25" />
               )}
             </div>
           </div>
         </section>
 
-        <section className='grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-10'>
-          <aside className='hidden lg:block'>
-            <div className='sticky top-28 space-y-6'>
-              <div className='rounded-2xl border border-white/10 bg-white/5 p-4'>
-                <p className='text-xs uppercase tracking-wide text-white/55 font-sans'>
+        <section className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-10">
+          <aside className="hidden lg:block">
+            <div className="sticky top-8 space-y-6">
+              <div className="rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5 p-4">
+                <p className="text-xs uppercase tracking-wide text-coal/55 dark:text-white/55 font-sans">
                   Author
                 </p>
-                <div className='mt-4 space-y-4'>
-                  <div className='flex items-start gap-3.5'>
-                    <div className='shrink-0 rounded-full p-[2px] ring-1 ring-inset ring-white/12 bg-gradient-to-br from-white/[0.08] to-transparent'>
+                <div className="mt-4 space-y-4">
+                  <div className="flex items-start gap-3.5">
+                    <div className="shrink-0 rounded-full p-[2px] ring-1 ring-inset ring-coal/12 bg-gradient-to-br from-coal/[0.08] to-transparent dark:ring-white/12 dark:from-white/[0.08]">
                       <Avatar
                         src={author?.image}
                         alt={displayName}
-                        className='size-9 border border-white/10'
-                        fallbackClassName='bg-white/[0.08] text-white font-display text-base border-0'
+                        className="size-9 border border-coal/10 dark:border-white/10"
+                        fallbackClassName="bg-coal/[0.08] text-coal dark:bg-white/[0.08] dark:text-white font-display text-base border-0"
                       />
                     </div>
-                    <div className='min-w-0 flex-1 pt-1'>
-                      <p className='font-display text-lg font-semibold text-white leading-snug tracking-tight'>
+                    <div className="min-w-0 flex-1 pt-1">
+                      <p className="font-display text-lg font-semibold text-coal dark:text-white leading-snug tracking-tight">
                         {displayName}
                       </p>
                       {/* <p>{author?.header}</p> */}
@@ -273,24 +282,24 @@ export default async function BlogDetailPage({ params }: PageProps) {
                   </div>
                   {author?.bio ? (
                     <>
-                      <div className='h-px bg-gradient-to-r from-transparent via-white/12 to-transparent' />
-                      <p className='text-sm text-white/65 font-sans leading-relaxed'>
+                      <div className="h-px bg-gradient-to-r from-transparent via-coal/12 dark:via-white/12 to-transparent" />
+                      <p className="text-sm text-coal/65 dark:text-white/65 font-sans leading-relaxed">
                         {author.bio}
                       </p>
                     </>
                   ) : null}
                   {authorSocials.length > 0 ? (
-                    <div className='flex flex-wrap gap-2 pt-0.5'>
+                    <div className="flex flex-wrap gap-2 pt-0.5">
                       {authorSocials.map(({ href, label, Icon }) => (
                         <Link
                           key={label}
                           href={href}
-                          target='_blank'
-                          rel='noopener noreferrer'
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className={socialBtnClass}
                           aria-label={label}
                         >
-                          <Icon className='size-4' />
+                          <Icon className="size-4" />
                         </Link>
                       ))}
                     </div>
@@ -299,16 +308,16 @@ export default async function BlogDetailPage({ params }: PageProps) {
               </div>
 
               {toc.length > 0 ? (
-                <div className='rounded-2xl border border-white/10 bg-white/5 p-4'>
-                  <p className='text-xs uppercase tracking-wide text-white/55 font-sans mb-3'>
+                <div className="rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5 p-4">
+                  <p className="text-xs uppercase tracking-wide text-coal/55 dark:text-white/55 font-sans mb-3">
                     Table of contents
                   </p>
-                  <nav className='space-y-2'>
+                  <nav className="space-y-2">
                     {toc.map((item) => (
                       <a
                         key={item.id}
                         href={`#${item.id}`}
-                        className={`block text-sm font-sans text-white/70 hover:text-malachite transition-colors ${item.level === 3 ? 'pl-3' : ''}`}
+                        className={`block text-sm font-sans text-coal/70 dark:text-white/70 hover:text-malachite transition-colors ${item.level === 3 ? "pl-3" : ""}`}
                       >
                         {item.label}
                       </a>
@@ -321,20 +330,20 @@ export default async function BlogDetailPage({ params }: PageProps) {
             </div>
           </aside>
 
-          <div className='min-w-0 space-y-12 lg:space-y-14'>
+          <div className="min-w-0 space-y-12 lg:space-y-14">
             <HtmlRenderer html={contentWithIds} />
 
-            <section className='rounded-2xl border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,0.04),rgba(114,255,168,0.07),rgba(255,177,87,0.06))] p-6 md:p-8'>
-              <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center'>
+            <section className="border-0 bg-transparent p-0 md:rounded-2xl md:border md:border-coal/10 dark:md:border-white/10 md:bg-[linear-gradient(120deg,rgba(0,0,0,0.03),rgba(114,255,168,0.07),rgba(255,177,87,0.06))] dark:md:bg-[linear-gradient(120deg,rgba(255,255,255,0.04),rgba(114,255,168,0.07),rgba(255,177,87,0.06))] md:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center">
                 <div>
-                  <h3 className='text-xl md:text-2xl font-display font-bold text-white'>
+                  <h3 className="text-xl md:text-2xl font-display font-bold text-coal dark:text-white">
                     Stay in the loop.
                   </h3>
-                  <p className='text-white/70 font-sans mt-2'>
+                  <p className="text-coal/70 dark:text-white/70 font-sans mt-2">
                     Bi-monthly-ish drops of new posts and recent work.
                   </p>
                 </div>
-                <NewsletterForm source='blog-detail' />
+                <NewsletterForm source="blog-detail" />
               </div>
             </section>
 
@@ -352,13 +361,13 @@ export default async function BlogDetailPage({ params }: PageProps) {
         </section>
 
         {relatedArticles.length > 0 ? (
-          <section className='space-y-6 pt-8 px-5'>
-            <div className='flex items-center justify-between gap-4'>
-              <h2 className='text-3xl md:text-4xl font-display font-bold text-white'>
+          <section className="space-y-6 pt-8 px-5">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-3xl md:text-4xl font-display font-bold text-coal dark:text-white">
                 Related articles
               </h2>
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8'>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
               {relatedArticles.map((relatedArticle) => (
                 <BlogCard key={relatedArticle.id} article={relatedArticle} />
               ))}

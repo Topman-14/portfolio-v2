@@ -1,4 +1,4 @@
-import { Bricolage_Grotesque, Krona_One, Syne } from 'next/font/google';
+import { Bricolage_Grotesque, Jost, Krona_One } from 'next/font/google';
 
 export const bricolageGrotesque = Bricolage_Grotesque({
   variable: '--font-bricolage-grotesque',
@@ -12,8 +12,8 @@ export const kronaOne = Krona_One({
   weight: '400',
 });
 
-export const syne = Syne({
-  variable: '--font-syne',
+export const jost = Jost({
+  variable: '--font-jost',
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
 });

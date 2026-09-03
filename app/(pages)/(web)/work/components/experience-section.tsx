@@ -129,12 +129,12 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                   className={`experience-item rounded-2xl border p-6 md:p-8 ${
                     isPresentRole(exp)
                       ? 'border-malachite/35 bg-malachite/[0.06] ring-1 ring-malachite/20'
-                      : 'border-white/10 bg-white/[0.03]'
+                      : 'border-coal/10 bg-coal/[0.03] dark:border-white/10 dark:bg-white/[0.03]'
                   } backdrop-blur-sm`}
                 >
                   <div className='flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10'>
                     <div className='min-w-0 flex-1 space-y-3'>
-                      <p className='font-sans text-sm text-white/50'>
+                      <p className='font-sans text-sm text-coal/50 dark:text-white/50'>
                         {formatDate(exp.startDate)}
                         {' — '}
                         {exp.isCurrentRole ? (
@@ -146,14 +146,14 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                         )}
                       </p>
                       <div>
-                        <h3 className='font-display text-2xl font-bold text-white md:text-3xl'>
+                        <h3 className='font-display text-2xl font-bold text-coal dark:text-white md:text-3xl'>
                           {exp.jobTitle}
                         </h3>
                         <p className='mt-1 font-sans text-lg font-semibold text-malachite md:text-xl'>
                           {exp.company}
                         </p>
                         {exp.location ? (
-                          <p className='mt-1 font-sans text-sm text-white/55'>
+                          <p className='mt-1 font-sans text-sm text-coal/55 dark:text-white/55'>
                             {exp.location}
                           </p>
                         ) : null}
@@ -161,7 +161,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                     </div>
                   </div>
 
-                  <p className='mt-5 font-sans text-base leading-relaxed text-white/95 md:text-lg whitespace-pre-line'>
+                  <p className='mt-5 font-sans text-base leading-relaxed text-coal/95 dark:text-white/95 md:text-lg whitespace-pre-line'>
                     {splitOnEmDash(exp.description)}
                   </p>
 
@@ -170,7 +170,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                       {exp.skills.map((skill) => (
                         <span
                           key={skill}
-                          className='rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-sans text-xs text-white/75 md:text-sm'
+                          className='rounded-full border border-coal/10 bg-coal/[0.04] px-3 py-1 font-sans text-xs text-coal/75 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/75 md:text-sm'
                         >
                           {skill}
                         </span>
@@ -181,7 +181,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
               ))}
             </div>
 
-            <p className='mt-12 max-w-2xl font-sans text-sm leading-relaxed text-white/55 md:text-base'>
+            <p className='mt-12 max-w-2xl font-sans text-sm leading-relaxed text-coal/55 dark:text-white/55 md:text-base'>
               For my full work history, kindly{' '}
               <a
                 href={`mailto:${MAIN_EMAIL}?subject=Resume%20%2F%20experience`}
@@ -193,7 +193,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
             </p>
           </>
         ) : (
-          <p className='text-center font-sans text-white/50'>
+          <p className='text-center font-sans text-coal/50 dark:text-white/50'>
             No experience entries yet.
           </p>
         )}

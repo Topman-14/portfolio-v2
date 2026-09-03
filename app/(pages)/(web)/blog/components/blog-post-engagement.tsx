@@ -30,7 +30,7 @@ type PostCommentResponse = {
 const READ_DELAY_MS = 4500;
 const COMMENTER_NAME_KEY = 'blog_commenter_name';
 const fieldClass =
-  'border-white/15 bg-white/5 text-white placeholder:text-white/40 focus-visible:border-malachite/50 focus-visible:ring-malachite/20';
+  'border-coal/15 bg-coal/5 text-coal placeholder:text-coal/40 dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40 focus-visible:border-malachite/50 focus-visible:ring-malachite/20';
 
 export function BlogPostEngagement({
   articleSlug,
@@ -126,14 +126,14 @@ export function BlogPostEngagement({
   }, [name, text, email, router, postComment]);
 
   return (
-    <div className='space-y-10 border-t border-white/10 pt-10'>
+    <div className='space-y-10 border-t border-coal/10 dark:border-white/10 pt-10'>
       <div className='space-y-6'>
-        <h2 className='text-2xl md:text-3xl font-display font-bold text-white px-4 md:px-0'>
+        <h2 className='text-2xl md:text-3xl font-display font-bold text-coal dark:text-white px-4 md:px-0'>
           Comments
         </h2>
 
         {comments.length === 0 ? (
-          <p className='text-white/65 font-sans text-sm px-4 md:px-0'>
+          <p className='text-coal/65 dark:text-white/65 font-sans text-sm px-4 md:px-0'>
             No comments yet. Be the first to share your thoughts.
           </p>
         ) : (
@@ -141,16 +141,16 @@ export function BlogPostEngagement({
             {comments.map((c) => (
               <li
                 key={c.id}
-                className='rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5'
+                className='rounded-2xl border border-coal/10 bg-coal/[0.04] dark:border-white/10 dark:bg-white/[0.04] p-4 md:p-5'
               >
-                <p className='text-xs text-white/50 font-sans mb-2'>
-                  <span className='text-white/75 font-medium'>
+                <p className='text-xs text-coal/50 dark:text-white/50 font-sans mb-2'>
+                  <span className='text-coal/75 dark:text-white/75 font-medium'>
                     {c.name?.trim() || 'Anonymous'}
                   </span>
                   {' · '}
                   {formatDistanceToNow(new Date(c.createdAt), { addSuffix: true })}
                 </p>
-                <p className='text-white/90 font-sans text-sm md:text-base whitespace-pre-wrap leading-relaxed'>
+                <p className='text-coal/90 dark:text-white/90 font-sans text-sm md:text-base whitespace-pre-wrap leading-relaxed'>
                   {c.text}
                 </p>
               </li>
@@ -158,10 +158,10 @@ export function BlogPostEngagement({
           </ul>
         )}
 
-        <div className='md:rounded-2xl border border-white/10 bg-white/[0.04] p-5 md:p-6 flex flex-col gap-4'>
-          <p className='font-display text-lg text-white'>Add a comment</p>
+        <div className='md:rounded-2xl border border-coal/10 bg-coal/[0.04] dark:border-white/10 dark:bg-white/[0.04] p-5 md:p-6 flex flex-col gap-4'>
+          <p className='font-display text-lg text-coal dark:text-white'>Add a comment</p>
           <div className='space-y-2'>
-            <Label htmlFor={`comment-name-${articleId}`} className='text-white/80 font-sans'>
+            <Label htmlFor={`comment-name-${articleId}`} className='text-coal/80 dark:text-white/80 font-sans'>
               Name
             </Label>
             <Input
@@ -178,7 +178,7 @@ export function BlogPostEngagement({
           </div>
           <div className='space-y-2'>
             <div className='space-y-2'>
-              <Label htmlFor={`comment-email-${articleId}`} className='text-white/80 font-sans'>
+              <Label htmlFor={`comment-email-${articleId}`} className='text-coal/80 dark:text-white/80 font-sans'>
                 Email (optional)
               </Label>
               <Input
@@ -191,11 +191,11 @@ export function BlogPostEngagement({
                 placeholder='you@example.com'
                 autoComplete='email'
               />
-              <p className='text-xs text-white/55 font-sans leading-relaxed max-w-lg'>
+              <p className='text-xs text-coal/55 dark:text-white/55 font-sans leading-relaxed max-w-lg'>
                 Emails are hidden.
               </p>
             </div>
-            <Label htmlFor={`comment-text-${articleId}`} className='text-white/80 font-sans'>
+            <Label htmlFor={`comment-text-${articleId}`} className='text-coal/80 dark:text-white/80 font-sans'>
               Comment
             </Label>
             <Textarea
@@ -218,7 +218,7 @@ export function BlogPostEngagement({
           <Button
             type='button'
             variant='outline'
-            className='border-malachite/40 bg-malachite/10 text-white hover:bg-malachite/20 hover:text-white ml-auto'
+            className='border-malachite/40 bg-malachite/10 text-coal dark:text-white hover:bg-malachite/20 hover:text-coal dark:hover:text-white ml-auto'
             disabled={submitting}
             onClick={() => void submitComment()}
             loading={submitting}

@@ -14,19 +14,24 @@ export type BlogCategoryChip = { id: string; name: string };
 export function BlogBrowseSection({
   initialBrowseArticles,
   categories,
+  q,
+  category,
 }: {
   initialBrowseArticles: BlogListArticle[];
   categories: BlogCategoryChip[];
+  q: string;
+  category: string;
 }) {
-  const {
-    q,
-    category,
-    hasFilter,
-    paramsString,
-    apiQueryParams,
-    replace,
-    isPending,
-  } = useBlogSearchParams();
+  const hasFilter = q.length > 0 || category.length > 0;
+  const apiQueryParams = hasFilter
+    ? {
+        ...(q ? { q } : {}),
+        ...(category ? { category } : {}),
+        limit: 48,
+      }
+    : undefined;
+
+  const { replace, isPending } = useBlogSearchParams({ q, category });
 
   const [input, setInput] = useState(q);
   const debounced = useDebounce(input, 400);
@@ -39,7 +44,7 @@ export function BlogBrowseSection({
     const next = debounced.trim();
     if (next === q) return;
     replace({ q: next || null });
-  }, [debounced, paramsString, q, replace]);
+  }, [debounced, q, replace]);
 
   // SSR already ran this exact filtered query (see blog/page.tsx) when the
   // page loaded, so seed React Query's cache with it — avoids an immediate
@@ -75,8 +80,8 @@ export function BlogBrowseSection({
 
   return (
     <section id='browse-all' className='space-y-8 md:mt-36'>
-      <div className='grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 items-end border-b border-white/10 pb-5'>
-        <h2 className='text-4xl md:text-5xl font-display font-bold text-white'>
+      <div className='grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 items-end border-b border-coal/10 dark:border-white/10 pb-5'>
+        <h2 className='text-4xl md:text-5xl font-display font-bold text-coal dark:text-white'>
           {heading}
         </h2>
         <SearchField
@@ -101,7 +106,7 @@ export function BlogBrowseSection({
       ) : null}
 
       {showEmpty ? (
-        <div className='rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-white/60 font-sans flex flex-col items-center gap-4'>
+        <div className='rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5 p-10 text-center text-coal/60 dark:text-white/60 font-sans flex flex-col items-center gap-4'>
           {hasFilter ? emptyMessage : 'No articles found.'}
           <Button variant='outline' size='sm' onClick={() => replace({ q: null, category: null })}>Clear filters</Button>
         </div>

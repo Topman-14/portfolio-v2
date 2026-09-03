@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import prismadb from '@/lib/prismadb';
-import { sendEmail, isEmailConfigured, getAppBaseUrl } from '@/lib/email';
-import { newsletterWelcomeTemplate } from '@/lib/email/templates/newsletter-welcome';
+import { sendNewsletterWelcomeEmail, isEmailConfigured } from '@/lib/email';
 
 const newsletterSchema = z.object({
   email: z.string().email(),
@@ -39,18 +38,7 @@ export async function POST(request: Request) {
     });
 
     if (isEmailConfigured()) {
-      const baseUrl = getAppBaseUrl();
-      const { subject, previewText, html } = newsletterWelcomeTemplate({
-        blogUrl: `${baseUrl}/blog`,
-        unsubscribeUrl: `${baseUrl}/unsubscribe?email=${encodeURIComponent(email)}`,
-      });
-      sendEmail({
-        to: { email },
-        subject,
-        html,
-        previewText,
-        unsubscribeUrl: `${baseUrl}/unsubscribe?email=${encodeURIComponent(email)}`,
-      })
+      sendNewsletterWelcomeEmail(email)
         .then(() => console.log('[newsletter] welcome email sent to', email))
         .catch((err) => console.error('[newsletter] welcome email error:', err));
     } else {

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { BASE_URL } from '@/config';
 import Providers from '@/context';
-import { bricolageGrotesque, kronaOne, syne } from '@/assets/fonts';
+import { bricolageGrotesque, jost, kronaOne } from '@/assets/fonts';
 import { PwaUpdateListener } from '@/components/pwa-update-listener';
 import { WebVitals } from '@/components/web-vitals';
 
@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body
-        className={`${bricolageGrotesque.variable} ${kronaOne.variable} ${syne.variable} antialiased h-full`}
+        className={`${bricolageGrotesque.variable} ${kronaOne.variable} ${jost.variable} antialiased h-full`}
       >
         <PwaUpdateListener />
         <WebVitals />

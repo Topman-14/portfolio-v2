@@ -35,7 +35,7 @@ export const BlogHero = ({ articles, title, reverse = false, className }: BlogHe
       )}
     >
       <Link href={`/blog/${active.slug}`} className='group block'>
-        <div className='relative aspect-[16/10] rounded-2xl overflow-hidden bg-white/5'>
+        <div className='relative aspect-[16/10] rounded-2xl overflow-hidden bg-coal/5 dark:bg-white/5'>
           <AnimatePresence mode='wait'>
             <motion.div
               key={active.id}
@@ -68,15 +68,15 @@ export const BlogHero = ({ articles, title, reverse = false, className }: BlogHe
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className='space-y-3 md:min-h-[190px]'
             >
-              <h3 className='text-2xl font-display font-bold text-white leading-tight line-clamp-2 max-w-xl min-h-[50px]'>
+              <h3 className='text-2xl font-display font-bold text-coal dark:text-white leading-tight line-clamp-2 max-w-xl min-h-[50px]'>
                 {active.title}
               </h3>
               {active.excerpt ? (
-                <p className='text-white/70 text-base md:text-lg leading-relaxed font-sans line-clamp-2 min-h-[50px]'>
+                <p className='text-coal/70 dark:text-white/70 text-base md:text-lg leading-relaxed font-sans line-clamp-2 min-h-[50px]'>
                   {active.excerpt}
                 </p>
               ) : null}
-              <div className='inline-flex items-center gap-2 text-sm font-sans text-white/70 group-hover:text-white transition-colors'>
+              <div className='inline-flex items-center gap-2 text-sm font-sans text-coal/70 dark:text-white/70 group-hover:text-coal dark:group-hover:text-white transition-colors'>
                 <span>
                   {formatPublishedDate(active.publishedAt)}
                   {active.readTime ? ` · ${active.readTime} min read` : ''}
@@ -89,10 +89,10 @@ export const BlogHero = ({ articles, title, reverse = false, className }: BlogHe
       </Link>
 
       <div>
-        <h2 className='text-4xl md:text-5xl font-display font-bold text-white mb-4'>
+        <h2 className='text-4xl md:text-5xl font-display font-bold text-coal dark:text-white mb-4'>
           {title}
         </h2>
-        <div className='divide-y divide-white/10 border-y border-white/10'>
+        <div className='divide-y divide-coal/10 border-y border-coal/10 dark:divide-white/10 dark:border-white/10'>
           {articles.map((article, i) => (
             <div
               key={article.id}
@@ -110,7 +110,7 @@ export const BlogHero = ({ articles, title, reverse = false, className }: BlogHe
                       {article.category.name}
                     </span>
                   )}
-                  <h4 className='text-2xl font-display font-semibold text-white leading-snug line-clamp-2'>
+                  <h4 className='text-2xl font-display font-semibold text-coal dark:text-white leading-snug line-clamp-2'>
                     {article.title}
                   </h4>
                 </Link>
@@ -119,7 +119,7 @@ export const BlogHero = ({ articles, title, reverse = false, className }: BlogHe
                   href={`/blog/${article.slug}`}
                   target='_self'
                   className={cn(
-                    'mt-1 transition-all duration-300',
+                    'mt-1 bg-coal/10 dark:bg-white/10 transition-all duration-300',
                     i === activeIndex
                       ? 'opacity-100 translate-x-0'
                       : 'opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0'
