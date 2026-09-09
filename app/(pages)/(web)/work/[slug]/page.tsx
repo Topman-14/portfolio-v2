@@ -1,15 +1,15 @@
-import type { Metadata } from 'next';
-import CloudinaryImage from '@/components/ui/cloudinary-image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import { FaGithub, FaUpRightFromSquare } from 'react-icons/fa6';
-import prismadb from '@/lib/prismadb';
-import { BASE_URL } from '@/config';
-import { Badge } from '@/components/ui/badge';
-import { createHtmlRenderData } from '@/lib/html-render';
-import { HtmlRenderer } from '@/components/custom/html-renderer';
-import { cn } from '@/lib/utils';
+import type { Metadata } from "next";
+import CloudinaryImage from "@/components/ui/cloudinary-image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import { FaGithub, FaUpRightFromSquare } from "react-icons/fa6";
+import prismadb from "@/lib/prismadb";
+import { BASE_URL } from "@/config";
+import { Badge } from "@/components/ui/badge";
+import { createHtmlRenderData } from "@/lib/html-render";
+import { HtmlRenderer } from "@/components/custom/html-renderer";
+import { cn } from "@/lib/utils";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -27,7 +27,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const work = await prismadb.work.findUnique({
     where: { slug },
@@ -36,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!work) {
     return {
-      title: 'Work Not Found | Tope Akinkuade',
+      title: "Work Not Found | Tope Akinkuade",
     };
   }
 
@@ -62,21 +64,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     keywords: [
       work.title,
       ...work.tools,
-      work.category?.name || '',
-      'Tope Akinkuade',
-      'Portfolio',
-      'Project',
+      work.category?.name || "",
+      "Tope Akinkuade",
+      "Portfolio",
+      "Project",
     ].filter(Boolean),
     openGraph: {
       title: `${work.title} | Tope Akinkuade`,
       description: work.description,
       url: `${BASE_URL}/work/${slug}`,
-      siteName: 'Tope Akinkuade',
-      type: 'website',
+      siteName: "Tope Akinkuade",
+      type: "website",
       ...projectOg.openGraph,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: `${work.title} | Tope Akinkuade`,
       description: work.description,
       ...projectOg.twitter,
@@ -85,7 +87,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 const ctaBase =
-  'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-sm font-medium transition-colors';
+  "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-sm font-medium transition-colors";
 
 export default async function WorkDetailPage({ params }: PageProps) {
   const { slug } = await params;
@@ -98,133 +100,149 @@ export default async function WorkDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const { html: contentHtml, toc } = createHtmlRenderData(work.content || '');
-  const hasBodyContent = contentHtml.replaceAll(/<[^>]+>/g, '').trim().length > 0;
+  const { html: contentHtml, toc } = createHtmlRenderData(work.content || "");
+  const hasBodyContent =
+    contentHtml.replaceAll(/<[^>]+>/g, "").trim().length > 0;
 
   return (
-    <main className='bg2 min-h-screen md:pb-24 pt-10 md:py-28'>
-      <div className='mx-auto max-w-[1500px] space-y-12 px-5 md:px-8 lg:px-12'>
+    <main className="bg2 min-h-screen md:pb-24 pt-10 md:py-28">
+      <div className="mx-auto max-w-[1500px] space-y-12 px-5 md:px-8 lg:px-12">
         <Link
-          href='/work'
-          className='inline-flex items-center gap-2 font-sans text-coal/70 dark:text-white/70 transition-colors hover:text-malachite'
+          href="/work"
+          className="inline-flex items-center gap-2 font-sans text-coal/70 dark:text-white/70 transition-colors hover:text-malachite"
         >
-          <ArrowLeft className='size-4' />
+          <ArrowLeft className="size-4" />
           Back
         </Link>
 
-        <div className='relative aspect-[16/10] w-full min-h-[220px] overflow-hidden rounded-2xl md:rounded-3xl md:aspect-[2.6/1] md:min-h-[300px]'>
+        <div className="relative aspect-[16/10] w-full min-h-[220px] overflow-hidden rounded-2xl md:rounded-3xl md:aspect-[2.6/1] md:min-h-[300px]">
           {work.image ? (
             <CloudinaryImage
               src={work.image}
-              alt=''
+              alt=""
               fill
               priority
-              className='object-cover'
-              sizes='(max-width: 1536px) 100vw, 1500px'
+              className="object-cover"
+              sizes="(max-width: 1536px) 100vw, 1500px"
               aria-hidden
             />
           ) : (
             <div
-              className='absolute inset-0 bg-gradient-to-br from-malachite/25 via-amber/20 to-bittersweet/25'
+              className="absolute inset-0 bg-gradient-to-br from-malachite/25 via-amber/20 to-bittersweet/25"
               aria-hidden
             />
           )}
           <div
-            className='pointer-events-none absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent md:via-black/35'
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent md:via-black/35"
             aria-hidden
           />
-          <div className='relative z-10 flex h-full min-h-0 flex-col justify-end p-6 pb-8 pt-20 md:p-10 md:pb-10 md:pt-28 lg:px-12 lg:pb-12'>
-            <div className='max-w-5xl space-y-4 drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]'>
-              <div className='flex flex-wrap items-center gap-3'>
+          <div className="relative z-10 flex h-full min-h-0 flex-col justify-end p-6 pb-8 pt-20 md:p-10 md:pb-10 md:pt-28 lg:px-12 lg:pb-12">
+            <div className="max-w-5xl space-y-4 drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
+              <div className="flex flex-wrap items-center gap-3">
                 {work.category ? (
-                  <Badge variant='malachite' className='uppercase tracking-wide'>
+                  <Badge className="uppercase tracking-wide">
                     {work.category.name}
                   </Badge>
                 ) : null}
                 {work.featured ? (
-                  <Badge variant='amber' className='uppercase tracking-wide'>
-                    Featured
-                  </Badge>
+                  <Badge className="uppercase tracking-wide">Featured</Badge>
                 ) : null}
               </div>
-              <h1 className='font-display text-4xl font-bold leading-[1.08] text-white md:text-5xl xl:text-6xl'>
+              <h1 className="font-display text-4xl font-bold leading-[1.08] text-white md:text-5xl xl:text-6xl">
                 {work.title}
               </h1>
             </div>
           </div>
         </div>
 
-        <section className='overflow-hidden border-0 bg-transparent md:rounded-3xl md:border md:border-coal/10 dark:md:border-white/10 md:bg-[linear-gradient(120deg,rgba(0,0,0,0.03),rgba(114,255,168,0.08),rgba(255,177,87,0.07))] dark:md:bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))]'>
-          <div className='space-y-6 py-2 md:p-8 lg:p-10'>
-            <p className='font-sans text-lg leading-relaxed text-coal/80 dark:text-white/80 md:text-xl'>
+        <section className="overflow-hidden border-0 bg-transparent md:rounded-3xl md:border md:border-coal/10 dark:md:border-white/10 md:bg-[linear-gradient(120deg,rgba(0,0,0,0.03),rgba(114,255,168,0.08),rgba(255,177,87,0.07))] dark:md:bg-[linear-gradient(120deg,rgba(255,255,255,0.06),rgba(114,255,168,0.08),rgba(255,177,87,0.07))]">
+          <div className="space-y-6 py-2 md:p-8 lg:p-10">
+            <p className="font-sans text-lg leading-relaxed text-coal/80 dark:text-white/80 md:text-xl">
               {work.description}
             </p>
 
             {work.tools.length > 0 ? (
-              <div className='flex flex-wrap gap-2'>
+              <div className="flex flex-wrap gap-2">
                 {work.tools.map((tool) => (
-                  <Badge key={tool} variant='white' className='text-xs'>
+                  <Badge key={tool} className="text-xs">
                     {tool}
                   </Badge>
                 ))}
               </div>
             ) : null}
 
-            <div className='flex flex-wrap gap-3 pt-2'>
+            <div className="flex flex-wrap gap-3 pt-2">
               {work.liveUrl ? (
                 <a
                   href={work.liveUrl}
-                  target='_blank'
-                  rel='noopener noreferrer'
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
                     ctaBase,
-                    'border border-malachite/35 bg-malachite/15 text-malachite hover:bg-malachite/25'
+                    "border border-malachite/35 bg-malachite/15 text-malachite hover:bg-malachite/25",
                   )}
                 >
                   <span>View live</span>
-                  <FaUpRightFromSquare className='size-4' aria-hidden />
+                  <FaUpRightFromSquare className="size-4" aria-hidden />
                 </a>
               ) : null}
               {work.githubLink ? (
                 <a
                   href={work.githubLink}
-                  target='_blank'
-                  rel='noopener noreferrer'
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
                     ctaBase,
-                    'border border-coal/15 bg-coal/10 text-coal hover:border-coal/25 hover:bg-coal/[0.14] dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:border-white/25 dark:hover:bg-white/[0.14]'
+                    "border border-coal/15 bg-coal/10 text-coal hover:border-coal/25 hover:bg-coal/[0.14] dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:border-white/25 dark:hover:bg-white/[0.14]",
                   )}
                 >
-                  <span>View code</span>
-                  <FaGithub className='size-4' aria-hidden />
+                  <span>See code</span>
+                  <FaGithub className="size-4" aria-hidden />
                 </a>
               ) : null}
             </div>
           </div>
         </section>
 
+        {work.videoUrl ? (
+          <section className="space-y-6">
+            <h2 className="font-display text-3xl font-bold text-coal dark:text-white md:text-4xl">
+              Demo
+            </h2>
+            <div className="relative aspect-video overflow-hidden rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5">
+              <iframe
+                src={work.videoUrl}
+                className="absolute inset-0 size-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={`${work.title} demo`}
+              />
+            </div>
+          </section>
+        ) : null}
+
         {hasBodyContent ? (
           <section
             className={cn(
-              'grid gap-10',
-              toc.length > 0 && 'lg:grid-cols-[260px_minmax(0,1fr)]'
+              "grid gap-10",
+              toc.length > 0 && "lg:grid-cols-[260px_minmax(0,1fr)]",
             )}
           >
             {toc.length > 0 ? (
-              <aside className='hidden lg:block'>
-                <div className='sticky top-28 space-y-6'>
-                  <div className='rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5 p-4'>
-                    <p className='mb-3 font-sans text-xs uppercase tracking-wide text-coal/55 dark:text-white/55'>
+              <aside className="hidden lg:block">
+                <div className="sticky top-28 space-y-6">
+                  <div className="rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5 p-4">
+                    <p className="mb-3 font-sans text-xs uppercase tracking-wide text-coal/55 dark:text-white/55">
                       On this page
                     </p>
-                    <nav className='space-y-2'>
+                    <nav className="space-y-2">
                       {toc.map((item) => (
                         <a
                           key={item.id}
                           href={`#${item.id}`}
                           className={cn(
-                            'block font-sans text-sm text-coal/70 dark:text-white/70 transition-colors hover:text-malachite',
-                            item.level === 3 && 'pl-3'
+                            "block font-sans text-sm text-coal/70 dark:text-white/70 transition-colors hover:text-malachite",
+                            item.level === 3 && "pl-3",
                           )}
                         >
                           {item.label}
@@ -235,26 +253,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 </div>
               </aside>
             ) : null}
-            <HtmlRenderer
-              html={contentHtml}
-            />
-          </section>
-        ) : null}
-
-        {work.videoUrl ? (
-          <section className='space-y-6'>
-            <h2 className='font-display text-3xl font-bold text-coal dark:text-white md:text-4xl'>
-              Demo video
-            </h2>
-            <div className='relative aspect-video overflow-hidden rounded-2xl border border-coal/10 bg-coal/5 dark:border-white/10 dark:bg-white/5'>
-              <iframe
-                src={work.videoUrl}
-                className='absolute inset-0 size-full'
-                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                allowFullScreen
-                title={`${work.title} demo`}
-              />
-            </div>
+            <HtmlRenderer html={contentHtml} />
           </section>
         ) : null}
       </div>

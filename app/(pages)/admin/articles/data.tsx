@@ -1,14 +1,14 @@
-'use client'
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { format } from "date-fns"
-import { Article, Category } from "@prisma/client"
+"use client";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { Article, Category } from "@prisma/client";
 
 type ArticleWithCategory = Article & {
-  category: Category | null
-}
+  category: Category | null;
+};
 
 export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
   {
@@ -22,50 +22,46 @@ export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
           Title
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      return (
-        <div className="font-medium">
-          {row.getValue("title")}
-        </div>
-      )
+      return <div className="font-medium">{row.getValue("title")}</div>;
     },
   },
   {
     accessorKey: "category",
     header: "Category",
     cell: ({ row }) => {
-      const category = row.getValue("category") as Category | null
+      const category = row.getValue("category") as Category | null;
       return (
         <div>
           {category ? (
-            <Badge variant="white">{category.name}</Badge>
+            <Badge>{category.name}</Badge>
           ) : (
             <span className="text-muted-foreground">No category</span>
           )}
         </div>
-      )
+      );
     },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string
+      const status = row.getValue("status") as string;
       return (
-        <Badge 
+        <Badge
           variant={
-            status === "PUBLISHED" 
-              ? "malachite" 
-              : status === "DRAFT" 
-                ? "amber" 
+            status === "PUBLISHED"
+              ? "malachite"
+              : status === "DRAFT"
+                ? "amber"
                 : "bittersweet"
           }
         >
           {status}
         </Badge>
-      )
+      );
     },
   },
   {
@@ -79,16 +75,15 @@ export const articlesColumns: ColumnDef<ArticleWithCategory>[] = [
           Created
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const date = row.getValue("createdAt") as Date
+      const date = row.getValue("createdAt") as Date;
       return (
         <div className="text-sm text-muted-foreground">
           {format(date, "MMM dd, yyyy")}
         </div>
-      )
+      );
     },
   },
-]
-
+];
