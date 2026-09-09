@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { format } from "date-fns"
-import { NewsletterSubscription } from "@prisma/client"
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { NewsletterSubscription } from "@prisma/client";
 
 export const newsletterColumns: ColumnDef<NewsletterSubscription>[] = [
   {
@@ -19,30 +19,26 @@ export const newsletterColumns: ColumnDef<NewsletterSubscription>[] = [
           Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      return (
-        <div className="font-medium">
-          {row.getValue("email")}
-        </div>
-      )
+      return <div className="font-medium">{row.getValue("email")}</div>;
     },
   },
   {
     accessorKey: "source",
     header: "Source",
     cell: ({ row }) => {
-      const source = row.getValue("source") as string | null
+      const source = row.getValue("source") as string | null;
       return (
         <div>
           {source ? (
-            <Badge variant="white">{source}</Badge>
+            <Badge>{source}</Badge>
           ) : (
             <span className="text-muted-foreground">No source</span>
           )}
         </div>
-      )
+      );
     },
   },
   {
@@ -56,15 +52,15 @@ export const newsletterColumns: ColumnDef<NewsletterSubscription>[] = [
           Subscribed
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const date = row.getValue("createdAt") as Date
+      const date = row.getValue("createdAt") as Date;
       return (
         <div className="text-sm text-muted-foreground">
           {format(date, "MMM dd, yyyy")}
         </div>
-      )
+      );
     },
   },
-]
+];

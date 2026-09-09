@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import { FC, ReactNode, useRef } from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { FC, ReactNode, useRef } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 interface CircleButtonProps {
   href?: string;
@@ -27,7 +27,7 @@ const CircleButton: FC<CircleButtonProps> = ({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const linkRef = useRef<HTMLAnchorElement>(null);
   const containerRef = onClick ? buttonRef : linkRef;
-  
+
   const strokeWidth = 2;
   const radius = size / 2 - strokeWidth / 2;
 
@@ -49,35 +49,35 @@ const CircleButton: FC<CircleButtonProps> = ({
         strokeDashoffset: 0,
         duration: 0.35,
         opacity: 1,
-        ease: 'power2.inOut',
+        ease: "power2.inOut",
       });
 
       const handleMouseEnter = () => tl.play();
       const handleMouseLeave = () => tl.reverse();
 
-      containerRef.current.addEventListener('mouseenter', handleMouseEnter);
-      containerRef.current.addEventListener('mouseleave', handleMouseLeave);
+      containerRef.current.addEventListener("mouseenter", handleMouseEnter);
+      containerRef.current.addEventListener("mouseleave", handleMouseLeave);
 
       return () => {
         if (containerRef.current) {
           containerRef.current.removeEventListener(
-            'mouseenter',
-            handleMouseEnter
+            "mouseenter",
+            handleMouseEnter,
           );
           containerRef.current.removeEventListener(
-            'mouseleave',
-            handleMouseLeave
+            "mouseleave",
+            handleMouseLeave,
           );
         }
       };
     },
-    { scope: containerRef, dependencies: [radius] }
+    { scope: containerRef, dependencies: [radius] },
   );
 
   const baseClasses = cn(
-    'relative text-white bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center transition-colors ease-in-out cursor-pointer overflow-hidden',
-    '[&>svg]:fill-current [&>svg]:transition-[fill] [&>svg]:duration-300',
-    className
+    "relative text-white bg-black/10 dark:bg-white/10  backdrop-blur-md rounded-full flex items-center justify-center transition-colors ease-in-out cursor-pointer overflow-hidden",
+    "[&>svg]:fill-current [&>svg]:transition-[fill] [&>svg]:duration-300",
+    className,
   );
 
   if (onClick) {
@@ -89,17 +89,17 @@ const CircleButton: FC<CircleButtonProps> = ({
         style={{ width: size, height: size }}
       >
         <svg
-          className='absolute inset-0 w-full h-full pointer-events-none'
-          style={{ transform: 'rotate(-90deg)' }}
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{ transform: "rotate(-90deg)" }}
         >
           <circle
             ref={borderRef}
-            cx='50%'
-            cy='50%'
+            cx="50%"
+            cy="50%"
             r={radius}
-            fill='none'
+            fill="none"
             opacity={0}
-            stroke='oklch(0.72 0.22 144)'
+            stroke="oklch(0.72 0.22 144)"
             strokeWidth={strokeWidth}
           />
         </svg>
@@ -113,22 +113,22 @@ const CircleButton: FC<CircleButtonProps> = ({
       <Link
         ref={linkRef}
         href={href}
-        target={target || '_blank'}
+        target={target || "_blank"}
         className={baseClasses}
         style={{ width: size, height: size }}
       >
         <svg
-          className='absolute inset-0 w-full h-full pointer-events-none'
-          style={{ transform: 'rotate(-90deg)' }}
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{ transform: "rotate(-90deg)" }}
         >
           <circle
             ref={borderRef}
-            cx='50%'
-            cy='50%'
+            cx="50%"
+            cy="50%"
             r={radius}
-            fill='none'
+            fill="none"
             opacity={0}
-            stroke='oklch(0.72 0.22 144)'
+            stroke="oklch(0.72 0.22 144)"
             strokeWidth={strokeWidth}
           />
         </svg>
@@ -141,4 +141,3 @@ const CircleButton: FC<CircleButtonProps> = ({
 };
 
 export default CircleButton;
-

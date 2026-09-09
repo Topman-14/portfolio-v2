@@ -26,6 +26,7 @@ export const Badge = ({
         "inline-flex px-3 py-1 rounded-full text-xs font-sans border transition-colors",
         variantStyles[variant],
         className,
+        "dark:bg-white/10 dark:text-white/70 dark:border-white/20",
       )}
     >
       {children}
